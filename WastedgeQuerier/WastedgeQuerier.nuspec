@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>WastedgeQuerier</id>
+    <version>$version$</version>
+    <authors>GMT Europe B.V.</authors>
+    <description>Windows desktop application to query the Wastedge API.</description>
+  </metadata>
+  <files>
+    <file src="bin\Release\**" target="Tools" exclude="bin\Release\**.pdb;bin\Release\**.xml;bin\Release\**.vshost.*" />
+    <file src="NguScript.xml" target="Tools" />
+    <file src="..\packages\NuGetUpdate*\Tools\Installer\ngu.exe" target="Tools" />
+  </files>
+</package>
