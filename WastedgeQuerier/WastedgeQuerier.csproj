@@ -43,10 +43,6 @@
       <HintPath>..\packages\NPOI.2.1.3.1\lib\net20\ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ICSharpCode.TextEditor, Version=3.2.1.6466, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL">
-      <HintPath>..\packages\ICSharpCode.TextEditor.3.2.1.6466\lib\Net20\ICSharpCode.TextEditor.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -90,14 +86,6 @@
       <HintPath>..\packages\SystemEx.14.5.31.5\lib\net20\SystemEx.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ThemeVS2012Light, Version=2.9.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
-      <HintPath>..\packages\DockPanelSuite.ThemeVS2012Light.2.10.0-beta2\lib\net40\ThemeVS2012Light.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=2.9.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
-      <HintPath>..\packages\DockPanelSuite.2.10.0-beta2\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
@@ -108,48 +96,8 @@
     <Compile Include="FilterControl.Designer.cs">
       <DependentUpon>FilterControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="JavaScript\Debugger\BreakPointMark.cs" />
-    <Compile Include="JavaScript\Debugger\BreakType.cs" />
-    <Compile Include="JavaScript\Debugger\CallStackControl.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="JavaScript\Debugger\CallStackControl.Designer.cs">
-      <DependentUpon>CallStackControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="JavaScript\Debugger\CaretMark.cs" />
-    <Compile Include="JavaScript\Debugger\Continuation.cs" />
-    <Compile Include="JavaScript\Debugger\JintDebuggerSteppedEventHandler.cs" />
-    <Compile Include="JavaScript\Debugger\VariablesControl.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="JavaScript\Debugger\VariablesControl.Designer.cs">
-      <DependentUpon>VariablesControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="JavaScript\Debugger\VariablesMode.cs" />
-    <Compile Include="JavaScript\EditorBreakPoint.cs" />
-    <Compile Include="JavaScript\EditorControl.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="JavaScript\EditorControl.Designer.cs">
-      <DependentUpon>EditorControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="JavaScript\Debugger\IJintSessionCallback.cs" />
-    <Compile Include="JavaScript\EditorScript.cs" />
-    <Compile Include="JavaScript\IStatusBarProvider.cs" />
-    <Compile Include="JavaScript\Debugger\JintDebuggerStoppedEventHandler.cs" />
     <Compile Include="JavaScript\JavaScriptForm.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="JavaScript\JavaScriptForm.Designer.cs">
-      <DependentUpon>JavaScriptForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="JavaScript\Debugger\JintDebugger.cs" />
-    <Compile Include="JavaScript\Debugger\JintSession.cs" />
-    <Compile Include="JavaScript\OutputControl.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="JavaScript\OutputControl.Designer.cs">
-      <DependentUpon>OutputControl.cs</DependentUpon>
     </Compile>
     <Compile Include="LoadingForm.cs">
       <SubType>Form</SubType>
@@ -190,21 +138,6 @@
     <EmbeddedResource Include="FilterControl.resx">
       <DependentUpon>FilterControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="JavaScript\Debugger\CallStackControl.resx">
-      <DependentUpon>CallStackControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="JavaScript\Debugger\VariablesControl.resx">
-      <DependentUpon>VariablesControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="JavaScript\EditorControl.resx">
-      <DependentUpon>EditorControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="JavaScript\JavaScriptForm.resx">
-      <DependentUpon>JavaScriptForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="JavaScript\OutputControl.resx">
-      <DependentUpon>OutputControl.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="LoadingForm.resx">
       <DependentUpon>LoadingForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -243,7 +176,11 @@
     <None Include="Resources\close.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Jint\Jint\Jint.csproj">
+    <ProjectReference Include="..\JintDebugger\JintDebugger\JintDebugger.csproj">
+      <Project>{39728704-0a80-44cc-ae2c-8365b2efa1ea}</Project>
+      <Name>JintDebugger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JintDebugger\Jint\Jint\Jint.csproj">
       <Project>{678738da-f723-4920-b9e5-cad667104bda}</Project>
       <Name>Jint</Name>
     </ProjectReference>
