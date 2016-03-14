@@ -117,41 +117,29 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="arrow_forward" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\arrow-forward.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="arrow_forward_double" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\arrow-forward-double.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="close" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\close.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="excel" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\excel.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="start" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\start.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="start_without_debugging" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\start-without-debugging.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="step_into" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\step-into.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="step_out" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\step-out.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="step_over" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\step-over.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="stop_process" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\stop-process.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_break" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\break.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_continue" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\continue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAQAQAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAACp03zAtdeD/LXXg/y114P8tdeD/LXXg/y114P8tdeD/LXXg/y114P8sdeCfAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAsdeDvLXXg/y114P8tdeD/LXXg/y114P8tdeD/LXXg/9Hj+v/R4/r/OH3i/yx1
+        4J8AAAAAAAAAAAAAAAAAAAAALXXg/y114P8tdeD/LXXg/y114P8tdeD/LXXg/y114P///////////9Hj
+        +v8tdeD/AAAAAAAAAAAAAAAAAAAAACx04N8tdeD/LXXg/y114P8tdeD/LXXg/y114P8tdeD/////////
+        ////////LXXg/wAAAAAAAAAAAAAAAAAAAAAAAAAALXXg////////////////////////////////////
+        /////////////y114P8AAAAAAAAAAAAAAAAAAAAAAAAAAC114P//////////////////////////////
+        //////////////////8tdeD/AAAAAAAAAAAAAAAAAAAAAAAAAAAtdeD/////////////////////////
+        ////////////////////////LXXg/wAAAAAAAAAAAAAAAAAAAAAAAAAALXXg////////////////////
+        /////////////////////////////y114P8AAAAAAAAAAAAAAAAAAAAAAAAAAC114P//////////////
+        //////////////////////////////////8tdeD/AAAAAAAAAAAAAAAAAAAAAAAAAAAtdeD/////////
+        ////////////////////////////////////////LXXg/wAAAAAAAAAAAAAAAAAAAAAAAAAALXXg////
+        /////////////////////////////////////////////y114P8tdeD/LXXg/wAAAAAAAAAAAAAAAC11
+        4P/R4/r///////////////////////////////////////////8tdeD/LXXg/y114P8AAAAAAAAAAAAA
+        AAAsdeCfOH3i/9Hj+v//////////////////////////////////////LXXg/y114P8tdeC/AAAAAAAA
+        AAAAAAAAAAAAACx14J8tdeD/LXXg/y114P8tdeD/LXXg/y114P8tdeD/LXXg/y114P8tdeC/L2/fEAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAA//8AAIAPAACABwAAgAcAAIAHAADABwAAwAcAAMAHAADABwAAwAcAAMAHAADAAQAAwAEAAMAB
+        AADgAQAA//8AAA==
+</value>
   </data>
 </root>

@@ -89,7 +89,9 @@
             // _toolsJavaScriptConsoleMenuItem
             // 
             this._toolsJavaScriptConsoleMenuItem.Index = 0;
+            this._toolsJavaScriptConsoleMenuItem.Shortcut = System.Windows.Forms.Shortcut.F11;
             this._toolsJavaScriptConsoleMenuItem.Text = "&JavaScript Console";
+            this._toolsJavaScriptConsoleMenuItem.Click += new System.EventHandler(this._toolsJavaScriptConsoleMenuItem_Click);
             // 
             // tableLayoutPanel1
             // 

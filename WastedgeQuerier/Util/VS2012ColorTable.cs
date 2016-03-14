@@ -24,7 +24,7 @@ namespace WastedgeQuerier.Util
         public override Color ButtonPressedGradientMiddle => Color.FromArgb(255, 32, 172, 232);
         public override Color ButtonPressedHighlight => ButtonPressedGradientMiddle;
         public override Color ButtonPressedHighlightBorder => ButtonPressedBorder;
-        public override Color ButtonSelectedBorder => Color.FromArgb(255, 239, 239, 242);
+        public override Color ButtonSelectedBorder => SystemColors.Control;
         public override Color ButtonSelectedGradientBegin => Color.FromArgb(255, 254, 254, 254);
         public override Color ButtonSelectedGradientEnd => Color.FromArgb(255, 254, 254, 254);
         public override Color ButtonSelectedGradientMiddle => Color.FromArgb(255, 254, 254, 254);
@@ -49,11 +49,11 @@ namespace WastedgeQuerier.Util
         public override Color MenuItemSelected => Color.FromArgb(255, 248, 249, 250);
         public override Color MenuItemSelectedGradientBegin => Color.FromArgb(255, 254, 254, 254);
         public override Color MenuItemSelectedGradientEnd => Color.FromArgb(255, 254, 254, 254);
-        public override Color MenuStripGradientBegin => Color.FromArgb(255, 239, 239, 242);
-        public override Color MenuStripGradientEnd => Color.FromArgb(255, 239, 239, 242);
-        public override Color OverflowButtonGradientBegin => Color.FromArgb(255, 239, 239, 242);
-        public override Color OverflowButtonGradientEnd => Color.FromArgb(255, 239, 239, 242);
-        public override Color OverflowButtonGradientMiddle => Color.FromArgb(255, 239, 239, 242);
+        public override Color MenuStripGradientBegin => SystemColors.Control;
+        public override Color MenuStripGradientEnd => SystemColors.Control;
+        public override Color OverflowButtonGradientBegin => SystemColors.Control;
+        public override Color OverflowButtonGradientEnd => SystemColors.Control;
+        public override Color OverflowButtonGradientMiddle => SystemColors.Control;
         public override Color RaftingContainerGradientBegin => Color.FromArgb(255, 186, 192, 201);
         public override Color RaftingContainerGradientEnd => Color.FromArgb(255, 186, 192, 201);
         public override Color SeparatorDark => Color.FromArgb(255, 204, 206, 219);
@@ -61,13 +61,13 @@ namespace WastedgeQuerier.Util
         public override Color StatusStripGradientBegin => Color.FromArgb(255, 79, 146, 219);
         public override Color StatusStripGradientEnd => Color.FromArgb(255, 79, 146, 219);
         public override Color ToolStripBorder => Color.FromArgb(0, 0, 0, 0);
-        public override Color ToolStripContentPanelGradientBegin => Color.FromArgb(255, 239, 239, 242);
-        public override Color ToolStripContentPanelGradientEnd => Color.FromArgb(255, 239, 239, 242);
+        public override Color ToolStripContentPanelGradientBegin => SystemColors.Control;
+        public override Color ToolStripContentPanelGradientEnd => SystemColors.Control;
         public override Color ToolStripDropDownBackground => Color.FromArgb(255, 231, 232, 236);
-        public override Color ToolStripGradientBegin => Color.FromArgb(255, 239, 239, 242);
-        public override Color ToolStripGradientEnd => Color.FromArgb(255, 239, 239, 242);
-        public override Color ToolStripGradientMiddle => Color.FromArgb(255, 239, 239, 242);
-        public override Color ToolStripPanelGradientBegin => Color.FromArgb(255, 239, 239, 242);
-        public override Color ToolStripPanelGradientEnd => Color.FromArgb(255, 239, 239, 242);
+        public override Color ToolStripGradientBegin => SystemColors.Control;
+        public override Color ToolStripGradientEnd => SystemColors.Control;
+        public override Color ToolStripGradientMiddle => SystemColors.Control;
+        public override Color ToolStripPanelGradientBegin => SystemColors.Control;
+        public override Color ToolStripPanelGradientEnd => SystemColors.Control;
     }
 }

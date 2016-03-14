@@ -422,6 +422,27 @@ namespace WastedgeApi
             return webRequest;
         }
 
+        public string ExecuteRaw(string path, string parameters, string method, string request)
+        {
+            var webRequest = BuildRequest(path, parameters, method);
+
+            if (request != null)
+            {
+                using (var stream = webRequest.GetRequestStream())
+                using (var writer = new StreamWriter(stream))
+                {
+                    writer.Write(request);
+                }
+            }
+
+            using (var response = webRequest.GetResponse())
+            using (var stream = response.GetResponseStream())
+            using (var reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
         private class QueryParameters
         {
             public string Parameters { get; }

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using WastedgeApi;
+using WastedgeQuerier.JavaScript;
 
 namespace WastedgeQuerier
 {
@@ -15,6 +16,7 @@ namespace WastedgeQuerier
         private readonly Api _api;
         private EntitySchema _schema;
         private readonly Dictionary<string, EntitySchema> _schemas = new Dictionary<string, EntitySchema>();
+        private JavaScriptForm _javaScriptForm;
 
         public MainForm(ApiCredentials credentials)
         {
@@ -55,6 +57,9 @@ namespace WastedgeQuerier
 #endif
 
             _container.Enabled = true;
+
+            if (Environment.GetCommandLineArgs().Skip(1).Any(p => p.EndsWith(".js")))
+                _toolsJavaScriptConsoleMenuItem.PerformClick();
         }
 
         private async void _tables_SelectedIndexChanged(object sender, EventArgs e)
@@ -164,6 +169,20 @@ namespace WastedgeQuerier
                     form.ShowDialog(this);
                 }
             }
+        }
+
+        private void _toolsJavaScriptConsoleMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_javaScriptForm != null)
+            {
+                _javaScriptForm.BringToFront();
+                return;
+            }
+
+            _javaScriptForm = new JavaScriptForm(_api);
+            _javaScriptForm.Disposed += (s, ea) => _javaScriptForm = null;
+
+            _javaScriptForm.Show();
         }
     }
 }

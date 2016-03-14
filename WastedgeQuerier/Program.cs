@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using WastedgeApi;
+using WastedgeQuerier.Util;
 
 namespace WastedgeQuerier
 {
@@ -16,6 +17,8 @@ namespace WastedgeQuerier
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            ToolStripManager.Renderer = new VS2012ToolStripRenderer();
 
             ApiCredentials credentials;
 

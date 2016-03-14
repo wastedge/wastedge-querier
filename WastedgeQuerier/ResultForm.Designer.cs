@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ResultForm));
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -38,7 +37,6 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this._getMoreResults = new System.Windows.Forms.ToolStripButton();
             this._getAllResults = new System.Windows.Forms.ToolStripButton();
-            this.vS2012ToolStripExtender1 = new WastedgeQuerier.Util.VS2012ToolStripExtender(this.components);
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -81,7 +79,6 @@
             // 
             // toolStrip1
             // 
-            this.vS2012ToolStripExtender1.SetEnableVS2012Style(this.toolStrip1, true);
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._exportToExcel,
@@ -149,7 +146,6 @@
         #endregion
 
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private Util.VS2012ToolStripExtender vS2012ToolStripExtender1;
         private System.Windows.Forms.ToolStripButton _exportToExcel;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;

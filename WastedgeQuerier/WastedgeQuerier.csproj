@@ -39,13 +39,19 @@
     <ApplicationIcon>mainicon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\Libraries\Jint\Antlr3.Runtime.dll</HintPath>
+    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\NPOI.2.1.3.1\lib\net20\ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Jurassic, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Jurassic.2.2.1\lib\net35\Jurassic.dll</HintPath>
+    <Reference Include="ICSharpCode.TextEditor, Version=3.2.1.6466, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL">
+      <HintPath>..\packages\ICSharpCode.TextEditor.3.2.1.6466\lib\Net20\ICSharpCode.TextEditor.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Jint">
+      <HintPath>..\Libraries\Jint\Jint.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -90,8 +96,12 @@
       <HintPath>..\packages\SystemEx.14.5.31.5\lib\net20\SystemEx.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="ThemeVS2012Light, Version=2.9.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <HintPath>..\packages\DockPanelSuite.ThemeVS2012Light.2.10.0-beta2\lib\net40\ThemeVS2012Light.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=2.9.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
-      <HintPath>..\packages\DockPanelSuite.2.9.0.0\lib\net20\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+      <HintPath>..\packages\DockPanelSuite.2.10.0-beta2\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
@@ -103,6 +113,55 @@
     </Compile>
     <Compile Include="FilterControl.Designer.cs">
       <DependentUpon>FilterControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="JavaScript\Debugger\BreakPointMark.cs" />
+    <Compile Include="JavaScript\Debugger\BreakType.cs" />
+    <Compile Include="JavaScript\Debugger\CallStackControl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="JavaScript\Debugger\CallStackControl.Designer.cs">
+      <DependentUpon>CallStackControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="JavaScript\Debugger\CaretMark.cs" />
+    <Compile Include="JavaScript\Debugger\Continuation.cs" />
+    <Compile Include="JavaScript\Debugger\JintDebuggerSteppedEventHandler.cs" />
+    <Compile Include="JavaScript\Debugger\ProgramControl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="JavaScript\Debugger\ProgramControl.Designer.cs">
+      <DependentUpon>ProgramControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="JavaScript\Debugger\StepType.cs" />
+    <Compile Include="JavaScript\Debugger\VariablesControl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="JavaScript\Debugger\VariablesControl.Designer.cs">
+      <DependentUpon>VariablesControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="JavaScript\Debugger\VariablesMode.cs" />
+    <Compile Include="JavaScript\EditorControl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="JavaScript\EditorControl.Designer.cs">
+      <DependentUpon>EditorControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="JavaScript\Debugger\IJintSessionCallback.cs" />
+    <Compile Include="JavaScript\IStatusBarProvider.cs" />
+    <Compile Include="JavaScript\Debugger\JintDebuggerStoppedEventHandler.cs" />
+    <Compile Include="JavaScript\JavaScriptForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="JavaScript\JavaScriptForm.Designer.cs">
+      <DependentUpon>JavaScriptForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="JavaScript\Debugger\JintDebugger.cs" />
+    <Compile Include="JavaScript\Debugger\JintSession.cs" />
+    <Compile Include="JavaScript\JintSupport.cs" />
+    <Compile Include="JavaScript\OutputControl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="JavaScript\OutputControl.Designer.cs">
+      <DependentUpon>OutputControl.cs</DependentUpon>
     </Compile>
     <Compile Include="LoadingForm.cs">
       <SubType>Form</SubType>
@@ -139,15 +198,27 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Util\VS2012ColorTable.cs" />
-    <Compile Include="Util\VS2012ToolStripExtender.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Util\VS2012ToolStripExtender.Designer.cs">
-      <DependentUpon>VS2012ToolStripExtender.cs</DependentUpon>
-    </Compile>
     <Compile Include="Util\VS2012ToolStripRenderer.cs" />
     <EmbeddedResource Include="FilterControl.resx">
       <DependentUpon>FilterControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="JavaScript\Debugger\CallStackControl.resx">
+      <DependentUpon>CallStackControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="JavaScript\Debugger\ProgramControl.resx">
+      <DependentUpon>ProgramControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="JavaScript\Debugger\VariablesControl.resx">
+      <DependentUpon>VariablesControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="JavaScript\EditorControl.resx">
+      <DependentUpon>EditorControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="JavaScript\JavaScriptForm.resx">
+      <DependentUpon>JavaScriptForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="JavaScript\OutputControl.resx">
+      <DependentUpon>OutputControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoadingForm.resx">
       <DependentUpon>LoadingForm.cs</DependentUpon>
@@ -170,8 +241,17 @@
     <None Include="WastedgeQuerier.nuspec" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="JavaScript\Lib.js" />
     <Content Include="mainicon.ico" />
     <Content Include="NguScript.xml" />
+    <None Include="Resources\stop-process.png" />
+    <None Include="Resources\step-over.png" />
+    <None Include="Resources\step-out.png" />
+    <None Include="Resources\step-into.png" />
+    <None Include="Resources\start.png" />
+    <None Include="Resources\start-without-debugging.png" />
+    <None Include="Resources\continue.png" />
+    <None Include="Resources\break.png" />
     <None Include="Resources\arrow-forward-double.png" />
     <None Include="Resources\arrow-forward.png" />
     <None Include="Resources\excel.png" />
