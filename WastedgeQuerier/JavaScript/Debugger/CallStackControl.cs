@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using SystemEx.Windows.Forms;
-using Jint.Debugger;
+using Jint.Runtime.Debugger;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace WastedgeQuerier.JavaScript.Debugger

@@ -4,7 +4,7 @@
             if (message === undefined)
                 message = '';
 
-            System.Console.WriteLine(message);
+            System.Console.WriteLine(message.replace(/\r?\n/g, '\r\n'));
         },
 
         dump: function (o, indent) {
@@ -71,21 +71,6 @@
 console = {
     log: function (log) {
         sys.log(log + '\n');
-    }
-};
-
-Array.prototype.forEach = function (callback) {
-    for (var i = 0; i < this.length; i++) {
-        callback.apply(this, [this[i]]);
-    }
-}
-
-JSON = {
-    parse: function(json) {
-        return WastedgeQuerier.JavaScript.JintSupport.Parse(json);
-    },
-    stringify: function(value, replacer, space) {
-        return WastedgeQuerier.JavaScript.JintSupport.Stringify(value, replacer, space);
     }
 };
 

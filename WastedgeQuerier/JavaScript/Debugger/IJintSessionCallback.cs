@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Jint;
-using Jint.Debugger;
+using Jint.Runtime.Debugger;
 
 namespace WastedgeQuerier.JavaScript.Debugger
 {
     internal interface IJintSessionCallback
     {
-        Continuation ProcessStep(JintEngine engine, DebugInformation debugInformation, BreakType breakType);
+        Continuation ProcessStep(Engine engine, DebugInformation debugInformation, BreakType breakType);
     }
 }

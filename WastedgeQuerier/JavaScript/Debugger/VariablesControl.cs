@@ -4,8 +4,8 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using SystemEx.Windows.Forms;
-using Jint.Debugger;
 using Jint.Native;
+using Jint.Runtime.Debugger;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace WastedgeQuerier.JavaScript.Debugger
@@ -43,43 +43,25 @@ namespace WastedgeQuerier.JavaScript.Debugger
 
             _listView.Items.Clear();
 
-            if (mode == VariablesMode.Locals && debug.Scopes.Count > 1)
+            var variables = mode == VariablesMode.Locals ? debug.Locals : debug.Globals;
+
+            foreach (var item in variables)
             {
-                var globals = new Dictionary<JsInstance, bool>();
-
-                foreach (var item in debug.Scopes.Peek().Global)
-                {
-                    globals[item.Value] = true;
-                }
-
-                foreach (var variable in debug.Locals)
-                {
-                    if (globals.ContainsKey(variable.Value))
-                        continue;
-
-                    AddVariable(variable);
-                }
-            }
-            else
-            {
-                foreach (var variable in debug.Scopes.Peek().Global)
-                {
-                    AddVariable(variable);
-                }
+                AddVariable(item.Key, item.Value);
             }
 
             _listView.EndUpdate();
         }
 
-        private void AddVariable(KeyValuePair<string, JsInstance> variable)
+        private void AddVariable(string name, JsValue value)
         {
             _listView.Items.Add(new ListViewItem
             {
-                Text = variable.Key,
+                Text = name,
                 SubItems =
                 {
-                    variable.Value.ToSource(),
-                    variable.Value.Type
+                    value.ToString(),
+                    value.Type.ToString()
                 }
             });
         }

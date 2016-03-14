@@ -55,6 +55,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "EditorControl";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EditorControl_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.EditorControl_FormClosed);
             this.ResumeLayout(false);
 
         }

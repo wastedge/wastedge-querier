@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Jint;
-using Jint.Debugger;
-using WastedgeApi;
+using ICSharpCode.TextEditor;
+using ICSharpCode.TextEditor.Document;
+using Jint.Parser;
+using Jint.Runtime.Debugger;
+using WastedgeQuerier.JavaScript.Debugger;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace WastedgeQuerier.JavaScript
@@ -15,9 +18,41 @@ namespace WastedgeQuerier.JavaScript
     {
         private readonly IStatusBarProvider _statusBarProvider;
         private string _tabText;
+        private EditorScript _script;
+        private CaretMark _caretMark;
 
         public string FileName { get; private set; }
+        public List<EditorBreakPoint> BreakPoints { get; }
         public bool IsDirty { get; private set; }
+
+        public EditorScript Script
+        {
+            get { return _script; }
+            set
+            {
+                _script = value;
+
+                _textEditor.IsReadOnly = _script != null;
+
+                if (_script != null)
+                {
+                    foreach (var breakPoint in BreakPoints)
+                    {
+                        breakPoint.BreakPoint = new BreakPoint(_script.Script, breakPoint.Line, breakPoint.Column);
+                        _script.Engine.BreakPoints.Add(breakPoint.BreakPoint);
+                    }
+                }
+                else
+                {
+                    foreach (var breakPoint in BreakPoints)
+                    {
+                        breakPoint.BreakPoint = null;
+                    }
+
+                    SetCaretMark(null);
+                }
+            }
+        }
 
         public EditorControl(IStatusBarProvider statusBarProvider)
         {
@@ -25,6 +60,7 @@ namespace WastedgeQuerier.JavaScript
                 throw new ArgumentNullException(nameof(statusBarProvider));
 
             _statusBarProvider = statusBarProvider;
+            BreakPoints = new List<EditorBreakPoint>();
 
             Font = SystemFonts.MessageBoxFont;
 
@@ -40,6 +76,7 @@ namespace WastedgeQuerier.JavaScript
                 _textEditor.Font = font;
 
             _textEditor.ActiveTextAreaControl.Caret.PositionChanged += Caret_PositionChanged;
+            _textEditor.ActiveTextAreaControl.TextArea.IconBarMargin.MouseDown += IconBarMargin_MouseDown;
 
             SetTabText("New File");
         }
@@ -49,7 +86,120 @@ namespace WastedgeQuerier.JavaScript
             UpdateLineCol();
         }
 
-        private void SetTabText(string tabText)
+        void IconBarMargin_MouseDown(AbstractMargin sender, Point mousepos, MouseButtons mouseButtons)
+        {
+            if (mouseButtons != MouseButtons.Left)
+                return;
+
+            var textArea = _textEditor.ActiveTextAreaControl.TextArea;
+
+            int yPos = mousepos.Y;
+            int lineHeight = textArea.TextView.FontHeight;
+            int lineNumber = (yPos + textArea.VirtualTop.Y) / lineHeight;
+
+            if (BreakPoints.Any(p => p.Line == lineNumber + 1))
+                return;
+
+            string text = textArea.Document.GetText(textArea.Document.GetLineSegment(lineNumber));
+            int offset = -1;
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (
+                    !Char.IsWhiteSpace(text[i]) &&
+                    text[i] != '/'
+                )
+                {
+                    offset = i;
+                    break;
+                }
+            }
+
+            if (offset == -1)
+                return;
+
+            var breakPoint = new EditorBreakPoint(lineNumber + 1, offset);
+
+            BreakPoints.Add(breakPoint);
+
+            if (_script != null)
+            {
+                breakPoint.BreakPoint = new BreakPoint(Script.Script, lineNumber + 1, offset);
+                _script.Engine.BreakPoints.Add(breakPoint.BreakPoint);
+            }
+
+            var document = _textEditor.Document;
+
+            var mark = new BreakPointMark(
+                document,
+                new TextLocation(
+                    offset,
+                    lineNumber
+                )
+            );
+
+            mark.Removed += (s, e) =>
+            {
+                BreakPoints.Remove(breakPoint);
+                _script?.Engine.BreakPoints.Remove(breakPoint.BreakPoint);
+            };
+
+            document.BookmarkManager.AddMark(mark);
+
+            _textEditor.Refresh();
+        }
+
+        public void UpdateDebugCaret(DebugInformation debugInformation)
+        {
+            if (debugInformation == null)
+            {
+                SetCaretMark(null);
+                return;
+            }
+
+            var document = _textEditor.Document;
+
+            int start = GetOffset(debugInformation.CurrentStatement.Location.Start);
+            int end = GetOffset(debugInformation.CurrentStatement.Location.End);
+
+            var position = document.OffsetToPosition(start);
+
+            document.MarkerStrategy.AddMarker(new TextMarker(start, end - start, TextMarkerType.SolidBlock, Color.Yellow));
+            _textEditor.ActiveTextAreaControl.TextArea.Caret.Position = position;
+
+            SetCaretMark(new CaretMark(document, position));
+        }
+
+        private int GetOffset(Position location)
+        {
+            return _textEditor.Document.PositionToOffset(new TextLocation(
+                location.Column, location.Line - 1
+            ));
+        }
+
+        private void SetCaretMark(CaretMark caretMark)
+        {
+            if (caretMark == null)
+            {
+                if (_caretMark != null)
+                {
+                    _textEditor.Document.MarkerStrategy.RemoveAll(p => true);
+                    _textEditor.Document.BookmarkManager.RemoveMark(_caretMark);
+                    _caretMark = null;
+
+                    _textEditor.Refresh();
+                }
+            }
+            else
+            {
+                _caretMark = caretMark;
+                _textEditor.Document.BookmarkManager.AddMark(_caretMark);
+
+                _textEditor.Refresh();
+            }
+        }
+
+        public void SetTabText(string tabText)
         {
             _tabText = tabText;
 
@@ -59,7 +209,7 @@ namespace WastedgeQuerier.JavaScript
             Text = TabText = tabText;
         }
 
-        internal void Open(string fileName)
+        public void Open(string fileName)
         {
             if (fileName == null)
                 throw new ArgumentNullException(nameof(fileName));
@@ -67,10 +217,7 @@ namespace WastedgeQuerier.JavaScript
             FileName = fileName;
 
             SetTabText(Path.GetFileName(fileName));
-
-            _textEditor.Text = File.ReadAllText(fileName);
-
-            SetDirty(false);
+            SetText(File.ReadAllText(fileName));
         }
 
         private void SetDirty(bool isDirty)
@@ -87,7 +234,7 @@ namespace WastedgeQuerier.JavaScript
             SetDirty(true);
         }
 
-        internal void Save(string fileName)
+        public void Save(string fileName)
         {
             if (fileName != null)
             {
@@ -102,6 +249,13 @@ namespace WastedgeQuerier.JavaScript
         public string GetText()
         {
             return _textEditor.Text;
+        }
+
+        public void SetText(string text)
+        {
+            _textEditor.Text = text;
+
+            SetDirty(false);
         }
 
         public bool PerformSave()
@@ -185,6 +339,11 @@ namespace WastedgeQuerier.JavaScript
             _statusBarProvider.SetLineColumn(
                 position.Line + 1, chars + 1, position.Column + 1
             );
+        }
+
+        private void EditorControl_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Script = null;
         }
     }
 }

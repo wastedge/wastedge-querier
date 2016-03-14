@@ -6,7 +6,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Jint;
-using Jint.Debugger;
+using Jint.Parser;
+using Jint.Runtime.Debugger;
 
 namespace WastedgeQuerier.JavaScript.Debugger
 {
@@ -18,7 +19,8 @@ namespace WastedgeQuerier.JavaScript.Debugger
         private string _baseDirectory;
         private readonly object _syncRoot = new object();
         private bool _breakOnNextStatement;
-        private JintEngine _engine;
+
+        public Engine Engine { get; private set; }
 
         public JintSession(IJintSessionCallback callback)
         {
@@ -35,36 +37,43 @@ namespace WastedgeQuerier.JavaScript.Debugger
             Stopped?.Invoke(this, e);
         }
 
-        public void Run(string baseDirectory, string script, bool debug, Action<JintEngine> setup)
+        public event SourceLoadedEventHandler SourceLoaded;
+
+        protected virtual void OnSourceLoaded(SourceLoadedEventArgs e)
+        {
+            SourceLoaded?.Invoke(this, e);
+        }
+
+        public void Run(string baseDirectory, string script, string fileName, bool debug, Action<Engine> setup)
         {
             _baseDirectory = baseDirectory;
 
-            _thread = new Thread(() => ThreadProc(script, debug, setup));
+            _thread = new Thread(() => ThreadProc(script, fileName, debug, setup));
             _thread.Start();
         }
 
-        private void ThreadProc(string script, bool debug, Action<JintEngine> setup)
+        private void ThreadProc(string script, string fileName, bool debug, Action<Engine> setup)
         {
-            _engine = new JintEngine();
+            Engine = new Engine(p => p
+                .DebugMode(debug)
+                .AllowClr()
+            );
 
-            _engine.Break += engine_Break;
-            _engine.Step += engine_Step;
+            Engine.Break += engine_Break;
+            Engine.Step += engine_Step;
+            Engine.SourceLoaded += (s, e) => OnSourceLoaded(e);
 
-            _engine.SetDebugMode(debug);
-            _engine.DisableSecurity();
-            _engine.AllowClr();
+            Engine.SetValue("require", new Func<string, object>(RequireFunction));
 
-            _engine.SetFunction("require", new Func<string, object>(RequireFunction));
-
-            setup?.Invoke(_engine);
+            setup?.Invoke(Engine);
 
             Exception exception = null;
 
             try
             {
-                _engine.Run(script);
+                Engine.Execute(script, new ParserOptions { Source = fileName });
 
-                _engine = null;
+                Engine = null;
             }
             catch (Exception ex)
             {
@@ -81,7 +90,7 @@ namespace WastedgeQuerier.JavaScript.Debugger
             if (!Path.IsPathRooted(fileName))
                 fileName = Path.Combine(_baseDirectory, fileName);
 
-            return _engine.Run(File.ReadAllText(fileName));
+            return Engine.Execute(File.ReadAllText(fileName), new ParserOptions { Source = fileName });
         }
 
         public bool BreakOnNextStatement
@@ -104,28 +113,28 @@ namespace WastedgeQuerier.JavaScript.Debugger
             BreakOnNextStatementChanged?.Invoke(null, e);
         }
 
-        void engine_Break(object sender, DebugInformation e)
+        StepMode engine_Break(object sender, DebugInformation e)
         {
-            ProcessStep(sender, e, BreakType.Break);
+            return ProcessStep(sender, e, BreakType.Break);
         }
 
-        void engine_Step(object sender, DebugInformation e)
+        StepMode engine_Step(object sender, DebugInformation e)
         {
-            ProcessStep(sender, e, BreakType.Step);
+            return ProcessStep(sender, e, BreakType.Step);
         }
 
-        private void ProcessStep(object sender, DebugInformation e, BreakType breakType)
+        private StepMode ProcessStep(object sender, DebugInformation e, BreakType breakType)
         {
             lock (_syncRoot)
             {
                 if (breakType == BreakType.Step && !BreakOnNextStatement)
-                    return;
+                    return StepMode.None;
 
                 BreakOnNextStatement = false;
 
-                using (var continuation = _callback.ProcessStep((JintEngine)sender, e, breakType))
+                using (var continuation = _callback.ProcessStep((Engine)sender, e, breakType))
                 {
-                    continuation.Wait();
+                    return continuation.Wait();
                 }
             }
         }

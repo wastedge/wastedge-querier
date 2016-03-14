@@ -39,9 +39,6 @@
     <ApplicationIcon>mainicon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Antlr3.Runtime">
-      <HintPath>..\Libraries\Jint\Antlr3.Runtime.dll</HintPath>
-    </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>..\packages\NPOI.2.1.3.1\lib\net20\ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>True</Private>
@@ -49,9 +46,6 @@
     <Reference Include="ICSharpCode.TextEditor, Version=3.2.1.6466, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL">
       <HintPath>..\packages\ICSharpCode.TextEditor.3.2.1.6466\lib\Net20\ICSharpCode.TextEditor.dll</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="Jint">
-      <HintPath>..\Libraries\Jint\Jint.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -125,13 +119,6 @@
     <Compile Include="JavaScript\Debugger\CaretMark.cs" />
     <Compile Include="JavaScript\Debugger\Continuation.cs" />
     <Compile Include="JavaScript\Debugger\JintDebuggerSteppedEventHandler.cs" />
-    <Compile Include="JavaScript\Debugger\ProgramControl.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="JavaScript\Debugger\ProgramControl.Designer.cs">
-      <DependentUpon>ProgramControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="JavaScript\Debugger\StepType.cs" />
     <Compile Include="JavaScript\Debugger\VariablesControl.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -139,6 +126,7 @@
       <DependentUpon>VariablesControl.cs</DependentUpon>
     </Compile>
     <Compile Include="JavaScript\Debugger\VariablesMode.cs" />
+    <Compile Include="JavaScript\EditorBreakPoint.cs" />
     <Compile Include="JavaScript\EditorControl.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -146,6 +134,7 @@
       <DependentUpon>EditorControl.cs</DependentUpon>
     </Compile>
     <Compile Include="JavaScript\Debugger\IJintSessionCallback.cs" />
+    <Compile Include="JavaScript\EditorScript.cs" />
     <Compile Include="JavaScript\IStatusBarProvider.cs" />
     <Compile Include="JavaScript\Debugger\JintDebuggerStoppedEventHandler.cs" />
     <Compile Include="JavaScript\JavaScriptForm.cs">
@@ -156,7 +145,6 @@
     </Compile>
     <Compile Include="JavaScript\Debugger\JintDebugger.cs" />
     <Compile Include="JavaScript\Debugger\JintSession.cs" />
-    <Compile Include="JavaScript\JintSupport.cs" />
     <Compile Include="JavaScript\OutputControl.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -204,9 +192,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="JavaScript\Debugger\CallStackControl.resx">
       <DependentUpon>CallStackControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="JavaScript\Debugger\ProgramControl.resx">
-      <DependentUpon>ProgramControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="JavaScript\Debugger\VariablesControl.resx">
       <DependentUpon>VariablesControl.cs</DependentUpon>
@@ -258,6 +243,10 @@
     <None Include="Resources\close.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Jint\Jint\Jint.csproj">
+      <Project>{678738da-f723-4920-b9e5-cad667104bda}</Project>
+      <Name>Jint</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WastedgeApi\WastedgeApi.csproj">
       <Project>{c6bd0c13-2385-48cc-a649-7ab79a14f8f2}</Project>
       <Name>WastedgeApi</Name>

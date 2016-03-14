@@ -7,8 +7,8 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using Jint;
-using Jint.Debugger;
-using Jint.Native;
+using Jint.Parser;
+using Jint.Runtime.Debugger;
 using WastedgeApi;
 using WastedgeQuerier.JavaScript.Debugger;
 using WeifenLuo.WinFormsUI.Docking;
@@ -25,8 +25,8 @@ namespace WastedgeQuerier.JavaScript
         private readonly VariablesControl _globalsControl;
         private readonly CallStackControl _callStackControl;
         private JintDebugger _debugger;
-        private readonly Dictionary<string, ProgramControl> _controls = new Dictionary<string, ProgramControl>();
-        private int _programCounter;
+        private readonly Dictionary<Script, EditorControl> _debugControls = new Dictionary<Script, EditorControl>();
+        private EditorControl _lastStepControl;
 
         private EditorControl ActiveEditor => _dockPanel.ActiveDocument as EditorControl;
 
@@ -81,6 +81,7 @@ namespace WastedgeQuerier.JavaScript
                 _debugger.IsRunningChanged += _debugger_IsRunningChanged;
                 _debugger.Stopped += _debugger_Stopped;
                 _debugger.Stepped += _debugger_Stepped;
+                _debugger.SourceLoaded += _debugger_SourceLoaded;
             }
 
             _viewLocals.Enabled =
@@ -104,48 +105,67 @@ namespace WastedgeQuerier.JavaScript
 
             if (_debugger == null)
             {
-                foreach (var document in _dockPanel.Documents.OfType<ProgramControl>().ToList())
+                foreach (var control in _debugControls.Values.ToList())
                 {
-                    document.Dispose();
+                    control?.Dispose();
                 }
 
-                _controls.Clear();
-            }
-            else
-            {
-                _programCounter = 0;
+                _debugControls.Clear();
             }
 
             UpdateEnabled();
         }
 
-        private void _debugger_Stepped(object sender, JintDebuggerSteppedEventArgs e)
+        private void _debugger_SourceLoaded(object sender, SourceLoadedEventArgs e)
         {
-            BeginInvoke(new Action(() => Stepped(e)));
+            // First see whether we have an editor that matches this script.
+
+            foreach (var editor in _dockPanel.Documents.OfType<EditorControl>())
+            {
+                if (editor.FileName == e.Source.Source)
+                {
+                    editor.Script = new EditorScript(_debugger.Engine, e.Source);
+                    return;
+                }
+            }
+
+            // Otherwise, add an empty registration for later on.
+
+            _debugControls.Add(e.Source, null);
         }
 
-        private void Stepped(JintDebuggerSteppedEventArgs e)
+        private void _debugger_Stepped(object sender, JintDebuggerSteppedEventArgs e)
         {
-            ProgramControl control;
+            BeginInvoke(new Action(Stepped));
+        }
 
-            var programSource = _debugger.DebugInformation.Program.ProgramSource;
+        private void Stepped()
+        {
+            var script = _debugger.DebugInformation.CurrentStatement.Location.Source;
 
-            if (!_controls.TryGetValue(programSource, out control))
+            var control =
+                _dockPanel.Documents.OfType<EditorControl>().FirstOrDefault(p => p.Script?.Script == script) ??
+                _debugControls[script];
+
+            if (control == null)
             {
-                control = new ProgramControl(_debugger.DebugInformation.Program, this, this);
+                control = new EditorControl(this);
+                _debugControls[script] = control;
 
-                control.Text += "Program " + ++_programCounter;
-
-                control.Disposed += (s, ea) => _controls.Remove(programSource);
-
-                _controls.Add(programSource, control);
-
+                control.SetTabText(script.Source ?? "(eval)");
+                control.SetText(script.Code);
+                control.Script = new EditorScript(_debugger.Engine, script);
                 control.Show(_dockPanel, DockState.Document);
+                control.Disposed += (s, ea) => _debugControls[script] = null;
             }
-            else
-                control.DockHandler.Activate();
 
-            control.ProcessStep(e.Engine, _debugger.DebugInformation, e.BreakType);
+            if (_lastStepControl != null && _lastStepControl != control)
+                _lastStepControl.UpdateDebugCaret(null);
+
+            _lastStepControl = control;
+            _lastStepControl.DockHandler.Activate();
+
+            control.UpdateDebugCaret(_debugger.DebugInformation);
         }
 
         private void _debugger_IsRunningChanged(object sender, EventArgs e)
@@ -163,9 +183,10 @@ namespace WastedgeQuerier.JavaScript
             {
                 ResetTabs();
 
-                foreach (var control in _dockPanel.Documents.OfType<ProgramControl>())
+                if (_lastStepControl != null)
                 {
-                    control.ResetState();
+                    _lastStepControl.UpdateDebugCaret(null);
+                    _lastStepControl = null;
                 }
             }
 
@@ -390,12 +411,12 @@ namespace WastedgeQuerier.JavaScript
             if (_debugger == null)
                 StartDebugger(true);
             else
-                _debugger.Step(StepType.Into);
+                _debugger.Step(StepMode.Into);
         }
 
         private void _stepOver_Click(object sender, EventArgs e)
         {
-            _debugger.Step(StepType.Over);
+            _debugger.Step(StepMode.Over);
         }
 
         private void StartDebugger(bool startBreaked)
@@ -419,22 +440,22 @@ namespace WastedgeQuerier.JavaScript
             );
         }
 
-        private void SetupEngine(JintEngine engine)
+        private void SetupEngine(Engine engine)
         {
-            engine.SetParameter("api", new Api(_api.Credentials));
+            engine.SetValue("api", new Api(_api.Credentials));
 
             string resourceName = GetType().Namespace + ".Lib.js";
 
             using (var stream = GetType().Assembly.GetManifestResourceStream(resourceName))
             using (var reader = new StreamReader(stream))
             {
-                engine.Run(reader.ReadToEnd());
+                engine.Execute(reader.ReadToEnd(), new ParserOptions { Source = "Lib.js" });
             }
         }
 
         private void _stepOut_Click(object sender, EventArgs e)
         {
-            _debugger.Step(StepType.Out);
+            _debugger.Step(StepMode.Out);
         }
 
         private void LoadTabs(DebugInformation debug)
@@ -442,14 +463,6 @@ namespace WastedgeQuerier.JavaScript
             _localsControl.LoadVariables(debug, VariablesMode.Locals);
             _globalsControl.LoadVariables(debug, VariablesMode.Globals);
             _callStackControl.LoadCallStack(debug);
-        }
-
-        public void ReloadAllBreakPoints()
-        {
-            foreach (var control in _controls.Values)
-            {
-                control.LoadBreakPoints();
-            }
         }
     }
 }

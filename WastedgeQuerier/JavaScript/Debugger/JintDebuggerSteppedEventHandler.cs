@@ -9,10 +9,10 @@ namespace WastedgeQuerier.JavaScript.Debugger
 {
     internal class JintDebuggerSteppedEventArgs
     {
-        public JintEngine Engine { get; }
+        public Engine Engine { get; }
         public BreakType BreakType { get; }
 
-        public JintDebuggerSteppedEventArgs(JintEngine engine, BreakType breakType)
+        public JintDebuggerSteppedEventArgs(Engine engine, BreakType breakType)
         {
             Engine = engine;
             BreakType = breakType;

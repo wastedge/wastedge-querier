@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using Jint.Runtime.Debugger;
 
 namespace WastedgeQuerier.JavaScript.Debugger
 {
@@ -9,15 +10,18 @@ namespace WastedgeQuerier.JavaScript.Debugger
     {
         private bool _disposed;
         private ManualResetEvent _event = new ManualResetEvent(false);
+        private StepMode _stepMode;
 
-        public void Signal()
+        public void Signal(StepMode stepMode)
         {
+            _stepMode = stepMode;
             _event.Set();
         }
 
-        public void Wait()
+        public StepMode Wait()
         {
             _event.WaitOne();
+            return _stepMode;
         }
 
         public void Dispose()

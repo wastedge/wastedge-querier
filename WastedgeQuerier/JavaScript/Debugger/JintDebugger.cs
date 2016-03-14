@@ -6,8 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Jint;
-using Jint.Debugger;
-using Jint.Native;
+using Jint.Runtime.Debugger;
 
 namespace WastedgeQuerier.JavaScript.Debugger
 {
@@ -17,7 +16,6 @@ namespace WastedgeQuerier.JavaScript.Debugger
         private JintSession _session;
         private bool _disposed;
         private Continuation _continuation;
-        private List<JsScope> _allowedScopes;
 
         public bool IsRunning
         {
@@ -33,6 +31,8 @@ namespace WastedgeQuerier.JavaScript.Debugger
         }
 
         public DebugInformation DebugInformation { get; private set; }
+
+        public Engine Engine => _session.Engine;
 
         public event EventHandler IsRunningChanged;
 
@@ -55,10 +55,18 @@ namespace WastedgeQuerier.JavaScript.Debugger
             Stepped?.Invoke(this, e);
         }
 
+        public event SourceLoadedEventHandler SourceLoaded;
+
+        protected virtual void OnSourceLoaded(SourceLoadedEventArgs e)
+        {
+            SourceLoaded?.Invoke(this, e);
+        }
+
         public JintDebugger()
         {
             _session = new JintSession(this);
             _session.Stopped += _session_Stopped;
+            _session.SourceLoaded += (s, e) => OnSourceLoaded(e);
         }
 
         private void _session_Stopped(object sender, JintDebuggerStoppedEventArgs e)
@@ -68,10 +76,10 @@ namespace WastedgeQuerier.JavaScript.Debugger
             OnStopped(e);
         }
 
-        public void Run(string fileName, string script, Action<JintEngine> setup, bool startBreaked)
+        public void Run(string fileName, string script, Action<Engine> setup, bool startBreaked)
         {
             _session.BreakOnNextStatement = startBreaked;
-            _session.Run(Path.GetDirectoryName(fileName), script, true, setup);
+            _session.Run(Path.GetDirectoryName(fileName), script, fileName, true, setup);
 
             IsRunning = true;
         }
@@ -83,104 +91,39 @@ namespace WastedgeQuerier.JavaScript.Debugger
 
         public void Continue()
         {
+            Continue(StepMode.None);
+        }
+
+        private void Continue(StepMode stepMode)
+        {
             DebugInformation = null;
             IsRunning = true;
 
             var continuation = _continuation;
             _continuation = null;
-            continuation.Signal();
+            continuation.Signal(stepMode);
         }
 
-        public void Step(StepType stepType)
+        public void Step(StepMode stepMode)
         {
-            if (stepType != StepType.Into)
-            {
-                _allowedScopes = new List<JsScope>(DebugInformation.Scopes);
-
-                _allowedScopes.Reverse();
-
-                if (stepType == StepType.Out)
-                    _allowedScopes.RemoveAt(_allowedScopes.Count - 1);
-            }
-
             _session.BreakOnNextStatement = true;
 
-            Continue();
+            Continue(stepMode);
         }
 
-        Continuation IJintSessionCallback.ProcessStep(JintEngine engine, DebugInformation debugInformation, BreakType breakType)
+        Continuation IJintSessionCallback.ProcessStep(Engine engine, DebugInformation debugInformation, BreakType breakType)
         {
             IsRunning = false;
 
             Debug.Assert(_continuation == null);
 
-            var continuation = new Continuation();
+            _continuation = new Continuation();
 
-            if (ProcessAllowedScopes(debugInformation))
-            {
-                continuation.Signal();
-            }
-            else
-            {
-                _continuation = continuation;
+            DebugInformation = debugInformation;
 
-                DebugInformation = debugInformation;
+            OnStepped(new JintDebuggerSteppedEventArgs(engine, breakType));
 
-                OnStepped(new JintDebuggerSteppedEventArgs(engine, breakType));
-            }
-
-            return continuation;
-        }
-
-        private bool ProcessAllowedScopes(DebugInformation debugInformation)
-        {
-            // Verify whether we need to step.
-
-            if (_allowedScopes != null)
-            {
-                var currentScopes = new List<JsScope>(debugInformation.Scopes);
-
-                currentScopes.Reverse();
-
-                bool areEqual = true;
-
-                for (int i = 0, count = Math.Min(currentScopes.Count, _allowedScopes.Count); i < count; i++)
-                {
-                    if (currentScopes[i] != _allowedScopes[i])
-                    {
-                        areEqual = false;
-                        break;
-                    }
-                }
-
-                bool doStep = false;
-
-                if (!areEqual)
-                {
-                    // If the part of the stacks that overlap are not equal, we
-                    // know for sure we need to step because we're in a different
-                    // scope.
-
-                    doStep = true;
-                }
-                else if (currentScopes.Count <= _allowedScopes.Count)
-                {
-                    // If the depth of the current stack is less than the allowed
-                    // stacks, we're sure we can step because we went to a
-                    // higher scope.
-
-                    doStep = true;
-                }
-
-                if (!doStep)
-                {
-                    _session.BreakOnNextStatement = true;
-
-                    return true;
-                }
-            }
-
-            return false;
+            return _continuation;
         }
 
         public void Dispose()
