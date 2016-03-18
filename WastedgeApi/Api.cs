@@ -57,7 +57,7 @@ namespace WastedgeApi
         public Schema GetSchema()
         {
             if (_schema == null)
-                _schema = new Schema((JObject)ExecuteJsonRequest("", "$meta", "GET", null));
+                _schema = new Schema((JObject)ExecuteJsonRequest(null, "$meta", "GET", null));
 
             return _schema;
         }
@@ -65,7 +65,7 @@ namespace WastedgeApi
         public async Task<Schema> GetSchemaAsync()
         {
             if (_schema == null)
-                _schema = new Schema((JObject)await ExecuteJsonRequestAsync("", "$meta", "GET", null));
+                _schema = new Schema((JObject)await ExecuteJsonRequestAsync(null, "$meta", "GET", null));
 
             return _schema;
         }
@@ -405,11 +405,12 @@ namespace WastedgeApi
             if (!Credentials.Url.EndsWith("/"))
                 url.Append('/');
 
-            url.Append("scripts/cgiip.exe/WService=wsDEV/api.p?$uri=");
-            url.Append(Uri.EscapeDataString(path));
+            url.Append("api/rest");
+            if (!String.IsNullOrEmpty(path))
+                    url.Append('/').Append(path);
 
             if (parameters != null)
-                url.Append('&').Append(parameters);
+                url.Append('?').Append(parameters);
 
             var webRequest = (HttpWebRequest)WebRequest.Create(url.ToString());
 
