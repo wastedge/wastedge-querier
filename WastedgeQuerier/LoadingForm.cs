@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace WastedgeQuerier
 {
-    public partial class LoadingForm : Form
+    public partial class LoadingForm : SystemEx.Windows.Forms.Form
     {
         public event EventHandler CancelClicked;
 

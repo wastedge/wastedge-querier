@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using SourceGrid.Cells;
 using SourceGrid.Cells.Controllers;
@@ -19,16 +20,27 @@ namespace WastedgeQuerier
 {
     public partial class ResultForm : SystemEx.Windows.Forms.Form
     {
+        private readonly Api _api;
+        private readonly EntitySchema _entity;
+        private readonly List<Filter> _filters;
         private ResultSet _resultSet;
         private readonly IView _defaultView;
         private readonly IView _numberView;
         private readonly IView _nullView;
         private readonly List<ResultSet> _resultSets = new List<ResultSet>();
 
-        public ResultForm(ResultSet resultSet)
+        public ResultForm(Api api, EntitySchema entity, List<Filter> filters)
         {
-            if (resultSet == null)
-                throw new ArgumentNullException(nameof(resultSet));
+            if (api == null)
+                throw new ArgumentNullException(nameof(api));
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+            if (filters == null)
+                throw new ArgumentNullException(nameof(filters));
+
+            _api = api;
+            _entity = entity;
+            _filters = filters;
 
             InitializeComponent();
 
@@ -57,24 +69,22 @@ namespace WastedgeQuerier
 
             var toolTipController = new ToolTipText();
 
-            _grid.ColumnsCount = resultSet.FieldCount;
+            _grid.ColumnsCount = _entity.Members.Count;
             _grid.FixedRows = 1;
 
             _grid.Rows.Insert(0);
 
-            for (int i = 0; i < resultSet.FieldCount; i++)
+            for (int i = 0; i < _entity.Members.Count; i++)
             {
-                _grid[0, i] = new SourceGrid.Cells.ColumnHeader(resultSet.GetFieldName(i))
+                _grid[0, i] = new SourceGrid.Cells.ColumnHeader(_entity.Members[i].Name)
                 {
                     View = headerView,
-                    ToolTipText = resultSet.GetFieldName(i),
+                    ToolTipText = _entity.Members[i].Name,
                     AutomaticSortEnabled = false
                 };
 
                 _grid[0, i].AddController(toolTipController);
             }
-
-            LoadResultSet(resultSet);
         }
 
         private void LoadResultSet(ResultSet resultSet)
@@ -94,10 +104,13 @@ namespace WastedgeQuerier
                 }
             }
 
-            _grid.AutoSizeCells(new SourceGrid.Range(
-                new SourceGrid.Position(1, 0),
-                new SourceGrid.Position(Math.Min(20, _grid.Rows.Count - 1), _grid.ColumnsCount - 1)
-            ));
+            if (_grid.RowsCount > _grid.FixedRows)
+            {
+                _grid.AutoSizeCells(new SourceGrid.Range(
+                    new SourceGrid.Position(_grid.FixedRows, 0),
+                    new SourceGrid.Position(Math.Min(20, _grid.Rows.Count - _grid.FixedRows), _grid.ColumnsCount - _grid.FixedRows)
+                    ));
+            }
 
             UpdateEnabled();
         }
@@ -253,6 +266,127 @@ namespace WastedgeQuerier
             catch
             {
                 // Ignore exceptions.
+            }
+        }
+
+        private void _editInExcel_Click(object sender, EventArgs e)
+        {
+            GetAllResults();
+
+            using (var form = new EditInExcelInstructionsForm())
+            {
+                if (form.ShowDialog(this) != DialogResult.OK)
+                    return;
+            }
+
+            string fileName;
+
+            for (int i = 0;; i++)
+            {
+                fileName = "Wastedge Export";
+                if (i > 0)
+                    fileName += $" ({i})";
+                fileName += ".xls";
+
+                fileName = Path.Combine(Path.GetTempPath(), fileName);
+
+                if (!File.Exists(fileName))
+                    break;
+            }
+
+            try
+            {
+                using (var stream = File.Create(fileName))
+                {
+                    new ExcelExporter().Export(stream, _resultSets);
+                }
+
+                try
+                {
+                    Process.Start(fileName);
+                }
+                catch
+                {
+                    // Ignore exceptions.
+                }
+
+                using (var form = new EditInExcelWaitForm())
+                {
+                    if (form.ShowDialog(this) != DialogResult.OK)
+                        return;
+                }
+
+                using (var form = new EditInExcelUploadForm(_api, _entity, BuildChanges(_resultSets, fileName)))
+                {
+                    form.ShowDialog(this);
+                }
+
+                ReloadResults();
+            }
+            finally
+            {
+                try
+                {
+                    File.Delete(fileName);
+                }
+                catch
+                {
+                    // Ignore.
+                }
+            }
+        }
+
+        private RecordSetChanges BuildChanges(List<ResultSet> resultSets, string fileName)
+        {
+            var original = new RecordSet();
+
+            foreach (var resultSet in resultSets)
+            {
+                original.AddResultSet(resultSet);
+            }
+
+            RecordSet modified;
+
+            using (var stream = File.OpenRead(fileName))
+            {
+                modified = new ExcelImporter().Import(stream, _entity);
+            }
+
+            return RecordSetChanges.Create(original, modified);
+        }
+
+        private void ResultForm_Shown(object sender, EventArgs e)
+        {
+            ReloadResults();
+        }
+
+        private void ReloadResults()
+        {
+            if (_grid.Rows.Count > _grid.FixedRows)
+                _grid.Rows.RemoveRange(_grid.FixedRows, _grid.Rows.Count - _grid.FixedRows);
+
+            _resultSets.Clear();
+
+            using (var form = new LoadingForm())
+            {
+                form.LoadingText = $"Loading {Constants.PageSize} results...";
+
+                form.Shown += async (s, ea) =>
+                {
+                    var resultSet = await _api.QueryAsync(
+                        _entity,
+                        _filters,
+                        null,
+                        Constants.PageSize,
+                        OutputFormat.Compact
+                        );
+
+                    LoadResultSet(resultSet);
+
+                    form.Dispose();
+                };
+
+                form.ShowDialog(this);
             }
         }
     }

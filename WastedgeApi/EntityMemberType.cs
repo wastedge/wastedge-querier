@@ -9,6 +9,8 @@ namespace WastedgeApi
     {
         Field,
         Foreign,
-        ForeignChild
+        ForeignChild,
+        Id,
+        Calculated
     }
 }

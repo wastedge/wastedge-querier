@@ -96,11 +96,12 @@ weapi = (function (api) {
 
     return {
         run: run,
-        query: function (entity, weql, offset, count) {
+        query: function (entity, weql, offset, count, order) {
             var parameters = buildParameters({
                 $query: weql,
                 $offset: offset,
-                $count: count
+                $count: count,
+                $order: order
             });
 
             return JSON.parse(run(entity, parameters, 'GET', null));

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -132,6 +133,51 @@ namespace WastedgeApi
             var parameters = BuildQueryParameters(filters, offset, count, outputFormat);
 
             return new ResultSet(entity, (JObject)await ExecuteJsonRequestAsync(entity.Name, parameters.Parameters, "GET", null), new ApiPager(this, entity, parameters.BaseParameters));
+        }
+
+        public async Task<List<string>> CreateAsync(EntitySchema entity, RecordSet recordSet)
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+            if (recordSet == null)
+                throw new ArgumentNullException(nameof(recordSet));
+
+            if (recordSet.Count == 0)
+                return new List<string>();
+
+            var response = (JObject)await ExecuteJsonRequestAsync(entity.Name, null, "PUT", recordSet.ToJson());
+
+            return ((JArray)response["result"]).Select(p => (string)p).ToList();
+        }
+
+        public async Task<List<string>> UpdateAsync(EntitySchema entity, RecordSet recordSet)
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+            if (recordSet == null)
+                throw new ArgumentNullException(nameof(recordSet));
+
+            if (recordSet.Count == 0)
+                return new List<string>();
+
+            var response = (JObject)await ExecuteJsonRequestAsync(entity.Name, null, "POST", recordSet.ToJson());
+
+            return ((JArray)response["result"]).Select(p => (string)p).ToList();
+        }
+
+        public async Task DeleteAsync(EntitySchema entity, IList<string> ids)
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+            if (ids == null)
+                throw new ArgumentNullException(nameof(ids));
+
+            if (ids.Count == 0)
+                return;
+
+            string path = entity.Name + "/" + String.Join(",", ids);
+
+            await ExecuteJsonRequestAsync(path, null, "DELETE", null);
         }
 
         private QueryParameters BuildQueryParameters(IEnumerable<Filter> filters, int? offset, int? count, OutputFormat outputFormat)
@@ -363,22 +409,47 @@ namespace WastedgeApi
         {
             var webRequest = BuildRequest(path, parameters, method);
 
-            if (request != null)
+            if (request != null || method != "GET")
             {
                 using (var stream = await webRequest.GetRequestStreamAsync())
                 using (var writer = new StreamWriter(stream))
-                using (var json = new JsonTextWriter(writer))
                 {
-                    request.WriteTo(json);
+                    if (request != null)
+                    {
+                        using (var json = new JsonTextWriter(writer))
+                        {
+                            request.WriteTo(json);
+                        }
+                    }
                 }
             }
 
-            using (var response = await webRequest.GetResponseAsync())
-            using (var stream = response.GetResponseStream())
-            using (var reader = new StreamReader(stream))
+            try
             {
-                return ParseJson(await reader.ReadToEndAsync());
+                using (var response = await webRequest.GetResponseAsync())
+                using (var stream = GetResponseStream(response))
+                using (var reader = new StreamReader(stream))
+                {
+                    return ParseJson(await reader.ReadToEndAsync());
+                }
             }
+            catch (WebException ex)
+            {
+                using (var response = ex.Response)
+                using (var stream = GetResponseStream(response))
+                using (var reader = new StreamReader(stream))
+                {
+                    throw new ApiException(reader.ReadToEnd());
+                }
+            }
+        }
+
+        private Stream GetResponseStream(WebResponse response)
+        {
+            if (response.Headers["Content-Encoding"] == "gzip")
+                return new GZipStream(response.GetResponseStream(), CompressionMode.Decompress);
+
+            return response.GetResponseStream();
         }
 
         private JToken ParseJson(string input)
@@ -408,6 +479,16 @@ namespace WastedgeApi
             url.Append("api/rest");
             if (!String.IsNullOrEmpty(path))
                     url.Append('/').Append(path);
+
+            // This is a work around because webspeed doesn't accept PUT or DELETE.
+
+            if (method != "GET" && method != "POST")
+            {
+                if (parameters != null)
+                    parameters += "&";
+                parameters += "$method=" + method;
+                method = "POST";
+            }
 
             if (parameters != null)
                 url.Append('?').Append(parameters);

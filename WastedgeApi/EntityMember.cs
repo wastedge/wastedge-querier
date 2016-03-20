@@ -19,5 +19,10 @@ namespace WastedgeApi
             Name = name;
             Comments = comments;
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

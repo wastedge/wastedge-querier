@@ -89,7 +89,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="EditInExcelUploadForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditInExcelUploadForm.Designer.cs">
+      <DependentUpon>EditInExcelUploadForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditInExcelWaitForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditInExcelWaitForm.Designer.cs">
+      <DependentUpon>EditInExcelWaitForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditInExcelInstructionsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditInExcelInstructionsForm.Designer.cs">
+      <DependentUpon>EditInExcelInstructionsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ExcelExporter.cs" />
+    <Compile Include="ExcelImporter.cs" />
     <Compile Include="FilterControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -135,6 +154,15 @@
     </Compile>
     <Compile Include="Util\VS2012ColorTable.cs" />
     <Compile Include="Util\VS2012ToolStripRenderer.cs" />
+    <EmbeddedResource Include="EditInExcelUploadForm.resx">
+      <DependentUpon>EditInExcelUploadForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditInExcelWaitForm.resx">
+      <DependentUpon>EditInExcelWaitForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditInExcelInstructionsForm.resx">
+      <DependentUpon>EditInExcelInstructionsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FilterControl.resx">
       <DependentUpon>FilterControl.cs</DependentUpon>
     </EmbeddedResource>

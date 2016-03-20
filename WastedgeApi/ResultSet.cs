@@ -13,9 +13,9 @@ namespace WastedgeApi
         private readonly List<object[]> _rows;
         private object[] _row;
         private int _offset;
-        private readonly List<EntityPhysicalField> _fields;
+        private readonly List<EntityTypedField> _fields;
         private readonly Dictionary<string, int> _fieldsByName;
-        private readonly Dictionary<EntityPhysicalField, int> _fieldsByField;
+        private readonly Dictionary<EntityTypedField, int> _fieldsByField;
         private readonly string _nextResult;
 
         public EntitySchema Entity { get; }
@@ -52,7 +52,7 @@ namespace WastedgeApi
             var resultArray = (JArray)results["result"];
             var headers = (JArray)resultArray[0];
 
-            _fields = headers.Select(p => (EntityPhysicalField)entity.Members[(string)p]).ToList();
+            _fields = headers.Select(p => (EntityTypedField)entity.Members[(string)p]).ToList();
             _fieldsByName = _fields.ToDictionary(p => p.Name, p => _fields.IndexOf(p));
             _fieldsByField = _fields.ToDictionary(p => p, p => _fields.IndexOf(p));
 
@@ -106,7 +106,7 @@ namespace WastedgeApi
             return this[index] == null;
         }
 
-        public EntityPhysicalField GetField(int index)
+        public EntityTypedField GetField(int index)
         {
             return _fields[index];
         }

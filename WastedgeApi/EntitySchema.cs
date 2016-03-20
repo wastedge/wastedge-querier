@@ -32,6 +32,8 @@ namespace WastedgeApi
 
             var members = new MemberCollection();
 
+            members.Add(new EntityIdField());
+
             foreach (var field in ((JObject)schema["fields"]))
             {
                 switch ((string)field.Value["type"])
@@ -61,6 +63,14 @@ namespace WastedgeApi
                             (string)field.Value["comments"],
                             (string)field.Value["link_table"],
                             (string)field.Value["link_field"]
+                        ));
+                        break;
+
+                    case "calculated":
+                        members.Add(new EntityCalculatedField(
+                            field.Key,
+                            (string)field.Value["comments"],
+                            ParseDataType((string)field.Value["data_type"])
                         ));
                         break;
                 }

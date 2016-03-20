@@ -34,6 +34,7 @@
             this._grid = new SourceGrid.Grid();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this._exportToExcel = new System.Windows.Forms.ToolStripButton();
+            this._editInExcel = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this._getMoreResults = new System.Windows.Forms.ToolStripButton();
             this._getAllResults = new System.Windows.Forms.ToolStripButton();
@@ -82,6 +83,7 @@
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._exportToExcel,
+            this._editInExcel,
             this.toolStripSeparator1,
             this._getMoreResults,
             this._getAllResults});
@@ -99,6 +101,15 @@
             this._exportToExcel.Size = new System.Drawing.Size(103, 22);
             this._exportToExcel.Text = "Export to Excel";
             this._exportToExcel.Click += new System.EventHandler(this._exportToExcel_Click);
+            // 
+            // _editInExcel
+            // 
+            this._editInExcel.Image = global::WastedgeQuerier.NeutralResources.excel;
+            this._editInExcel.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._editInExcel.Name = "_editInExcel";
+            this._editInExcel.Size = new System.Drawing.Size(89, 22);
+            this._editInExcel.Text = "Edit in Excel";
+            this._editInExcel.Click += new System.EventHandler(this._editInExcel_Click);
             // 
             // toolStripSeparator1
             // 
@@ -134,6 +145,7 @@
             this.Name = "ResultForm";
             this.ShowInTaskbar = false;
             this.Text = "Results";
+            this.Shown += new System.EventHandler(this.ResultForm_Shown);
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.toolStrip1.ResumeLayout(false);
@@ -153,5 +165,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton _getMoreResults;
         private System.Windows.Forms.ToolStripButton _getAllResults;
+        private System.Windows.Forms.ToolStripButton _editInExcel;
     }
 }

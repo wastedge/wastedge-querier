@@ -140,34 +140,11 @@ namespace WastedgeQuerier
 
         private void _export_Click(object sender, EventArgs e)
         {
-            ResultSet resultSet = null;
+            var filters = _filterControls.Controls.OfType<FilterControl>().Select(p => p.GetFilter()).ToList();
 
-            using (var form = new LoadingForm())
+            using (var form = new ResultForm(_api, _schema, filters))
             {
-                form.LoadingText = $"Loading {Constants.PageSize} results...";
-
-                form.Shown += async (s, ea) =>
-                {
-                    resultSet = await _api.QueryAsync(
-                        _schema,
-                        _filterControls.Controls.OfType<FilterControl>().Select(p => p.GetFilter()),
-                        null,
-                        Constants.PageSize,
-                        OutputFormat.Compact
-                    );
-
-                    form.Dispose();
-                };
-
                 form.ShowDialog(this);
-            }
-
-            if (resultSet != null)
-            {
-                using (var form = new ResultForm(resultSet))
-                {
-                    form.ShowDialog(this);
-                }
             }
         }
 
