@@ -204,6 +204,10 @@
     <None Include="Resources\close.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\WastedgeApi\WastedgeApi\WastedgeApi.csproj">
+      <Project>{c6bd0c13-2385-48cc-a649-7ab79a14f8f2}</Project>
+      <Name>WastedgeApi</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JintDebugger\JintDebugger\JintDebugger.csproj">
       <Project>{39728704-0a80-44cc-ae2c-8365b2efa1ea}</Project>
       <Name>JintDebugger</Name>
@@ -211,10 +215,6 @@
     <ProjectReference Include="..\JintDebugger\Jint\Jint\Jint.csproj">
       <Project>{678738da-f723-4920-b9e5-cad667104bda}</Project>
       <Name>Jint</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WastedgeApi\WastedgeApi.csproj">
-      <Project>{c6bd0c13-2385-48cc-a649-7ab79a14f8f2}</Project>
-      <Name>WastedgeApi</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
