@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jint", "JintDebugger\Jint\J
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JintDebugger", "JintDebugger\JintDebugger\JintDebugger.csproj", "{39728704-0A80-44CC-AE2C-8365B2EFA1EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WastedgeApi", "..\WastedgeApi\WastedgeApi\WastedgeApi.csproj", "{C6BD0C13-2385-48CC-A649-7AB79A14F8F2}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{39728704-0A80-44CC-AE2C-8365B2EFA1EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39728704-0A80-44CC-AE2C-8365B2EFA1EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39728704-0A80-44CC-AE2C-8365B2EFA1EA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C6BD0C13-2385-48CC-A649-7AB79A14F8F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C6BD0C13-2385-48CC-A649-7AB79A14F8F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C6BD0C13-2385-48CC-A649-7AB79A14F8F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C6BD0C13-2385-48CC-A649-7AB79A14F8F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

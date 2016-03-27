@@ -117,21 +117,21 @@ namespace WastedgeQuerier
         {
             form.Text = $"Creating {@new.Count} new records...";
 
-            await _api.CreateAsync(_entity, @new);
+            await _api.CreateCreate(_entity, @new).ExecuteAsync();
         }
 
         private async Task UploadModified(LoadingForm form, RecordSet modified)
         {
             form.Text = $"Updating {modified.Count} records...";
 
-            await _api.UpdateAsync(_entity, modified);
+            await _api.CreateUpdate(_entity, modified).ExecuteAsync();
         }
 
         private async Task UploadDeleted(LoadingForm form, IList<string> deleted)
         {
             form.Text = $"Deleting {deleted.Count} records...";
 
-            await _api.DeleteAsync(_entity, deleted);
+            await _api.CreateDelete(_entity, deleted).ExecuteAsync();
         }
     }
 }

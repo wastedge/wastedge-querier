@@ -72,7 +72,7 @@
             this._grid.Location = new System.Drawing.Point(1, 1);
             this._grid.Name = "_grid";
             this._grid.OptimizeMode = SourceGrid.CellOptimizeMode.ForRows;
-            this._grid.SelectionMode = SourceGrid.GridSelectionMode.Cell;
+            this._grid.SelectionMode = SourceGrid.GridSelectionMode.Row;
             this._grid.Size = new System.Drawing.Size(683, 467);
             this._grid.TabIndex = 0;
             this._grid.TabStop = true;

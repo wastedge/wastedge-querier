@@ -28,6 +28,7 @@ namespace WastedgeQuerier
         private readonly IView _numberView;
         private readonly IView _nullView;
         private readonly List<ResultSet> _resultSets = new List<ResultSet>();
+        private ApiQuery _query;
 
         public ResultForm(Api api, EntitySchema entity, List<Filter> filters)
         {
@@ -109,7 +110,7 @@ namespace WastedgeQuerier
                 _grid.AutoSizeCells(new SourceGrid.Range(
                     new SourceGrid.Position(_grid.FixedRows, 0),
                     new SourceGrid.Position(Math.Min(20, _grid.Rows.Count - _grid.FixedRows), _grid.ColumnsCount - _grid.FixedRows)
-                    ));
+                ));
             }
 
             UpdateEnabled();
@@ -182,7 +183,9 @@ namespace WastedgeQuerier
 
                 form.Shown += async (s, ea) =>
                 {
-                    LoadResultSet(await _resultSet.GetNextAsync(Constants.PageSize));
+                    _query.Start = _resultSet.NextResult;
+
+                    LoadResultSet(await _query.ExecuteReaderAsync());
 
                     form.Dispose();
                 };
@@ -210,9 +213,13 @@ namespace WastedgeQuerier
                     int count = 0;
                     var resultSets = new List<ResultSet>();
 
+                    _query.Count = null;
+
                     while (true)
                     {
-                        var resultSet = await _resultSet.GetNextAsync();
+                        _query.Start = _resultSet.NextResult;
+
+                        var resultSet = await _query.ExecuteReaderAsync();
 
                         count += resultSet.RowCount;
 
@@ -373,15 +380,11 @@ namespace WastedgeQuerier
 
                 form.Shown += async (s, ea) =>
                 {
-                    var resultSet = await _api.QueryAsync(
-                        _entity,
-                        _filters,
-                        null,
-                        Constants.PageSize,
-                        OutputFormat.Compact
-                        );
+                    _query = _api.CreateQuery(_entity);
+                    _query.Filters.AddRange(_filters);
+                    _query.Count = Constants.PageSize;
 
-                    LoadResultSet(resultSet);
+                    LoadResultSet(await _query.ExecuteReaderAsync());
 
                     form.Dispose();
                 };
