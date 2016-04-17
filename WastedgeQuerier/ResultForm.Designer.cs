@@ -118,7 +118,7 @@
             // 
             // _getMoreResults
             // 
-            this._getMoreResults.Image = global::WastedgeQuerier.NeutralResources.arrow_forward;
+            this._getMoreResults.Image = global::WastedgeQuerier.NeutralResources.navigate_down;
             this._getMoreResults.ImageTransparentColor = System.Drawing.Color.Magenta;
             this._getMoreResults.Name = "_getMoreResults";
             this._getMoreResults.Size = new System.Drawing.Size(116, 22);
@@ -127,7 +127,7 @@
             // 
             // _getAllResults
             // 
-            this._getAllResults.Image = global::WastedgeQuerier.NeutralResources.arrow_forward_double;
+            this._getAllResults.Image = global::WastedgeQuerier.NeutralResources.navigate_down2;
             this._getAllResults.ImageTransparentColor = System.Drawing.Color.Magenta;
             this._getAllResults.Name = "_getAllResults";
             this._getAllResults.Size = new System.Drawing.Size(102, 22);
