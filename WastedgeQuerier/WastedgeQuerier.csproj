@@ -120,8 +120,18 @@
     <Compile Include="FilterControl.Designer.cs">
       <DependentUpon>FilterControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="JavaScript\Disposer.cs" />
     <Compile Include="JavaScript\JavaScriptForm.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="JavaScript\JavaScriptUi.cs" />
+    <Compile Include="JavaScript\JavaScriptUtil.cs" />
+    <Compile Include="JavaScript\JintExtensions.cs" />
+    <Compile Include="JavaScript\UiForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="JavaScript\UiForm.Designer.cs">
+      <DependentUpon>UiForm.cs</DependentUpon>
     </Compile>
     <Compile Include="LoadingForm.cs">
       <SubType>Form</SubType>
@@ -171,6 +181,9 @@
     <EmbeddedResource Include="FilterControl.resx">
       <DependentUpon>FilterControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="JavaScript\UiForm.resx">
+      <DependentUpon>UiForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LoadingForm.resx">
       <DependentUpon>LoadingForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -194,7 +207,6 @@
   <ItemGroup>
     <None Include="Resources\navigate_down2.png" />
     <None Include="Resources\navigate_down.png" />
-    <EmbeddedResource Include="JavaScript\Lib.js" />
     <Content Include="mainicon.ico" />
     <Content Include="NguScript.xml" />
     <None Include="Resources\stop-process.png" />
