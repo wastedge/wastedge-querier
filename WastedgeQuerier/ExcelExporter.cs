@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 using WastedgeApi;
 
 namespace WastedgeQuerier
@@ -26,7 +27,7 @@ namespace WastedgeQuerier
 
             var firstResultSet = resultSets[0];
 
-            var workbook = new HSSFWorkbook();
+            var workbook = new XSSFWorkbook();
             var defaultFont = workbook.GetFontAt(0);
             defaultFont.FontName = DefaultFont;
             defaultFont.FontHeightInPoints = DefaultFontHeight;
@@ -145,7 +146,7 @@ namespace WastedgeQuerier
                 throw new ArgumentException("Invalid type");
         }
 
-        private static ICellStyle CreateDateStyle(HSSFWorkbook workbook, bool withTime)
+        private static ICellStyle CreateDateStyle(XSSFWorkbook workbook, bool withTime)
         {
             var dateStyle = workbook.CreateCellStyle();
 
@@ -166,13 +167,11 @@ namespace WastedgeQuerier
             return dateStyle;
         }
 
-        private static ICellStyle CreateHeaderStyle(HSSFWorkbook workbook)
+        private static ICellStyle CreateHeaderStyle(XSSFWorkbook workbook)
         {
-            var palette = workbook.GetCustomPalette();
+            var style = (XSSFCellStyle)workbook.CreateCellStyle();
 
-            var style = workbook.CreateCellStyle();
-
-            style.FillForegroundColor = palette.FindColor(192, 192, 192).Indexed;
+            style.FillForegroundXSSFColor = new XSSFColor(new byte[] { 192, 192, 192 });
             style.FillPattern = FillPattern.SolidForeground;
             style.Alignment = NPOI.SS.UserModel.HorizontalAlignment.Center;
 

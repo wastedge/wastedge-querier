@@ -251,9 +251,9 @@ namespace WastedgeQuerier
 
             using (var form = new SaveFileDialog())
             {
-                form.Filter = "Excel (*.xls)|*.xls|All Files (*.*)|*.*";
+                form.Filter = "Excel (*.xlsx)|*.xlsx|All Files (*.*)|*.*";
                 form.RestoreDirectory = true;
-                form.FileName = "Wastedge Export.xls";
+                form.FileName = "Wastedge Export.xlsx";
 
                 if (form.ShowDialog(this) != DialogResult.OK)
                     return;
@@ -293,7 +293,7 @@ namespace WastedgeQuerier
                 fileName = "Wastedge Export";
                 if (i > 0)
                     fileName += $" ({i})";
-                fileName += ".xls";
+                fileName += ".xlsx";
 
                 fileName = Path.Combine(Path.GetTempPath(), fileName);
 
