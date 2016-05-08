@@ -3,27 +3,39 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using WastedgeApi;
 using WastedgeQuerier.JavaScript;
+using WastedgeQuerier.Plugins;
 
 namespace WastedgeQuerier
 {
     public partial class MainForm : SystemEx.Windows.Forms.Form
     {
+        private readonly string[] _args;
         private readonly Api _api;
         private EntitySchema _schema;
         private readonly Dictionary<string, EntitySchema> _schemas = new Dictionary<string, EntitySchema>();
         private JavaScriptForm _javaScriptForm;
+        private readonly PluginManager _pluginManager;
 
-        public MainForm(ApiCredentials credentials)
+        public MainForm(ApiCredentials credentials, string[] args)
         {
             if (credentials == null)
                 throw new ArgumentNullException(nameof(credentials));
+            if (args == null)
+                throw new ArgumentNullException(nameof(args));
+
+            _args = args;
 
             InitializeComponent();
+
+            _pluginManager = new PluginManager(Path.Combine(Program.DataPath, "Plugins"), _pluginsMenuItem, _pluginsPluginManagerSeparatorMenuItem);
+            _pluginManager.Reload();
+            _pluginManager.PluginOpened += _pluginManager_PluginOpened;
 
             _filters.Visible = false;
 
@@ -35,6 +47,11 @@ namespace WastedgeQuerier
             UpdateEnabled();
 
             _container.Enabled = false;
+        }
+
+        private void _pluginManager_PluginOpened(object sender, PluginEventArgs e)
+        {
+            e.Plugin.Run(_api.Credentials, this);
         }
 
         private void _fileExitMenuItem_Click(object sender, EventArgs e)
@@ -52,14 +69,39 @@ namespace WastedgeQuerier
             _tables.Items.AddRange(schema.Entities.OrderBy(p => p).Cast<object>().ToArray());
             _tables.EndUpdate();
 
-#if DEBUG
-            _tables.SelectedIndex = _tables.Items.IndexOf("system/customer");
-#endif
-
             _container.Enabled = true;
 
-            if (Environment.GetCommandLineArgs().Skip(1).Any(p => p.EndsWith(".js")))
-                _toolsJavaScriptConsoleMenuItem.PerformClick();
+            ProcessArguments();
+        }
+
+        private void ProcessArguments()
+        {
+            foreach (string arg in _args)
+            {
+                if (File.Exists(arg) && Path.HasExtension(arg))
+                {
+                    switch (Path.GetExtension(arg).ToLowerInvariant())
+                    {
+                        case ".js":
+                            EnsureJavaScriptForm();
+                            _javaScriptForm.OpenEditor(arg);
+                            break;
+
+                        case ".weproj":
+                            EnsureJavaScriptForm();
+                            _javaScriptForm.OpenProject(arg);
+                            break;
+
+                        case ".wqpkg":
+                            using (var form = new PluginManagerForm(_api.Credentials))
+                            {
+                                form.LoadPackage(arg);
+                                form.ShowDialog(this);
+                            }
+                            return;
+                    }
+                }
+            }
         }
 
         private async void _tables_SelectedIndexChanged(object sender, EventArgs e)
@@ -150,6 +192,11 @@ namespace WastedgeQuerier
 
         private void _toolsJavaScriptConsoleMenuItem_Click(object sender, EventArgs e)
         {
+            EnsureJavaScriptForm();
+        }
+
+        private void EnsureJavaScriptForm()
+        {
             if (_javaScriptForm != null)
             {
                 _javaScriptForm.BringToFront();
@@ -160,6 +207,16 @@ namespace WastedgeQuerier
             _javaScriptForm.Disposed += (s, ea) => _javaScriptForm = null;
 
             _javaScriptForm.Show();
+        }
+
+        private void _pluginsPluginManagerMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var form = new PluginManagerForm(_api.Credentials))
+            {
+                form.ShowDialog(this);
+
+                _pluginManager.Reload();
+            }
         }
     }
 }

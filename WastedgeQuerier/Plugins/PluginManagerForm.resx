@@ -117,50 +117,46 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="navigate_down" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\navigate_down.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <metadata name="imageList1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>227, 17</value>
+  </metadata>
+  <data name="imageList1.ImageStream" mimetype="application/x-microsoft.net.object.binary.base64">
+    <value>
+        AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
+        LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
+        ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAAK
+        BgAAAk1TRnQBSQFMAwEBAAEoAQABKAEAARABAAEQAQAE/wEhAQAI/wFCAU0BNgcAATYDAAEoAwABQAMA
+        ARADAAEBAQABIAYAARASAAE1AbwB5QH/AR8BtAHlAf8BHwG0AeUB/wEfAbQB5QH/AR8BtAHlAf8BHwG0
+        AeUB/wEfAbQB5QH/AR8BtAHlAf8BHwG0AeUB/wEfAbQB5QH/AR8BtAHlAf8BHwG0AeUB/wEfAbQB5QH/
+        AR8BtAHlAf8BHwG0AeUB/wEfAbQB5QH/wAABQwG/AeUB/wFIAdYC/wErAc0C/wEjAcsC/wElAcsC/wEl
+        AcsC/wElAcsC/wElAcsC/wElAcsC/wElAcsC/wElAcsC/wElAcsC/wElAcsC/wElAcsC/wEoAc4C/wEh
+        AbYB5QH/wAABQwG9AeUB/wFOAdgC/wFNAdcC/wE1Ac0C/wEjAckC/wEjAckC/wEjAckC/wEjAckC/wEj
+        AckC/wEjAckC/wEjAckC/wEjAckC/wEjAckC/wEjAckC/wElAcsC/wEhAbYB5QH/wAABQwG9AeUB/wFL
+        AdgC/wFLAdUC/wFOAdgC/wFFAdUC/wEoAcoC/wEjAckC/wEjAckC/wEjAckC/wEjAckC/wEjAckC/wEj
+        AckC/wEjAckC/wEjAckC/wElAcsC/wEhAbYB5QH/wAABQwG9AeUB/wFLAdgC/wFJAdMC/wFLAdUC/wFO
+        AdgC/wFMAdcC/wExAcwC/wEjAckC/wEjAckC/wEjAckC/wEjAckC/wEjAckC/wEjAckC/wEjAckC/wEl
+        AcsC/wEhAbYB5QH/wAABQwG9AeUB/wFLAdgC/wFJAdMC/wFJAdMC/wFLAdUC/wFLAdUC/wFOAdgC/wFB
+        AdQC/wElAckC/wEjAckC/wEjAckC/wEjAckC/wEjAckC/wEjAckC/wElAcsC/wEhAbYB5QH/wAABQwG9
+        AeUB/wFLAdgC/wFJAdMC/wFJAdMC/wFJAdMC/wFJAdMC/wFLAdUC/wFOAdgC/wFKAdYC/wEtAcsC/wEj
+        AckC/wEjAckC/wEjAckC/wEjAckC/wElAcsC/wEhAbYB5QH/wAABQwG9AeUB/wFLAdgC/wFJAdMC/wFJ
+        AdMC/wFJAdMC/wFJAdMC/wFJAdMC/wFLAdUC/wFOAdgC/wFNAdcC/wE9AdAC/wEkAckC/wEjAckC/wEj
+        AckC/wElAcsC/wEhAbYB5QH/wAABQwG9AeUB/wFLAdgC/wFJAdMC/wFJAdMC/wFJAdMC/wFJAdMC/wFJ
+        AdMC/wFJAdMC/wFLAdUC/wFLAdUC/wFOAdgC/wFHAdYC/wEpAcoC/wEjAckC/wElAcsC/wEhAbYB5QH/
+        wAABQgG/AeUB/wFOAdgC/wFLAdUC/wFLAdUC/wFLAdUC/wFLAdUC/wFLAdUC/wFLAdUC/wFJAdMC/wFJ
+        AdMC/wFLAdUC/wFOAdgC/wFMAdcC/wE0Ac0C/wEjAcsC/wEfAbQB5QH/wQABnwHlAf8BAAGzAv8BAAGz
+        Av8BAAGzAv8BAAGzAv8BHAG/Av8BTQHXAv8BTgHYAv8BSwHVAv8BSwHVAv8BSwHVAv8BSwHVAv8BSwHV
+        Av8BTgHYAv8BRAHVAv8BJAG3AeUB/8EAAZ8B5QH/AQABswL/AQABswL/AQABswL/AQABswL/AQABswL/
+        AQABswL/AQABswL/AQABswL/AQABswL/AQABswL/AQABswL/AQABswL/AQABswL/AQABswL/AQ0BpwHl
+        Af/BAAGhAeUB/wEAAbYC/wEAAbYC/wEAAbYC/wEAAbYC/wEAAaEB5QH/AQABngHlAf8BAAGhAeUB/wEA
+        AZ4B5QH/AQABngHlAf8BAAGhAeUB/wEAAZ4B5QH/AQABngHlAf8BAAGhAeUB/wEAAZ4B5QH/AQABngHl
+        Af/BAAGeAeUB/wEAAaEB5QH/AQABnwHlAf8BAAGhAeUB/wEAAZ4B5QH/AQABngHlAf//AP8A6gABQgFN
+        AT4HAAE+AwABKAMAAUADAAEQAwABAQEAAQEFAAGAFwAD/2kAAQMB/wYAAv8GAAL/BgAL
+</value>
   </data>
-  <data name="stop_process" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\stop-process.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="start" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\start.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="excel" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\excel.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="step_over" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\step-over.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_continue" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\continue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="close" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\close.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="navigate_down2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\navigate_down2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="step_out" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\step-out.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="start_without_debugging" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\start-without-debugging.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="mainicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>mainicon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="step_into" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\step-into.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_break" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\break.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="add" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
+  <metadata name="toolStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <metadata name="toolStrip2.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>122, 17</value>
+  </metadata>
 </root>

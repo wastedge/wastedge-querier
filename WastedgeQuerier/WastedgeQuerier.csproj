@@ -90,6 +90,10 @@
       <HintPath>..\packages\WastedgeApi.1.3.0.0\lib\net45\WastedgeApi.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=2.9.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\JintDebugger\packages\DockPanelSuite.2.10.0-beta2\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CollectionExtensions.cs" />
@@ -121,12 +125,48 @@
       <DependentUpon>FilterControl.cs</DependentUpon>
     </Compile>
     <Compile Include="JavaScript\Disposer.cs" />
+    <Compile Include="JavaScript\JavaScriptForm.Designer.cs">
+      <DependentUpon>JavaScriptForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="JavaScript\NewProjectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="JavaScript\NewProjectForm.Designer.cs">
+      <DependentUpon>NewProjectForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="JavaScript\ProjectItem.cs" />
     <Compile Include="JavaScript\JavaScriptForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="JavaScript\JavaScriptForm.Initialize.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="JavaScript\JavaScriptUi.cs" />
     <Compile Include="JavaScript\JavaScriptUtil.cs" />
     <Compile Include="JavaScript\JintExtensions.cs" />
+    <Compile Include="JavaScript\Project.cs" />
+    <Compile Include="JavaScript\ProjectControl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="JavaScript\ProjectControl.Designer.cs">
+      <DependentUpon>ProjectControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="JavaScript\ProjectFile.cs" />
+    <Compile Include="JavaScript\ProjectFolder.cs" />
+    <Compile Include="JavaScript\ProjectItemEventHandler.cs" />
+    <Compile Include="JavaScript\ProjectItemType.cs" />
+    <Compile Include="JavaScript\ProjectPropertiesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="JavaScript\ProjectPropertiesForm.Designer.cs">
+      <DependentUpon>ProjectPropertiesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="JavaScript\ProjectRoot.cs" />
+    <Compile Include="JavaScript\RecentItemEventHandler.cs" />
+    <Compile Include="JavaScript\RecentItemsManager.cs" />
+    <Compile Include="JavaScript\TaskDialogEx.cs" />
+    <Compile Include="JavaScript\TreeNodeExtensions.cs" />
+    <Compile Include="JavaScript\TreeViewManager.cs" />
     <Compile Include="JavaScript\UiForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -156,8 +196,26 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>NeutralResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Plugins\Plugin.cs" />
+    <Compile Include="Plugins\PluginEventHandler.cs" />
+    <Compile Include="Plugins\PluginFolder.cs" />
+    <Compile Include="Plugins\PluginManager.cs" />
+    <Compile Include="Plugins\PluginManagerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Plugins\PluginManagerForm.Designer.cs">
+      <DependentUpon>PluginManagerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Plugins\PluginNode.cs" />
+    <Compile Include="Plugins\PluginRunner.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="JavaScript\RenameForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="JavaScript\RenameForm.Designer.cs">
+      <DependentUpon>RenameForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ResultForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -167,6 +225,11 @@
     <Compile Include="SimpleButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Util\NativeMethods.cs" />
+    <Compile Include="Util\ShellRegistration.cs" />
+    <Compile Include="Util\ShellRegistrationConfiguration.cs" />
+    <Compile Include="Util\ShellRegistrationLocation.cs" />
+    <Compile Include="Util\ShellUtil.cs" />
     <Compile Include="Util\VS2012ColorTable.cs" />
     <Compile Include="Util\VS2012ToolStripRenderer.cs" />
     <EmbeddedResource Include="EditInExcelUploadForm.resx">
@@ -180,6 +243,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FilterControl.resx">
       <DependentUpon>FilterControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="JavaScript\JavaScriptForm.resx">
+      <DependentUpon>JavaScriptForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="JavaScript\NewProjectForm.resx">
+      <DependentUpon>NewProjectForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="JavaScript\ProjectControl.resx">
+      <DependentUpon>ProjectControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="JavaScript\ProjectPropertiesForm.resx">
+      <DependentUpon>ProjectPropertiesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="JavaScript\UiForm.resx">
       <DependentUpon>UiForm.cs</DependentUpon>
@@ -197,6 +272,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>NeutralResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="JavaScript\RenameForm.resx">
+      <DependentUpon>RenameForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Plugins\PluginManagerForm.resx">
+      <DependentUpon>PluginManagerForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ResultForm.resx">
       <DependentUpon>ResultForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -205,8 +286,13 @@
     <None Include="WastedgeQuerier.nuspec" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\document.ico" />
+    <EmbeddedResource Include="Resources\package.ico" />
+    <None Include="Resources\delete.png" />
+    <None Include="Resources\add.png" />
     <None Include="Resources\navigate_down2.png" />
     <None Include="Resources\navigate_down.png" />
+    <EmbeddedResource Include="JavaScript\main.js" />
     <Content Include="mainicon.ico" />
     <Content Include="NguScript.xml" />
     <None Include="Resources\stop-process.png" />

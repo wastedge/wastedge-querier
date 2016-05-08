@@ -33,6 +33,9 @@
             this.mainMenu1 = new System.Windows.Forms.MainMenu(this.components);
             this._fileMenuItem = new System.Windows.Forms.MenuItem();
             this._fileExitMenuItem = new System.Windows.Forms.MenuItem();
+            this._pluginsMenuItem = new System.Windows.Forms.MenuItem();
+            this._pluginsPluginManagerSeparatorMenuItem = new System.Windows.Forms.MenuItem();
+            this._pluginsPluginManagerMenuItem = new System.Windows.Forms.MenuItem();
             this._toolsMenuItem = new System.Windows.Forms.MenuItem();
             this._toolsJavaScriptConsoleMenuItem = new System.Windows.Forms.MenuItem();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -63,6 +66,7 @@
             // 
             this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this._fileMenuItem,
+            this._pluginsMenuItem,
             this._toolsMenuItem});
             // 
             // _fileMenuItem
@@ -79,9 +83,28 @@
             this._fileExitMenuItem.Text = "E&xit";
             this._fileExitMenuItem.Click += new System.EventHandler(this._fileExitMenuItem_Click);
             // 
+            // _pluginsMenuItem
+            // 
+            this._pluginsMenuItem.Index = 1;
+            this._pluginsMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this._pluginsPluginManagerSeparatorMenuItem,
+            this._pluginsPluginManagerMenuItem});
+            this._pluginsMenuItem.Text = "&Plugins";
+            // 
+            // _pluginsPluginManagerSeparatorMenuItem
+            // 
+            this._pluginsPluginManagerSeparatorMenuItem.Index = 0;
+            this._pluginsPluginManagerSeparatorMenuItem.Text = "-";
+            // 
+            // _pluginsPluginManagerMenuItem
+            // 
+            this._pluginsPluginManagerMenuItem.Index = 1;
+            this._pluginsPluginManagerMenuItem.Text = "&Plugin Manager";
+            this._pluginsPluginManagerMenuItem.Click += new System.EventHandler(this._pluginsPluginManagerMenuItem_Click);
+            // 
             // _toolsMenuItem
             // 
-            this._toolsMenuItem.Index = 1;
+            this._toolsMenuItem.Index = 2;
             this._toolsMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this._toolsJavaScriptConsoleMenuItem});
             this._toolsMenuItem.Text = "&Tools";
@@ -310,6 +333,9 @@
         private System.Windows.Forms.ComboBox _filter;
         private System.Windows.Forms.Button _add;
         private System.Windows.Forms.Panel _filterControls;
+        private System.Windows.Forms.MenuItem _pluginsMenuItem;
+        private System.Windows.Forms.MenuItem _pluginsPluginManagerSeparatorMenuItem;
+        private System.Windows.Forms.MenuItem _pluginsPluginManagerMenuItem;
     }
 }
 
