@@ -149,11 +149,13 @@ namespace WastedgeQuerier.JavaScript
 
                 if (form.ShowDialog(Owner) == DialogResult.OK)
                 {
-                    using (var stream = form.OpenFile())
-                    using (var writer = new StreamWriter(stream))
+                    if (content != null)
                     {
-                        if (content != null)
+                        using (var stream = form.OpenFile())
+                        using (var writer = new StreamWriter(stream))
+                        {
                             writer.Write(content);
+                        }
                     }
 
                     return form.FileName;
@@ -166,17 +168,17 @@ namespace WastedgeQuerier.JavaScript
         private void InitFileDialog(FileDialog form, ObjectInstance obj)
         {
             if (obj.HasOwnProperty("title"))
-                form.Title = obj.Get("title").AsString();
+                form.Title = obj.Get("title").ConvertToString();
             if (obj.HasOwnProperty("filter"))
-                form.Filter = obj.Get("filter").AsString();
+                form.Filter = obj.Get("filter").ConvertToString();
             if (obj.HasOwnProperty("filename"))
-                form.FileName = obj.Get("filename").AsString();
+                form.FileName = obj.Get("filename").ConvertToString();
         }
 
         public void Open(string fileName)
         {
             if (fileName == null)
-                throw new ArgumentNullException(nameof(fileName));
+                return;
 
             try
             {

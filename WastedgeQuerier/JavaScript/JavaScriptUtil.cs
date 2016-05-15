@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using SystemEx.Windows.Forms;
 using Jint;
 using Jint.Native;
 using Jint.Runtime;
 using WastedgeApi;
+using WastedgeQuerier.JavaScript.Excelnterop;
 
 namespace WastedgeQuerier.JavaScript
 {
@@ -31,8 +30,9 @@ namespace WastedgeQuerier.JavaScript
             if (owner == null)
                 throw new ArgumentNullException(nameof(owner));
 
-            engine.SetValue("api", BuildApi(engine));
-            engine.SetValue("ui", BuildUi(engine, owner));
+            engine.SetValue("Api", BuildApi(engine));
+            engine.SetValue("UI", BuildUi(engine, owner));
+            new ExcelInterop(engine, owner).Setup();
         }
 
         private object BuildUi(Engine engine, System.Windows.Forms.Form owner)
@@ -57,14 +57,14 @@ namespace WastedgeQuerier.JavaScript
 
             return new
             {
-                query = new Func<string, string, int?, int?, string, bool?, JsValue>((entity, weql, offset, count, order, compact) =>
+                query = new Func<string, string, JsValue, JsValue, string, JsValue, JsValue>((entity, weql, offset, count, order, compact) =>
                 {
                     var parameters = new ParameterBuilder()
                         .Add("$query", weql)
-                        .Add("$offset", offset)
-                        .Add("$count", count)
+                        .Add("$offset", offset.ConvertToInt32())
+                        .Add("$count", count.ConvertToInt32())
                         .Add("$order", order)
-                        .Add("$output", compact.GetValueOrDefault() ? "compact" : "normal")
+                        .Add("$output", compact.ConvertToBoolean().GetValueOrDefault() ? "compact" : "normal")
                         .ToString();
 
                     return Execute(engine, () => api.ExecuteRaw(entity, parameters, "GET", null));
@@ -77,6 +77,9 @@ namespace WastedgeQuerier.JavaScript
                 ),
                 delete = new Func<string, JsValue, JsValue>((path, request) =>
                     Execute(engine, () => api.ExecuteRaw(path, null, "DELETE", SerializeRequest(engine, request)))
+                ),
+                schema = new Func<string, JsValue>(path =>
+                    Execute(engine, () => api.ExecuteRaw(path, "$meta=true", "GET", null))
                 )
             };
         }
@@ -129,9 +132,9 @@ namespace WastedgeQuerier.JavaScript
         private string SerializeRequest(Engine engine, JsValue value)
         {
             if (value.IsObject())
-                return engine.Json.Stringify(engine.Json, new[] { value }).AsString();
+                return engine.Json.Stringify(engine.Json, new[] { value }).ConvertToString();
             if (value.IsString())
-                return value.AsString();
+                return value.ConvertToString();
             return null;
         }
 
@@ -145,7 +148,10 @@ namespace WastedgeQuerier.JavaScript
                 {
                     if (_sb.Length > 0)
                         _sb.Append('&');
-                    _sb.Append(Uri.EscapeDataString(name)).Append('=').Append(Uri.EscapeDataString(value.ToString()));
+                    _sb
+                        .Append(Uri.EscapeDataString(name))
+                        .Append('=')
+                        .Append(Uri.EscapeDataString(value.ToString()));
                 }
 
                 return this;

@@ -57,9 +57,9 @@ namespace WastedgeQuerier.JavaScript
                     }
 
                     var field = value.AsObject();
-                    string name = field.Get("name").AsString();
-                    string label = field.Get("label").AsString();
-                    var type = ParseType(field.Get("type").AsString());
+                    string name = field.Get("name").ConvertToString();
+                    string label = field.Get("label").ConvertToString();
+                    var type = ParseType(field.Get("type").ConvertToString());
                     ArrayInstance list = null;
                     if (field.HasOwnProperty("list"))
                         list = field.Get("list").AsArray();
@@ -121,7 +121,7 @@ namespace WastedgeQuerier.JavaScript
                     {
                         var values = BuildValues(ui.Engine, controls);
                         var result = validate.Invoke(values);
-                        if (!result.IsBoolean() || !result.AsBoolean())
+                        if (!result.ConvertToBoolean().GetValueOrDefault())
                             return;
                     }
 
@@ -224,7 +224,7 @@ namespace WastedgeQuerier.JavaScript
 
             public override void SetValue(JsValue value)
             {
-                Control.Text = value.AsString();
+                Control.Text = value.ConvertToString();
             }
         }
 
@@ -243,11 +243,7 @@ namespace WastedgeQuerier.JavaScript
 
             public override void SetValue(JsValue value)
             {
-                var textBox = (SimpleNumericTextBox)Control;
-                if (value.IsNumber())
-                    textBox.Value = (decimal)value.AsNumber();
-                else
-                    textBox.Value = null;
+                ((SimpleNumericTextBox)Control).Value = (decimal)value.ConvertToDouble();
             }
         }
 
@@ -269,11 +265,7 @@ namespace WastedgeQuerier.JavaScript
 
             public override void SetValue(JsValue value)
             {
-                var checkBox = (CheckBox)Control;
-                if (value.IsBoolean())
-                    checkBox.Checked = value.AsBoolean();
-                else
-                    checkBox.Checked = false;
+                ((CheckBox)Control).Checked = value.ConvertToBoolean().GetValueOrDefault();
             }
         }
 
@@ -338,7 +330,7 @@ namespace WastedgeQuerier.JavaScript
 
                 comboBox.Items.Add("");
 
-                list.ForEach((index, value) => comboBox.Items.Add(value.AsString()));
+                list.ForEach((index, value) => comboBox.Items.Add(value.ConvertToString()));
             }
 
             public override JsValue GetValue(Engine engine)
@@ -353,12 +345,7 @@ namespace WastedgeQuerier.JavaScript
 
             public override void SetValue(JsValue value)
             {
-                var comboBox = (ComboBox)Control;
-
-                if (value.IsNumber())
-                    comboBox.SelectedIndex = (int)value.AsNumber() + 1;
-                else
-                    comboBox.SelectedIndex = 0;
+                ((ComboBox)Control).SelectedIndex = value.ConvertToInt32().Map(0, p => p + 1);
             }
         }
     }

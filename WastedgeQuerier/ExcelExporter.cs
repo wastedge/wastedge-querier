@@ -110,7 +110,7 @@ namespace WastedgeQuerier
             if (pos == -1)
                 return name;
 
-            return name.Substring(0, pos) + " (" + name.Substring(pos + 1).Replace('/', ' ') + ")";
+            return name.Substring(pos + 1) + " (" + name.Substring(0, pos).Replace('/', ' ') + ")";
         }
 
         private void AddCell(IRow row, int column, object value, ICellStyle style)
@@ -149,18 +149,9 @@ namespace WastedgeQuerier
         private static ICellStyle CreateDateStyle(XSSFWorkbook workbook, bool withTime)
         {
             var dateStyle = workbook.CreateCellStyle();
-
             var dataFormat = workbook.CreateDataFormat();
 
-            var dateTimeFormat = Thread.CurrentThread.CurrentCulture.DateTimeFormat;
-
-            string format = dateTimeFormat.ShortDatePattern;
-
-            if (withTime)
-                format += " " + dateTimeFormat.ShortTimePattern;
-
-            if (format.EndsWith(" tt") || format.EndsWith(" TT"))
-                format = format.Substring(0, format.Length - 2) + "AM/PM";
+            string format = withTime ? ExcelUtil.GetDateTimeFormat() : ExcelUtil.GetDateFormat();
 
             dateStyle.DataFormat = dataFormat.GetFormat(format);
 
