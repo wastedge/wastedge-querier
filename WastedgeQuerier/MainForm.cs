@@ -97,6 +97,7 @@ namespace WastedgeQuerier
                             {
                                 form.LoadPackage(arg);
                                 form.ShowDialog(this);
+                                _pluginManager.Reload();
                             }
                             return;
                     }
