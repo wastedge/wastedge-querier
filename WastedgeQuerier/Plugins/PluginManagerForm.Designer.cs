@@ -37,6 +37,8 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this._addFolder = new System.Windows.Forms.ToolStripButton();
             this._deleteFolder = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this._renameFolder = new System.Windows.Forms.ToolStripButton();
             this._plugins = new SystemEx.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
@@ -116,7 +118,9 @@
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this._addFolder,
-            this._deleteFolder});
+            this._deleteFolder,
+            this.toolStripSeparator2,
+            this._renameFolder});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(228, 25);
@@ -142,6 +146,21 @@
             this._deleteFolder.Size = new System.Drawing.Size(23, 22);
             this._deleteFolder.Text = "Delete Folder";
             this._deleteFolder.Click += new System.EventHandler(this._deleteFolder_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // _renameFolder
+            // 
+            this._renameFolder.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this._renameFolder.Image = global::WastedgeQuerier.NeutralResources.text_field;
+            this._renameFolder.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._renameFolder.Name = "_renameFolder";
+            this._renameFolder.Size = new System.Drawing.Size(23, 22);
+            this._renameFolder.Text = "Rename";
+            this._renameFolder.Click += new System.EventHandler(this._renameFolder_Click);
             // 
             // _plugins
             // 
@@ -282,5 +301,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton _runPlugin;
         private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripButton _renameFolder;
     }
 }

@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using ICSharpCode.SharpZipLib.Zip;
 using Jint;
 using Jint.Parser;
+using Jint.Runtime;
 using JintDebugger;
 using WastedgeApi;
 using WastedgeQuerier.JavaScript;
@@ -29,7 +30,7 @@ namespace WastedgeQuerier.Plugins
             _zipFile = new ZipFile(path);
         }
 
-        public void Run(ApiCredentials credentials, Form owner)
+        public void Run(ApiCredentials credentials, Form owner, bool debugMode)
         {
             if (credentials == null)
                 throw new ArgumentNullException(nameof(credentials));
@@ -37,7 +38,7 @@ namespace WastedgeQuerier.Plugins
                 throw new ArgumentNullException(nameof(owner));
 
             _engine = new Engine(p => p
-                .DebugMode(false)
+                .DebugMode(debugMode)
                 .AllowClr()
             );
 
@@ -46,7 +47,33 @@ namespace WastedgeQuerier.Plugins
 
             new JavaScriptUtil(credentials).Setup(_engine, owner);
 
-            RequireFunction("main.js");
+            try
+            {
+                RequireFunction("main.js");
+            }
+            catch (Exception ex)
+            {
+                var javaScriptException = ex as JavaScriptException;
+                if (javaScriptException != null)
+                {
+                    ExceptionForm.Show(owner, javaScriptException);
+                    return;
+                }
+
+                MessageBox.Show(
+                    owner,
+                    new StringBuilder()
+                        .AppendLine("An exception occurred while executing the script:")
+                        .AppendLine()
+                        .Append(ex.Message).Append(" (").Append(ex.GetType().FullName).AppendLine(")")
+                        .AppendLine()
+                        .AppendLine(ex.StackTrace)
+                        .ToString(),
+                    owner.Text,
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
         }
 
         private object RequireFunction(string fileName)

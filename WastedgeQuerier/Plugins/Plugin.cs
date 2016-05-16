@@ -40,15 +40,21 @@ namespace WastedgeQuerier.Plugins
             if (owner == null)
                 throw new ArgumentNullException(nameof(owner));
 
+            var content = "Do you want to run the " + Name + " plugin?";
+
+            if (!String.IsNullOrEmpty(Project.Description))
+                content += Environment.NewLine + Environment.NewLine + Project.Description;
+
             var taskDialog = new TaskDialog
             {
                 AllowDialogCancellation = true,
                 MainInstruction = "Run " + Name,
                 CustomMainIcon = NeutralResources.mainicon,
                 CommonButtons = TaskDialogCommonButtons.Cancel,
-                Content = "Do you want to run the " + Name + " plugin?",
+                Content = content,
                 WindowTitle = owner.Text,
                 PositionRelativeToWindow = true,
+                VerificationText = "Run with debugging enabled",
                 Buttons = new[]
                 {
                     new TaskDialogButton
@@ -59,9 +65,10 @@ namespace WastedgeQuerier.Plugins
                 }
             };
 
-            var result = (DialogResult)taskDialog.Show(owner);
+            bool debugMode;
+            var result = (DialogResult)taskDialog.Show(owner, out debugMode);
             if (result == DialogResult.OK)
-                new PluginRunner(Path).Run(credentials, owner);
+                new PluginRunner(Path).Run(credentials, owner, debugMode);
         }
     }
 }

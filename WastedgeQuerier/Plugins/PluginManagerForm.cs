@@ -139,6 +139,7 @@ namespace WastedgeQuerier.Plugins
         {
             _addFolder.Enabled = _folders.SelectedNode != null;
             _deleteFolder.Enabled = _folders.SelectedNode?.Parent != null;
+            _renameFolder.Enabled = _folders.SelectedNode?.Parent != null;
             _addPlugin.Enabled = _folders.SelectedNode != null;
 
             _deletePlugin.Enabled = SelectedPlugin != null;
@@ -364,6 +365,11 @@ namespace WastedgeQuerier.Plugins
 
             if (AddPlugin(_pendingPackage))
                 TaskDialogEx.Show(this, "The new plugin has been added. You can start the plugin by clicking the run button or through the Plugins menu.", Text, TaskDialogCommonButtons.OK, TaskDialogIcon.Information);
+        }
+
+        private void _renameFolder_Click(object sender, EventArgs e)
+        {
+            _folders.SelectedNode.BeginEdit();
         }
     }
 }
