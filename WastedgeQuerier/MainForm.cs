@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -217,6 +218,30 @@ namespace WastedgeQuerier
                 form.ShowDialog(this);
 
                 _pluginManager.Reload();
+            }
+        }
+
+        private void _helpOpenHelpMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Process.Start("https://github.com/wastedge/wastedge-querier/wiki");
+            }
+            catch
+            {
+                // Ignore exceptions.
+            }
+        }
+
+        private void _helpAboutMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Process.Start("https://github.com/wastedge/wastedge-querier");
+            }
+            catch
+            {
+                // Ignore exceptions.
             }
         }
     }

@@ -53,6 +53,10 @@
             this._filterControls = new System.Windows.Forms.Panel();
             this._container = new System.Windows.Forms.Panel();
             this._toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this._helpOpenHelpMenuItem = new System.Windows.Forms.MenuItem();
+            this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this._helpAboutMenuItem = new System.Windows.Forms.MenuItem();
             this.tableLayoutPanel1.SuspendLayout();
             this._footerPanel.SuspendLayout();
             this._filters.SuspendLayout();
@@ -67,7 +71,8 @@
             this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this._fileMenuItem,
             this._pluginsMenuItem,
-            this._toolsMenuItem});
+            this._toolsMenuItem,
+            this.menuItem1});
             // 
             // _fileMenuItem
             // 
@@ -286,6 +291,33 @@
             this._container.Size = new System.Drawing.Size(516, 360);
             this._container.TabIndex = 0;
             // 
+            // menuItem1
+            // 
+            this.menuItem1.Index = 3;
+            this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this._helpOpenHelpMenuItem,
+            this.menuItem2,
+            this._helpAboutMenuItem});
+            this.menuItem1.Text = "&Help";
+            // 
+            // _helpOpenHelpMenuItem
+            // 
+            this._helpOpenHelpMenuItem.Index = 0;
+            this._helpOpenHelpMenuItem.Shortcut = System.Windows.Forms.Shortcut.F1;
+            this._helpOpenHelpMenuItem.Text = "&Open Help";
+            this._helpOpenHelpMenuItem.Click += new System.EventHandler(this._helpOpenHelpMenuItem_Click);
+            // 
+            // menuItem2
+            // 
+            this.menuItem2.Index = 1;
+            this.menuItem2.Text = "-";
+            // 
+            // _helpAboutMenuItem
+            // 
+            this._helpAboutMenuItem.Index = 2;
+            this._helpAboutMenuItem.Text = "A&bout";
+            this._helpAboutMenuItem.Click += new System.EventHandler(this._helpAboutMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -336,6 +368,10 @@
         private System.Windows.Forms.MenuItem _pluginsMenuItem;
         private System.Windows.Forms.MenuItem _pluginsPluginManagerSeparatorMenuItem;
         private System.Windows.Forms.MenuItem _pluginsPluginManagerMenuItem;
+        private System.Windows.Forms.MenuItem menuItem1;
+        private System.Windows.Forms.MenuItem _helpOpenHelpMenuItem;
+        private System.Windows.Forms.MenuItem menuItem2;
+        private System.Windows.Forms.MenuItem _helpAboutMenuItem;
     }
 }
 

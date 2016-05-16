@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -460,6 +461,30 @@ namespace WastedgeQuerier.JavaScript
                         BeginInvoke(new Action(() => _projectControl.SelectFile(newPath)));
                     }
                 }
+            }
+        }
+
+        private void HelpOpenHelp_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Process.Start("https://github.com/wastedge/wastedge-querier/wiki/JavaScript-console");
+            }
+            catch
+            {
+                // Ignore exceptions.
+            }
+        }
+
+        private void HelpJavaScriptAPIHelp_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Process.Start("https://github.com/wastedge/wastedge-querier/wiki/JavaScript-API");
+            }
+            catch
+            {
+                // Ignore exceptions.
             }
         }
     }

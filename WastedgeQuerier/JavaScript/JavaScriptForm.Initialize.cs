@@ -102,6 +102,32 @@ namespace WastedgeQuerier.JavaScript
             fileMenu.DropDownItems.Insert(fileMenu.DropDownItems.IndexOf(closeSeparator) + 1, new ToolStripSeparator());
             fileMenu.DropDownItems.Insert(fileMenu.DropDownItems.IndexOf(closeSeparator) + 1, _recentProjects);
             fileMenu.DropDownItems.Insert(fileMenu.DropDownItems.IndexOf(closeSeparator) + 1, _recentFiles);
+
+            var help = new ToolStripMenuItem
+            {
+                Text = "&Help"
+            };
+
+            Menu.Items.Add(help);
+
+            var helpOpenHelp = new ToolStripMenuItem
+            {
+                Text = "&Open Help",
+                ShortcutKeys = Keys.F1
+            };
+
+            help.DropDownItems.Add(helpOpenHelp);
+
+            helpOpenHelp.Click += HelpOpenHelp_Click;
+
+            var helpJavaScriptAPIHelp = new ToolStripMenuItem
+            {
+                Text = "&JavaScript API Help"
+            };
+
+            help.DropDownItems.Add(helpJavaScriptAPIHelp);
+
+            helpJavaScriptAPIHelp.Click += HelpJavaScriptAPIHelp_Click;
         }
     }
 }
