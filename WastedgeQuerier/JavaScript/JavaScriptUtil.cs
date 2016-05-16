@@ -32,7 +32,7 @@ namespace WastedgeQuerier.JavaScript
 
             engine.SetValue("Api", BuildApi(engine));
             engine.SetValue("UI", BuildUi(engine, owner));
-            new ExcelInterop(engine, owner).Setup();
+            new ExcelInterop(engine).Setup();
         }
 
         private object BuildUi(Engine engine, System.Windows.Forms.Form owner)
@@ -46,8 +46,9 @@ namespace WastedgeQuerier.JavaScript
             {
                 form = new Func<string, JsValue, JsValue, JsValue>(ui.ShowForm),
                 load = new Func<JsValue, string>(ui.LoadFile),
+                open = new Func<JsValue, string>(ui.OpenFile),
                 save = new Func<string, JsValue, string>(ui.SaveFile),
-                open = new Action<string>(ui.Open)
+                start = new Action<string>(ui.Start)
             };
         }
 

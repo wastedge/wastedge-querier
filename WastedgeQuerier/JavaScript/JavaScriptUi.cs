@@ -135,6 +135,23 @@ namespace WastedgeQuerier.JavaScript
             return null;
         }
 
+        public string OpenFile(JsValue options)
+        {
+            if (Owner.InvokeRequired)
+                return (string)Owner.Invoke(new Func<JsValue, string>(OpenFile), options);
+
+            using (var form = new OpenFileDialog())
+            {
+                if (options.IsObject())
+                    InitFileDialog(form, options.AsObject());
+
+                if (form.ShowDialog(Owner) == DialogResult.OK)
+                    return form.FileName;
+            }
+
+            return null;
+        }
+
         public string SaveFile(string content, JsValue options)
         {
             if (Owner.InvokeRequired)
@@ -175,7 +192,7 @@ namespace WastedgeQuerier.JavaScript
                 form.FileName = obj.Get("filename").ConvertToString();
         }
 
-        public void Open(string fileName)
+        public void Start(string fileName)
         {
             if (fileName == null)
                 return;
