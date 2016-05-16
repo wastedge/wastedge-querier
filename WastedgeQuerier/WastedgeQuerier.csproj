@@ -251,6 +251,9 @@
     <Compile Include="SimpleButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Util\FolderBrowser.cs" />
+    <Compile Include="Util\FolderBrowser.NativeMethods.cs" />
+    <Compile Include="Util\FolderBrowserMode.cs" />
     <Compile Include="Util\NativeMethods.cs" />
     <Compile Include="Util\ShellRegistration.cs" />
     <Compile Include="Util\ShellRegistrationConfiguration.cs" />
@@ -312,6 +315,7 @@
     <None Include="WastedgeQuerier.nuspec" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\text_field.png" />
     <EmbeddedResource Include="Resources\document.ico" />
     <EmbeddedResource Include="Resources\package.ico" />
     <None Include="Resources\delete.png" />

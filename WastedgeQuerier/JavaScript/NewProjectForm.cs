@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SystemEx.Windows.Forms;
+using WastedgeQuerier.Util;
 
 namespace WastedgeQuerier.JavaScript
 {
@@ -32,14 +33,13 @@ namespace WastedgeQuerier.JavaScript
 
         private void _browse_Click(object sender, EventArgs e)
         {
-            string directory = BrowseForFolderDialog.Show(
-                this,
-                "Project Location",
-                BrowseForFolderOptions.ReturnOnlyFileSystemDirectories | BrowseForFolderOptions.UseNewUI
-            );
+            var form = new FolderBrowser
+            {
+                Title = "Project Location"
+            };
 
-            if (directory != null)
-                _location.Text = directory;
+            if (form.ShowDialog(this) == DialogResult.OK)
+                _location.Text = form.SelectedPath;
         }
 
         private void _acceptButton_Click(object sender, EventArgs e)

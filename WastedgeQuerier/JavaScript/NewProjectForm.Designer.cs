@@ -30,9 +30,9 @@
         {
             this.formHeader1 = new SystemEx.Windows.Forms.FormHeader();
             this.formFlowFooter1 = new SystemEx.Windows.Forms.FormFlowFooter();
-            this.panel1 = new System.Windows.Forms.Panel();
             this._cancelButton = new System.Windows.Forms.Button();
             this._acceptButton = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
             this._name = new System.Windows.Forms.TextBox();
@@ -63,17 +63,6 @@
             this.formFlowFooter1.Size = new System.Drawing.Size(464, 45);
             this.formFlowFooter1.TabIndex = 2;
             // 
-            // panel1
-            // 
-            this.panel1.AutoSize = true;
-            this.panel1.Controls.Add(this.tableLayoutPanel1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 60);
-            this.panel1.Name = "panel1";
-            this.panel1.Padding = new System.Windows.Forms.Padding(8);
-            this.panel1.Size = new System.Drawing.Size(464, 69);
-            this.panel1.TabIndex = 1;
-            // 
             // _cancelButton
             // 
             this._cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
@@ -93,6 +82,17 @@
             this._acceptButton.Text = "OK";
             this._acceptButton.UseVisualStyleBackColor = true;
             this._acceptButton.Click += new System.EventHandler(this._acceptButton_Click);
+            // 
+            // panel1
+            // 
+            this.panel1.AutoSize = true;
+            this.panel1.Controls.Add(this.tableLayoutPanel1);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 60);
+            this.panel1.Name = "panel1";
+            this.panel1.Padding = new System.Windows.Forms.Padding(8);
+            this.panel1.Size = new System.Drawing.Size(464, 69);
+            this.panel1.TabIndex = 1;
             // 
             // tableLayoutPanel1
             // 
