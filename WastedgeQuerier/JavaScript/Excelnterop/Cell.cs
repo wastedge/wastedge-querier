@@ -102,12 +102,7 @@ namespace WastedgeQuerier.JavaScript.Excelnterop
 
         public JsValue GetComment()
         {
-            if (Cell.CellComment == null)
-                return JsValue.Null;
-
-            var comment = _interop.Comment.Construct();
-            comment.Comment = (XSSFComment)Cell.CellComment;
-            return comment;
+            return Row.Sheet.WrapComment((XSSFComment)Cell.CellComment);
         }
 
         public void SetComment(JsValue value)

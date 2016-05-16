@@ -14,7 +14,6 @@ namespace WastedgeQuerier.JavaScript.Excelnterop
 {
     internal class WorkbookInstance : InteropInstance
     {
-        private readonly Form _owner;
         private readonly ExcelInterop _interop;
         private readonly SheetListInstance _sheetList;
         private readonly CellStyleListInstance _cellStyleList;
@@ -22,17 +21,14 @@ namespace WastedgeQuerier.JavaScript.Excelnterop
 
         public XSSFWorkbook Workbook { get; }
 
-        public WorkbookInstance(Engine engine, Form owner, XSSFWorkbook workbook, ExcelInterop interop)
+        public WorkbookInstance(Engine engine, XSSFWorkbook workbook, ExcelInterop interop)
             : base(engine)
         {
-            if (owner == null)
-                throw new ArgumentNullException(nameof(owner));
             if (workbook == null)
                 throw new ArgumentNullException(nameof(workbook));
 
             Workbook = workbook;
 
-            _owner = owner;
             _interop = interop;
 
             _sheetList = interop.SheetList.Construct();
@@ -91,18 +87,14 @@ namespace WastedgeQuerier.JavaScript.Excelnterop
 
     internal class WorkbookFactory : InteropFactory<WorkbookInstance>
     {
-        private readonly Form _owner;
         private readonly ExcelInterop _interop;
 
-        public WorkbookFactory(Engine engine, Form owner, ExcelInterop interop)
+        public WorkbookFactory(Engine engine, ExcelInterop interop)
             : base(engine, "Workbook")
         {
-            if (owner == null)
-                throw new ArgumentNullException(nameof(owner));
             if (interop == null)
                 throw new ArgumentNullException(nameof(interop));
 
-            _owner = owner;
             _interop = interop;
         }
 
@@ -132,7 +124,7 @@ namespace WastedgeQuerier.JavaScript.Excelnterop
                 workbook = new XSSFWorkbook();
             }
 
-            return new WorkbookInstance(Engine, _owner, workbook, _interop);
+            return new WorkbookInstance(Engine, workbook, _interop);
         }
     }
 }

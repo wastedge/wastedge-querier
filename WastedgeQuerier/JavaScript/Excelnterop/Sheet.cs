@@ -14,7 +14,7 @@ namespace WastedgeQuerier.JavaScript.Excelnterop
     {
         private readonly ExcelInterop _interop;
         private readonly RowListInstance _rowList;
-        private readonly MergeRegionListInstance _mergeRegionList;
+        private readonly Dictionary<XSSFComment, CommentInstance> _comments = new Dictionary<XSSFComment, CommentInstance>(IdentityComparer<XSSFComment>.Instance);
 
         public XSSFSheet Sheet { get; set; }
         public WorkbookInstance Workbook { get; set; }
@@ -30,9 +30,10 @@ namespace WastedgeQuerier.JavaScript.Excelnterop
             _rowList = interop.RowList.Construct();
             _rowList.Sheet = this;
             FastAddProperty("rows", _rowList, true, false, true);
-            _mergeRegionList = interop.MergeRegionList.Construct();
-            _mergeRegionList.Sheet = this;
-            FastAddProperty("mergeRegions", _mergeRegionList, true, false, true);
+            var mergeRegionList = interop.MergeRegionList.Construct();
+            mergeRegionList.Sheet = this;
+            FastAddProperty("mergeRegions", mergeRegionList, true, false, true);
+
         }
 
         public JsValue CreateRow(JsValue[] arguments)
@@ -51,6 +52,26 @@ namespace WastedgeQuerier.JavaScript.Excelnterop
         {
             Sheet.AutoSizeColumn(column.ConvertToInt32().GetValueOrDefault());
             return JsValue.Undefined;
+        }
+
+        public JsValue CreateComment(JsValue[] arguments)
+        {
+            return WrapComment((XSSFComment)Sheet.CreateComment());
+        }
+
+        public CommentInstance WrapComment(XSSFComment comment)
+        {
+            if (comment == null)
+                return null;
+
+            CommentInstance result;
+            if (!_comments.TryGetValue(comment, out result))
+            {
+                result = _interop.Comment.Construct();
+                result.Comment = comment;
+                _comments.Add(comment, result);
+            }
+            return result;
         }
     }
 
@@ -71,6 +92,7 @@ namespace WastedgeQuerier.JavaScript.Excelnterop
         {
             AddInstanceProperty(prototype, "name", self => self.Sheet.SheetName, (self, value) => self.Sheet.Workbook.SetSheetName(self.Sheet.Workbook.GetSheetIndex(self.Sheet), value.ConvertToString()));
             AddInstanceMethod(prototype, "createRow", (self, arguments) => self.CreateRow(arguments), 1);
+            AddInstanceMethod(prototype, "createComment", (self, arguments) => self.CreateComment(arguments), 1);
             AddInstanceMethod(prototype, "addMergeRegion", (self, arguments) => self.AddMergeRegion(arguments), 4);
             AddInstanceProperty(prototype, "defaultRowHeight", self => self.Sheet.DefaultRowHeightInPoints, (self, value) => self.Sheet.DefaultRowHeightInPoints = (float)value.ConvertToDouble().GetValueOrDefault());
             AddInstanceProperty(prototype, "defaultColumnWidth", self => self.Sheet.DefaultColumnWidth, (self, value) => self.Sheet.DefaultColumnWidth = value.ConvertToInt32().GetValueOrDefault());

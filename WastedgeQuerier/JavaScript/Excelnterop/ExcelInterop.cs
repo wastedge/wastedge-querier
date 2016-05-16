@@ -31,16 +31,14 @@ namespace WastedgeQuerier.JavaScript.Excelnterop
         public CellStyleListFactory CellStyleList { get; }
         public CellStyleFactory CellStyle { get; }
 
-        public ExcelInterop(Engine engine, Form owner)
+        public ExcelInterop(Engine engine)
         {
             if (engine == null)
                 throw new ArgumentNullException(nameof(engine));
-            if (owner == null)
-                throw new ArgumentNullException(nameof(owner));
 
             Engine = engine;
 
-            Workbook = new WorkbookFactory(engine, owner, this);
+            Workbook = new WorkbookFactory(engine, this);
             Sheet = new SheetFactory(engine, this);
             SheetList = new SheetListFactory(engine, this);
             Row = new RowFactory(engine, this);
