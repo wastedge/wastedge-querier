@@ -24,7 +24,7 @@ namespace WastedgeQuerier.JavaScript.Excelnterop
 
         public SheetInstance Sheet { get; set; }
 
-        public override int Length => Sheet.Sheet.LastRowNum;
+        public override int Length => Sheet.Sheet.LastRowNum + 1;
 
         protected override RowInstance CreateWrapper(XSSFRow obj)
         {
