@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using WastedgeApi;
 using WastedgeQuerier.JavaScript;
 using WastedgeQuerier.Plugins;
+using WastedgeQuerier.Report;
 
 namespace WastedgeQuerier
 {
@@ -73,6 +74,10 @@ namespace WastedgeQuerier
             _container.Enabled = true;
 
             ProcessArguments();
+
+#if DEBUG
+            _tables.SelectedItem = "commercial/stdpr_hdr";
+#endif
         }
 
         private void ProcessArguments()
@@ -134,6 +139,10 @@ namespace WastedgeQuerier
 
             _footerPanel.Visible = true;
             _filters.Visible = true;
+
+#if DEBUG
+            _report.PerformClick();
+#endif
         }
 
         private void _filter_SizeChanged(object sender, EventArgs e)
@@ -242,6 +251,16 @@ namespace WastedgeQuerier
             catch
             {
                 // Ignore exceptions.
+            }
+        }
+
+        private void _report_Click(object sender, EventArgs e)
+        {
+            var filters = _filterControls.Controls.OfType<FilterControl>().Select(p => p.GetFilter()).ToList();
+
+            using (var form = new ReportForm(_api, _schema, filters))
+            {
+                form.ShowDialog(this);
             }
         }
     }

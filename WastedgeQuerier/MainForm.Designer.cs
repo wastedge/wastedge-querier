@@ -38,6 +38,10 @@
             this._pluginsPluginManagerMenuItem = new System.Windows.Forms.MenuItem();
             this._toolsMenuItem = new System.Windows.Forms.MenuItem();
             this._toolsJavaScriptConsoleMenuItem = new System.Windows.Forms.MenuItem();
+            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this._helpOpenHelpMenuItem = new System.Windows.Forms.MenuItem();
+            this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this._helpAboutMenuItem = new System.Windows.Forms.MenuItem();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
             this._tables = new System.Windows.Forms.ComboBox();
@@ -53,10 +57,7 @@
             this._filterControls = new System.Windows.Forms.Panel();
             this._container = new System.Windows.Forms.Panel();
             this._toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.menuItem1 = new System.Windows.Forms.MenuItem();
-            this._helpOpenHelpMenuItem = new System.Windows.Forms.MenuItem();
-            this.menuItem2 = new System.Windows.Forms.MenuItem();
-            this._helpAboutMenuItem = new System.Windows.Forms.MenuItem();
+            this._report = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this._footerPanel.SuspendLayout();
             this._filters.SuspendLayout();
@@ -121,6 +122,33 @@
             this._toolsJavaScriptConsoleMenuItem.Text = "&JavaScript Console";
             this._toolsJavaScriptConsoleMenuItem.Click += new System.EventHandler(this._toolsJavaScriptConsoleMenuItem_Click);
             // 
+            // menuItem1
+            // 
+            this.menuItem1.Index = 3;
+            this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this._helpOpenHelpMenuItem,
+            this.menuItem2,
+            this._helpAboutMenuItem});
+            this.menuItem1.Text = "&Help";
+            // 
+            // _helpOpenHelpMenuItem
+            // 
+            this._helpOpenHelpMenuItem.Index = 0;
+            this._helpOpenHelpMenuItem.Shortcut = System.Windows.Forms.Shortcut.F1;
+            this._helpOpenHelpMenuItem.Text = "&Open Help";
+            this._helpOpenHelpMenuItem.Click += new System.EventHandler(this._helpOpenHelpMenuItem_Click);
+            // 
+            // menuItem2
+            // 
+            this.menuItem2.Index = 1;
+            this.menuItem2.Text = "-";
+            // 
+            // _helpAboutMenuItem
+            // 
+            this._helpAboutMenuItem.Index = 2;
+            this._helpAboutMenuItem.Text = "A&bout";
+            this._helpAboutMenuItem.Click += new System.EventHandler(this._helpAboutMenuItem_Click);
+            // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 2;
@@ -169,6 +197,7 @@
             this._footerPanel.AutoSize = true;
             this.tableLayoutPanel1.SetColumnSpan(this._footerPanel, 2);
             this._footerPanel.Controls.Add(this._export);
+            this._footerPanel.Controls.Add(this._report);
             this._footerPanel.Controls.Add(this._reset);
             this._footerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this._footerPanel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
@@ -182,14 +211,14 @@
             this._export.Location = new System.Drawing.Point(414, 3);
             this._export.Name = "_export";
             this._export.Size = new System.Drawing.Size(75, 23);
-            this._export.TabIndex = 1;
+            this._export.TabIndex = 2;
             this._export.Text = "&Export";
             this._export.UseVisualStyleBackColor = true;
             this._export.Click += new System.EventHandler(this._export_Click);
             // 
             // _reset
             // 
-            this._reset.Location = new System.Drawing.Point(333, 3);
+            this._reset.Location = new System.Drawing.Point(252, 3);
             this._reset.Name = "_reset";
             this._reset.Size = new System.Drawing.Size(75, 23);
             this._reset.TabIndex = 0;
@@ -291,32 +320,15 @@
             this._container.Size = new System.Drawing.Size(516, 360);
             this._container.TabIndex = 0;
             // 
-            // menuItem1
+            // _report
             // 
-            this.menuItem1.Index = 3;
-            this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this._helpOpenHelpMenuItem,
-            this.menuItem2,
-            this._helpAboutMenuItem});
-            this.menuItem1.Text = "&Help";
-            // 
-            // _helpOpenHelpMenuItem
-            // 
-            this._helpOpenHelpMenuItem.Index = 0;
-            this._helpOpenHelpMenuItem.Shortcut = System.Windows.Forms.Shortcut.F1;
-            this._helpOpenHelpMenuItem.Text = "&Open Help";
-            this._helpOpenHelpMenuItem.Click += new System.EventHandler(this._helpOpenHelpMenuItem_Click);
-            // 
-            // menuItem2
-            // 
-            this.menuItem2.Index = 1;
-            this.menuItem2.Text = "-";
-            // 
-            // _helpAboutMenuItem
-            // 
-            this._helpAboutMenuItem.Index = 2;
-            this._helpAboutMenuItem.Text = "A&bout";
-            this._helpAboutMenuItem.Click += new System.EventHandler(this._helpAboutMenuItem_Click);
+            this._report.Location = new System.Drawing.Point(333, 3);
+            this._report.Name = "_report";
+            this._report.Size = new System.Drawing.Size(75, 23);
+            this._report.TabIndex = 1;
+            this._report.Text = "Re&port";
+            this._report.UseVisualStyleBackColor = true;
+            this._report.Click += new System.EventHandler(this._report_Click);
             // 
             // MainForm
             // 
@@ -372,6 +384,7 @@
         private System.Windows.Forms.MenuItem _helpOpenHelpMenuItem;
         private System.Windows.Forms.MenuItem menuItem2;
         private System.Windows.Forms.MenuItem _helpAboutMenuItem;
+        private System.Windows.Forms.Button _report;
     }
 }
 

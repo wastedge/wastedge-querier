@@ -86,8 +86,8 @@
       <HintPath>..\packages\SystemEx.14.5.31.5\lib\net20\SystemEx.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="WastedgeApi, Version=1.3.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\WastedgeApi.1.3.3.0\lib\net45\WastedgeApi.dll</HintPath>
+    <Reference Include="WastedgeApi, Version=1.3.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WastedgeApi.1.3.4.0\lib\net45\WastedgeApi.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=2.9.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
@@ -242,6 +242,23 @@
     <Compile Include="JavaScript\RenameForm.Designer.cs">
       <DependentUpon>RenameForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Report\DragDropListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Report\ListBoxItemEventHandler.cs" />
+    <Compile Include="Report\ReportField.cs" />
+    <Compile Include="Report\ReportFieldListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Report\ReportFieldTransform.cs" />
+    <Compile Include="Report\ReportFieldType.cs" />
+    <Compile Include="Report\ReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Report\ReportForm.Designer.cs">
+      <DependentUpon>ReportForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Report\ReportGridManager.cs" />
     <Compile Include="ResultForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -306,6 +323,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Plugins\PluginManagerForm.resx">
       <DependentUpon>PluginManagerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Report\ReportForm.resx">
+      <DependentUpon>ReportForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ResultForm.resx">
       <DependentUpon>ResultForm.cs</DependentUpon>
