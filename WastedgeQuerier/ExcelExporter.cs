@@ -104,7 +104,7 @@ namespace WastedgeQuerier
             }
         }
 
-        private static string PrettifyName(string name)
+        public static string PrettifyName(string name)
         {
             int pos = name.IndexOf('/');
             if (pos == -1)

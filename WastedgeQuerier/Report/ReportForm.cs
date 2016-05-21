@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,12 +9,8 @@ using System.Windows.Forms;
 using SystemEx.Windows.Forms;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using SourceGrid.Cells;
-using SourceGrid.Cells.Controllers;
-using SourceGrid.Cells.Views;
 using WastedgeApi;
 using WastedgeQuerier.JavaScript;
-using Cell = SourceGrid.Cells.Cell;
 
 namespace WastedgeQuerier.Report
 {
@@ -31,11 +23,9 @@ namespace WastedgeQuerier.Report
         private readonly Api _api;
         private readonly EntitySchema _entity;
         private readonly List<Filter> _filters;
-        private ResultSet _resultSet;
-        private readonly List<ResultSet> _resultSets = new List<ResultSet>();
-        private ApiQuery _query;
         private SelectedField _selectedField;
-        private ReportGridManager _gridManager;
+        private readonly ReportGridManager _gridManager;
+        private ReportDataSet _dataSet;
 
         public ReportForm(Api api, EntitySchema entity, List<Filter> filters)
         {
@@ -103,7 +93,7 @@ namespace WastedgeQuerier.Report
             {
                 form.Filter = "Excel (*.xlsx)|*.xlsx|All Files (*.*)|*.*";
                 form.RestoreDirectory = true;
-                form.FileName = "Wastedge Export.xlsx";
+                form.FileName = "Wastedge Report.xlsx";
 
                 if (form.ShowDialog(this) != DialogResult.OK)
                     return;
@@ -113,7 +103,7 @@ namespace WastedgeQuerier.Report
 
             using (var stream = File.Create(fileName))
             {
-                new ExcelExporter().Export(stream, _resultSets);
+                new ReportExcelWriter(stream, ExcelExporter.PrettifyName(_entity.Name)).Load(_dataSet);
             }
 
             try
@@ -287,7 +277,11 @@ namespace WastedgeQuerier.Report
 
             _gridManager.Reset();
 
+            _dataSet = null;
+
             _update.Enabled = false;
+
+            UpdateEnabled();
 
             try
             {
@@ -307,7 +301,9 @@ namespace WastedgeQuerier.Report
                     result = (JObject)JToken.ReadFrom(json);
                 }
 
-                _gridManager.Load(result, columns, rows, values);
+                _dataSet = new ReportDataSet(result, columns, rows, values);
+
+                _gridManager.Load(_dataSet);
             }
             catch (Exception ex)
             {
@@ -316,7 +312,14 @@ namespace WastedgeQuerier.Report
             finally
             {
                 _update.Enabled = true;
+
+                UpdateEnabled();
             }
+        }
+
+        private void UpdateEnabled()
+        {
+            _exportToExcel.Enabled = _dataSet != null;
         }
 
         private string BuildRequest(List<ReportField> columns, List<ReportField> rows, List<ReportField> values)

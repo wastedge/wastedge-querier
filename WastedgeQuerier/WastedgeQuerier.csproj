@@ -246,6 +246,8 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Report\ListBoxItemEventHandler.cs" />
+    <Compile Include="Report\ReportDataSet.cs" />
+    <Compile Include="Report\ReportExcelWriter.cs" />
     <Compile Include="Report\ReportField.cs" />
     <Compile Include="Report\ReportFieldListBox.cs">
       <SubType>Component</SubType>
@@ -259,6 +261,7 @@
       <DependentUpon>ReportForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Report\ReportGridManager.cs" />
+    <Compile Include="Report\ReportLoader.cs" />
     <Compile Include="ResultForm.cs">
       <SubType>Form</SubType>
     </Compile>

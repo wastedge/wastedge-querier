@@ -15,7 +15,7 @@ using Cell = SourceGrid.Cells.Views.Cell;
 
 namespace WastedgeQuerier.Report
 {
-    internal class ReportGridManager
+    internal class ReportGridManager : ReportLoader
     {
         private readonly Grid _grid;
         private readonly IView _headerView;
@@ -112,26 +112,21 @@ namespace WastedgeQuerier.Report
             _grid.Redim(0, 0);
         }
 
-        public void Load(JObject data, List<ReportField> columns, List<ReportField> rows, List<ReportField> values)
+        public override void Load(ReportDataSet data)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
-            if (columns == null)
-                throw new ArgumentNullException(nameof(columns));
-            if (rows == null)
-                throw new ArgumentNullException(nameof(rows));
-            if (values == null)
-                throw new ArgumentNullException(nameof(values));
+            base.Load(data);
 
-            int columnDepth = columns.Count + Math.Min(values.Count, 1);
+            _grid.AutoSizeCells();
+            _grid.RecalcCustomScrollBars();
+        }
 
-            var dataValues = (JArray)data["values"];
-
-            _grid.FixedRows = columnDepth;
-            _grid.FixedColumns = rows.Count;
+        protected override void Resize(int headerRows, int headerColumns, int rows, int columns)
+        {
+            _grid.FixedRows = headerRows;
+            _grid.FixedColumns = headerColumns;
             _grid.Redim(
-                _grid.FixedRows + dataValues.Count,
-                _grid.FixedColumns + (dataValues.Count == 0 ? 0 : ((JArray)dataValues[0]).Count)
+                _grid.FixedRows + rows,
+                _grid.FixedColumns + columns
             );
 
             for (int row = 0; row < _grid.FixedRows; row++)
@@ -141,100 +136,16 @@ namespace WastedgeQuerier.Report
                     _grid[row, column] = BuildHeader(null, 1, 1);
                 }
             }
-
-            BuildColumns((JArray)data["columns"]);
-            BuildRows((JArray)data["rows"]);
-            if (dataValues.Count > 0)
-                BuildValues(dataValues);
-
-            _grid.AutoSizeCells();
-            _grid.RecalcCustomScrollBars();
         }
 
-        private void BuildValues(JArray data)
+        protected override void SetCell(int row, int column, object value)
         {
-            int rows = data.Count;
-            int columns = ((JArray)data[0]).Count;
-
-            for (int row = 0; row < rows; row++)
-            {
-                var rowData = (JArray)data[row];
-
-                for (int column = 0; column < columns; column++)
-                {
-                    _grid[row + _grid.FixedRows, column + _grid.FixedColumns] = BuildCell(
-                        ((JValue)rowData[column]).Value
-                    );
-                }
-            }
+            _grid[row + _grid.FixedRows, column + _grid.FixedColumns] = BuildCell(value);
         }
 
-        private void BuildColumns(JArray data)
+        protected override void SetHeader(int row, int column, string data, int rowSpan, int columnSpan)
         {
-            int span = 0;
-
-            for (int i = 0; i < data.Count; i++)
-            {
-                span += BuildColumn(data[i], 0, _grid.FixedColumns + span);
-            }
-        }
-
-        private int BuildColumn(JToken data, int row, int column)
-        {
-            if (data.Type != JTokenType.Array)
-            {
-                _grid[row, column] = BuildHeader((string)data, 1, 1);
-                return 1;
-            }
-
-            var subData = (JArray)data;
-            int span = 0;
-
-            for (int i = 1; i < subData.Count; i++)
-            {
-                span += BuildColumn(subData[i], row + 1, column + span);
-            }
-
-            if (span == 0)
-                span = 1;
-
-            _grid[row, column] = BuildHeader((string)subData[0], 1, span);
-
-            return span;
-        }
-
-        private void BuildRows(JArray data)
-        {
-            int span = 0;
-
-            for (int i = 0; i < data.Count; i++)
-            {
-                span += BuildRow(data[i], _grid.FixedRows + span, 0);
-            }
-        }
-
-        private int BuildRow(JToken data, int row, int column)
-        {
-            if (data.Type != JTokenType.Array)
-            {
-                _grid[row, column] = BuildHeader((string)data, 1, 1);
-                return 1;
-            }
-
-            var subData = (JArray)data;
-            int span = 0;
-
-            for (int i = 1; i < subData.Count; i++)
-            {
-                span += BuildRow(subData[i], row + span, column + 1);
-            }
-
-            if (span == 0)
-                span = 1;
-
-            _grid[row, column] = BuildHeader((string)subData[0], span, 1);
-
-            return span;
+            _grid[row, column] = BuildHeader(data, rowSpan, columnSpan);
         }
 
         private ICell BuildHeader(string value, int rowSpan, int columnSpan)
