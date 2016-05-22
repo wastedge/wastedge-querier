@@ -63,32 +63,24 @@ namespace WastedgeQuerier.Report
             {
                 value = ((DateTime)value).ToShortDateString() + " " + ((DateTime)value).ToLongTimeString();
             }
-            if (value == null)
-            {
-                return new SourceGrid.Cells.Cell("null")
-                {
-                    View = _nullView
-                };
-            }
-
-            if (value is string)
+            if (value == null || value is string)
             {
                 return new SourceGrid.Cells.Cell(value)
                 {
                     View = _defaultView
                 };
             }
-            if (value is decimal)
+            if (value is double)
             {
-                var decimalValue = (decimal)value;
+                var doubleValue = (double)value;
 
-                if (decimalValue % 1 == 0)
+                if (doubleValue % 1 == 0)
                 {
-                    value = (long)decimalValue;
+                    value = (long)doubleValue;
                 }
                 else
                 {
-                    return new SourceGrid.Cells.Cell(decimalValue.ToString(CultureInfo.CurrentUICulture))
+                    return new SourceGrid.Cells.Cell(doubleValue.ToString(CultureInfo.CurrentUICulture))
                     {
                         View = _numberView
                     };
@@ -145,7 +137,7 @@ namespace WastedgeQuerier.Report
 
         protected override void SetHeader(int row, int column, string data, int rowSpan, int columnSpan)
         {
-            _grid[row, column] = BuildHeader(data, rowSpan, columnSpan);
+            _grid[row, column] = BuildHeader(data ?? "(blank)", rowSpan, columnSpan);
         }
 
         private ICell BuildHeader(string value, int rowSpan, int columnSpan)

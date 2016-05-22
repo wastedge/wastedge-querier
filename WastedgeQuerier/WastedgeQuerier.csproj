@@ -246,6 +246,8 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Report\ListBoxItemEventHandler.cs" />
+    <Compile Include="Report\ReportDataHeader.cs" />
+    <Compile Include="Report\ReportDataHeaderCollection.cs" />
     <Compile Include="Report\ReportDataSet.cs" />
     <Compile Include="Report\ReportExcelWriter.cs" />
     <Compile Include="Report\ReportField.cs" />

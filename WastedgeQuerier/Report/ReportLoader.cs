@@ -17,112 +17,65 @@ namespace WastedgeQuerier.Report
             if (data == null)
                 throw new ArgumentNullException(nameof(data));
 
-            _headerRows = data.Columns.Count + Math.Min(data.Values.Count, 1);
-            _headerColumns = data.Rows.Count;
-
-            var dataValues = (JArray)data.Data["values"];
+            _headerRows = data.ColumnLevels;
+            _headerColumns = data.RowLevels;
 
             Resize(
                 _headerRows,
                 _headerColumns,
-                dataValues.Count,
-                dataValues.Count == 0 ? 0 : ((JArray)dataValues[0]).Count
+                data.RowCount,
+                data.ColumnCount
             );
 
-            BuildColumns((JArray)data.Data["columns"]);
-            BuildRows((JArray)data.Data["rows"]);
-            if (dataValues.Count > 0)
-                BuildValues(dataValues);
-        }
+            BuildHeaders(data.Columns, false);
+            BuildHeaders(data.Rows, true);
 
-        protected abstract void Resize(int headerRows, int headerColumns, int rows, int columns);
+            var values = data.Values;
 
-        private void BuildValues(JArray data)
-        {
-            int rows = data.Count;
-            int columns = ((JArray)data[0]).Count;
-
-            for (int row = 0; row < rows; row++)
+            for (int row = 0; row < values.GetLength(0); row++)
             {
-                var rowData = (JArray)data[row];
-
-                for (int column = 0; column < columns; column++)
+                for (int column = 0; column < values.GetLength(1); column++)
                 {
-                    SetCell(row, column, ((JValue)rowData[column]).Value);
+                    var value = values[row, column];
+                    if (!double.IsNaN(value))
+                        SetCell(row, column, value);
+                    else
+                        SetCell(row, column, null);
                 }
             }
         }
 
+        private void BuildHeaders(ReportDataHeaderCollection headers, bool inverse)
+        {
+            int offset = 0;
+
+            foreach (var header in headers)
+            {
+                BuildHeader(header, inverse, offset);
+                offset += header.Span;
+            }
+        }
+
+        private void BuildHeader(ReportDataHeader header, bool inverse, int offset)
+        {
+            int row = inverse ? offset + _headerRows : header.Level;
+            int column = inverse ? header.Level : offset + _headerColumns;
+            int rowSpan = inverse ? header.Span : 1;
+            int columnSpan = inverse ? 1 : header.Span;
+
+            SetHeader(row, column, header.Label, rowSpan, columnSpan);
+
+            foreach (var child in header.Children)
+            {
+                BuildHeader(child, inverse, offset);
+                offset += child.Span;
+            }
+        }
+
+        protected abstract void Resize(int headerRows, int headerColumns, int rows, int columns);
+
         protected abstract void SetCell(int row, int column, object value);
 
-        private void BuildColumns(JArray data)
-        {
-            int span = 0;
-
-            for (int i = 0; i < data.Count; i++)
-            {
-                span += BuildColumn(data[i], 0, _headerColumns + span);
-            }
-        }
-
-        private int BuildColumn(JToken data, int row, int column)
-        {
-            if (data.Type != JTokenType.Array)
-            {
-                SetHeader(row, column, (string)data, 1, 1);
-                return 1;
-            }
-
-            var subData = (JArray)data;
-            int span = 0;
-
-            for (int i = 1; i < subData.Count; i++)
-            {
-                span += BuildColumn(subData[i], row + 1, column + span);
-            }
-
-            if (span == 0)
-                span = 1;
-
-            SetHeader(row, column, (string)subData[0], 1, span);
-
-            return span;
-        }
-
         protected abstract void SetHeader(int row, int column, string data, int rowSpan, int columnSpan);
-
-        private void BuildRows(JArray data)
-        {
-            int span = 0;
-
-            for (int i = 0; i < data.Count; i++)
-            {
-                span += BuildRow(data[i], _headerRows + span, 0);
-            }
-        }
-
-        private int BuildRow(JToken data, int row, int column)
-        {
-            if (data.Type != JTokenType.Array)
-            {
-                SetHeader(row, column, (string)data, 1, 1);
-                return 1;
-            }
-
-            var subData = (JArray)data;
-            int span = 0;
-
-            for (int i = 1; i < subData.Count; i++)
-            {
-                span += BuildRow(subData[i], row + span, column + 1);
-            }
-
-            if (span == 0)
-                span = 1;
-
-            SetHeader(row, column, (string)subData[0], span, 1);
-
-            return span;
-        }
     }
 }

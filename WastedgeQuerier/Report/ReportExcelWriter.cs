@@ -57,6 +57,14 @@ namespace WastedgeQuerier.Report
             _headerRows = headerRows;
             _headerColumns = headerColumns;
             _sheet.CreateFreezePane(headerColumns, headerRows);
+
+            for (int row = 0; row < headerRows; row++)
+            {
+                for (int column = 0; column < headerColumns; column++)
+                {
+                    SetHeader(row, column, "", 1, 1);
+                }
+            }
         }
 
         private ICell GetCell(int row, int column)
@@ -78,9 +86,9 @@ namespace WastedgeQuerier.Report
             {
                 cell.SetCellValue((long)value);
             }
-            else if (value is decimal)
+            else if (value is double)
             {
-                cell.SetCellValue((double)(decimal)value);
+                cell.SetCellValue((double)value);
             }
             else if (value is bool)
             {
@@ -107,7 +115,7 @@ namespace WastedgeQuerier.Report
             var cell = GetCell(row, column);
 
             cell.CellStyle = _headerStyle;
-            cell.SetCellValue(data);
+            cell.SetCellValue(data ?? "(blank)");
 
             if (rowSpan > 1 || columnSpan > 1)
             {

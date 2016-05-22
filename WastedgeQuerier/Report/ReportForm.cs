@@ -296,7 +296,6 @@ namespace WastedgeQuerier.Report
                 using (var json = new JsonTextReader(reader))
                 {
                     json.DateParseHandling = DateParseHandling.None;
-                    json.FloatParseHandling = FloatParseHandling.Decimal;
 
                     result = (JObject)JToken.ReadFrom(json);
                 }
