@@ -17,19 +17,15 @@ namespace WastedgeQuerier.Report
         public int RowLevels { get; }
         public int RowCount { get; }
 
-        public ReportDataSet(JObject data, IList<ReportField> columns, IList<ReportField> rows, IList<ReportField> values)
+        public ReportDataSet(JObject data, string[] valueLabels)
         {
             if (data == null)
                 throw new ArgumentNullException(nameof(data));
-            if (columns == null)
-                throw new ArgumentNullException(nameof(columns));
-            if (rows == null)
-                throw new ArgumentNullException(nameof(rows));
-            if (values == null)
-                throw new ArgumentNullException(nameof(values));
+            if (valueLabels == null)
+                throw new ArgumentNullException(nameof(valueLabels));
 
-            Columns = ParseHeaders((JArray)data["columns"]);
-            Rows = ParseHeaders((JArray)data["rows"]);
+            Columns = ParseHeaders((JArray)data["columns"], valueLabels);
+            Rows = ParseHeaders((JArray)data["rows"], null);
             Values = BuildValues((JArray)data["values"]);
 
             RowLevels = GetLevels(Rows);
@@ -91,28 +87,41 @@ namespace WastedgeQuerier.Report
             }
         }
 
-        private ReportDataHeaderCollection ParseHeaders(JArray data)
+        private ReportDataHeaderCollection ParseHeaders(JArray data, string[] tailLabels)
         {
             var headers = new List<ReportDataHeader>();
             int span = 0;
 
             for (int i = 0; i < data.Count; i++)
             {
-                var header = ParseHeader(data[i], 0, span);
+                var header = ParseHeader(data[i], 0, span, tailLabels, i);
                 headers.Add(header);
                 span += header.Span;
             }
 
+            // Don't sort the tail columns.
+
+            if (tailLabels != null && headers[0].Children.Count == 0)
+                return ReportDataHeaderCollection.New(headers);
+
             return ReportDataHeaderCollection.NewSorted(headers);
         }
 
-        private ReportDataHeader ParseHeader(JToken data, int level, int offset)
+        private ReportDataHeader ParseHeader(JToken data, int level, int offset, string[] tailLabels, int tailIndex)
         {
             if (data.Type != JTokenType.Array)
             {
-                var label = (string)data;
-                if (String.IsNullOrEmpty(label))
-                    label = null;
+                string label;
+                if (tailLabels != null)
+                {
+                    label = tailLabels[tailIndex];
+                }
+                else
+                {
+                    label = (string)data;
+                    if (String.IsNullOrEmpty(label))
+                        label = null;
+                }
 
                 return new ReportDataHeader(
                     label,
@@ -129,7 +138,7 @@ namespace WastedgeQuerier.Report
 
             for (int i = 1; i < subData.Count; i++)
             {
-                var header = ParseHeader(subData[i], level + 1, offset + span);
+                var header = ParseHeader(subData[i], level + 1, offset + span, tailLabels, i - 1);
                 children.Add(header);
                 span += header.Span;
             }
@@ -141,12 +150,20 @@ namespace WastedgeQuerier.Report
             if (String.IsNullOrEmpty(subLabel))
                 subLabel = null;
 
+            // Don't sort the tail columns.
+
+            ReportDataHeaderCollection childHeaders;
+            if (tailLabels != null && children[0].Children.Count == 0)
+                childHeaders = ReportDataHeaderCollection.New(children);
+            else
+                childHeaders = ReportDataHeaderCollection.NewSorted(children);
+
             return new ReportDataHeader(
                 subLabel,
                 level,
                 offset,
                 span,
-                ReportDataHeaderCollection.NewSorted(children)
+                childHeaders
             );
         }
     }

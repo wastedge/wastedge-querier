@@ -21,14 +21,22 @@ namespace WastedgeQuerier.Report
 
         private ReportDataHeaderCollection(List<ReportDataHeader> headers)
         {
+            _headers = headers;
+        }
+
+        public static ReportDataHeaderCollection New(List<ReportDataHeader> headers)
+        {
             if (headers == null)
                 throw new ArgumentNullException(nameof(headers));
 
-            _headers = headers;
+            return new ReportDataHeaderCollection(headers);
         }
 
         public static ReportDataHeaderCollection NewSorted(List<ReportDataHeader> headers)
         {
+            if (headers == null)
+                throw new ArgumentNullException(nameof(headers));
+
             headers.Sort((a, b) => Compare(a.Label, b.Label));
             return new ReportDataHeaderCollection(headers);
         }

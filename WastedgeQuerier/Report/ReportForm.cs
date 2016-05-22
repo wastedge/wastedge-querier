@@ -52,6 +52,41 @@ namespace WastedgeQuerier.Report
             VisualStyleUtil.StyleTreeView(_fields);
 
             BuildFields(_fields.Nodes, entity);
+
+#if DEBUG
+            _rows.Items.Add(new ReportField(new List<EntityMember>
+            {
+                _entity.Members["serv_type"]
+            })
+            {
+                Type = ReportFieldType.Row
+            });
+
+            _rows.Items.Add(new ReportField(new List<EntityMember>
+            {
+                _entity.Members["line_no"]
+            })
+            {
+                Type = ReportFieldType.Row
+            });
+
+            _columns.Items.Add(new ReportField(new List<EntityMember>
+            {
+                _entity.Members["bill_cycle"]
+            })
+            {
+                Type = ReportFieldType.Column
+            });
+
+            _values.Items.Add(new ReportField(new List<EntityMember>
+            {
+                _entity.Members["$id"]
+            })
+            {
+                Type = ReportFieldType.Value,
+                Transform = ReportFieldTransform.Count
+            });
+#endif
         }
 
         private void BuildFields(TreeNodeCollection nodes, EntitySchema entity)
@@ -271,10 +306,6 @@ namespace WastedgeQuerier.Report
                 return;
             }
 
-            var columns = _columns.Items.Cast<ReportField>().Select(p => p.Clone()).ToList();
-            var rows = _rows.Items.Cast<ReportField>().Select(p => p.Clone()).ToList();
-            var values = _values.Items.Cast<ReportField>().Select(p => p.Clone()).ToList();
-
             _gridManager.Reset();
 
             _dataSet = null;
@@ -285,7 +316,15 @@ namespace WastedgeQuerier.Report
 
             try
             {
-                string response = await _api.ExecuteRawAsync(_entity.Name + "/$report", null, "POST", BuildRequest(columns, rows, values));
+                string request = BuildRequest(
+                    _columns.Items.Cast<ReportField>(),
+                    _rows.Items.Cast<ReportField>(),
+                    _values.Items.Cast<ReportField>()
+                );
+
+                string[] valueLabels = _values.Items.Cast<ReportField>().Select(p => p.ToString()).ToArray();
+
+                string response = await _api.ExecuteRawAsync(_entity.Name + "/$report", null, "POST", request);
 
                 if (IsDisposed)
                     return;
@@ -300,7 +339,7 @@ namespace WastedgeQuerier.Report
                     result = (JObject)JToken.ReadFrom(json);
                 }
 
-                _dataSet = new ReportDataSet(result, columns, rows, values);
+                _dataSet = new ReportDataSet(result, valueLabels);
 
                 _gridManager.Load(_dataSet);
             }
@@ -321,7 +360,7 @@ namespace WastedgeQuerier.Report
             _exportToExcel.Enabled = _dataSet != null;
         }
 
-        private string BuildRequest(List<ReportField> columns, List<ReportField> rows, List<ReportField> values)
+        private string BuildRequest(IEnumerable<ReportField> columns, IEnumerable<ReportField> rows, IEnumerable<ReportField> values)
         {
             using (var writer = new StringWriter())
             using (var json = new JsonTextWriter(writer))

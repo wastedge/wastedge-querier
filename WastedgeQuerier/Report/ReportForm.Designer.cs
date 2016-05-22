@@ -42,6 +42,9 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this._columns = new WastedgeQuerier.Report.ReportFieldListBox();
+            this._rows = new WastedgeQuerier.Report.ReportFieldListBox();
+            this._values = new WastedgeQuerier.Report.ReportFieldListBox();
             this._update = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this._fieldContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -68,9 +71,6 @@
             this._standardDeviationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._sampleVarianceMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._varianceMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this._columns = new WastedgeQuerier.Report.ReportFieldListBox();
-            this._rows = new WastedgeQuerier.Report.ReportFieldListBox();
-            this._values = new WastedgeQuerier.Report.ReportFieldListBox();
             this.panel2.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -97,11 +97,11 @@
             // 
             this._grid.BackColor = System.Drawing.SystemColors.Window;
             this._grid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._grid.EnableSort = true;
+            this._grid.EnableSort = false;
             this._grid.Location = new System.Drawing.Point(1, 1);
             this._grid.Name = "_grid";
             this._grid.OptimizeMode = SourceGrid.CellOptimizeMode.ForRows;
-            this._grid.SelectionMode = SourceGrid.GridSelectionMode.Row;
+            this._grid.SelectionMode = SourceGrid.GridSelectionMode.Cell;
             this._grid.Size = new System.Drawing.Size(450, 494);
             this._grid.TabIndex = 0;
             this._grid.TabStop = true;
@@ -246,6 +246,43 @@
             this.label5.Size = new System.Drawing.Size(39, 13);
             this.label5.TabIndex = 2;
             this.label5.Text = "Values";
+            // 
+            // _columns
+            // 
+            this._columns.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._columns.FieldType = WastedgeQuerier.Report.ReportFieldType.Column;
+            this._columns.FormattingEnabled = true;
+            this._columns.IntegralHeight = false;
+            this._columns.Location = new System.Drawing.Point(3, 16);
+            this._columns.Name = "_columns";
+            this._columns.Size = new System.Drawing.Size(103, 67);
+            this._columns.TabIndex = 3;
+            this._columns.ItemClick += new WastedgeQuerier.Report.ListBoxItemEventHandler(this._fieldsList_ItemClick);
+            // 
+            // _rows
+            // 
+            this._rows.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._rows.FieldType = WastedgeQuerier.Report.ReportFieldType.Row;
+            this._rows.FormattingEnabled = true;
+            this._rows.IntegralHeight = false;
+            this._rows.Location = new System.Drawing.Point(112, 16);
+            this._rows.Name = "_rows";
+            this._rows.Size = new System.Drawing.Size(104, 67);
+            this._rows.TabIndex = 3;
+            this._rows.ItemClick += new WastedgeQuerier.Report.ListBoxItemEventHandler(this._fieldsList_ItemClick);
+            // 
+            // _values
+            // 
+            this.tableLayoutPanel2.SetColumnSpan(this._values, 2);
+            this._values.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._values.FieldType = WastedgeQuerier.Report.ReportFieldType.Value;
+            this._values.FormattingEnabled = true;
+            this._values.IntegralHeight = false;
+            this._values.Location = new System.Drawing.Point(3, 102);
+            this._values.Name = "_values";
+            this._values.Size = new System.Drawing.Size(213, 67);
+            this._values.TabIndex = 3;
+            this._values.ItemClick += new WastedgeQuerier.Report.ListBoxItemEventHandler(this._fieldsList_ItemClick);
             // 
             // _update
             // 
@@ -462,43 +499,6 @@
             this._varianceMenuItem.Tag = "Varp";
             this._varianceMenuItem.Text = "Va&riance";
             this._varianceMenuItem.Click += new System.EventHandler(this._selectAverageMenuItem_Click);
-            // 
-            // _columns
-            // 
-            this._columns.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._columns.FieldType = WastedgeQuerier.Report.ReportFieldType.Column;
-            this._columns.FormattingEnabled = true;
-            this._columns.IntegralHeight = false;
-            this._columns.Location = new System.Drawing.Point(3, 16);
-            this._columns.Name = "_columns";
-            this._columns.Size = new System.Drawing.Size(103, 67);
-            this._columns.TabIndex = 3;
-            this._columns.ItemClick += new WastedgeQuerier.Report.ListBoxItemEventHandler(this._fieldsList_ItemClick);
-            // 
-            // _rows
-            // 
-            this._rows.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._rows.FieldType = WastedgeQuerier.Report.ReportFieldType.Row;
-            this._rows.FormattingEnabled = true;
-            this._rows.IntegralHeight = false;
-            this._rows.Location = new System.Drawing.Point(112, 16);
-            this._rows.Name = "_rows";
-            this._rows.Size = new System.Drawing.Size(104, 67);
-            this._rows.TabIndex = 3;
-            this._rows.ItemClick += new WastedgeQuerier.Report.ListBoxItemEventHandler(this._fieldsList_ItemClick);
-            // 
-            // _values
-            // 
-            this.tableLayoutPanel2.SetColumnSpan(this._values, 2);
-            this._values.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._values.FieldType = WastedgeQuerier.Report.ReportFieldType.Value;
-            this._values.FormattingEnabled = true;
-            this._values.IntegralHeight = false;
-            this._values.Location = new System.Drawing.Point(3, 102);
-            this._values.Name = "_values";
-            this._values.Size = new System.Drawing.Size(213, 67);
-            this._values.TabIndex = 3;
-            this._values.ItemClick += new WastedgeQuerier.Report.ListBoxItemEventHandler(this._fieldsList_ItemClick);
             // 
             // ReportForm
             // 
