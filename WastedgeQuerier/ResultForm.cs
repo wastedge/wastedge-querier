@@ -212,12 +212,16 @@ namespace WastedgeQuerier
                 {
                     int count = 0;
                     var resultSets = new List<ResultSet>();
+                    string nextResult = _resultSet.NextResult;
 
                     _query.Count = null;
 
                     while (true)
                     {
-                        _query.Start = _resultSet.NextResult;
+                        _query.Start = nextResult;
+
+                        if (IsDisposed)
+                            return;
 
                         var resultSet = await _query.ExecuteReaderAsync();
 
@@ -229,6 +233,8 @@ namespace WastedgeQuerier
 
                         if (!resultSet.HasMore)
                             break;
+
+                        nextResult = resultSet.NextResult;
                     }
 
                     foreach (var resultSet in resultSets)
