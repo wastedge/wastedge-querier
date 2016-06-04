@@ -179,7 +179,7 @@ namespace WastedgeQuerier
         {
             using (var form = new LoadingForm())
             {
-                form.LoadingText = $"Loading {Constants.PageSize} results...";
+                form.LoadingText = $"Loading {Constants.LimitPageSize} results...";
 
                 form.Shown += async (s, ea) =>
                 {
@@ -220,7 +220,7 @@ namespace WastedgeQuerier
                     {
                         _query.Start = nextResult;
 
-                        if (IsDisposed)
+                        if (form.IsDisposed)
                             return;
 
                         var resultSet = await _query.ExecuteReaderAsync();
