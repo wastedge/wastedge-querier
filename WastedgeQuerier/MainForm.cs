@@ -63,12 +63,12 @@ namespace WastedgeQuerier
 
         private async void MainForm_Shown(object sender, EventArgs e)
         {
-            var schema = await _api.GetSchemaAsync();
+            await _api.CacheFullEntitySchemaAsync();
 
             _tables.BeginUpdate();
             _tables.Items.Clear();
             _tables.Items.Add("");
-            _tables.Items.AddRange(schema.Entities.OrderBy(p => p).Cast<object>().ToArray());
+            _tables.Items.AddRange(_api.GetSchema().Entities.OrderBy(p => p).Cast<object>().ToArray());
             _tables.EndUpdate();
 
             _container.Enabled = true;
@@ -76,7 +76,7 @@ namespace WastedgeQuerier
             ProcessArguments();
 
 #if DEBUG
-            _tables.SelectedItem = "commercial/stdpr_hdr";
+            _tables.SelectedItem = "customer/service";
 #endif
         }
 

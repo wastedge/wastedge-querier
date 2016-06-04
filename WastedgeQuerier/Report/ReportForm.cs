@@ -151,17 +151,14 @@ namespace WastedgeQuerier.Report
             }
         }
 
-        private async void _fields_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        private void _fields_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
             if (e.Node.Nodes.Count != 1 || e.Node.Nodes[0].Tag != null)
                 return;
 
-            e.Cancel = true;
             e.Node.Nodes.Clear();
 
-            BuildFields(e.Node.Nodes, await _api.GetEntitySchemaAsync(((EntityForeign)e.Node.Tag).LinkTable));
-
-            e.Node.Expand();
+            BuildFields(e.Node.Nodes, _api.GetEntitySchema(((EntityForeign)e.Node.Tag).LinkTable));
         }
 
         private void _fields_ItemDrag(object sender, ItemDragEventArgs e)
