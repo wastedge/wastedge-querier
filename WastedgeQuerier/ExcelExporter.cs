@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Windows.Forms;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using WastedgeApi;
@@ -15,9 +11,6 @@ namespace WastedgeQuerier
 {
     public class ExcelExporter
     {
-        private const string DefaultFont = "Calibri";
-        private const int DefaultFontHeight = 11;
-
         public void Export(Stream stream, IList<ResultSet> resultSets)
         {
             if (stream == null)
@@ -28,9 +21,6 @@ namespace WastedgeQuerier
             var firstResultSet = resultSets[0];
 
             var workbook = new XSSFWorkbook();
-            var defaultFont = workbook.GetFontAt(0);
-            defaultFont.FontName = DefaultFont;
-            defaultFont.FontHeightInPoints = DefaultFontHeight;
 
             var sheet = workbook.CreateSheet(PrettifyName(firstResultSet.Entity.Name));
             sheet.DefaultRowHeightInPoints = 15;
@@ -167,9 +157,10 @@ namespace WastedgeQuerier
             style.Alignment = NPOI.SS.UserModel.HorizontalAlignment.Center;
 
             var font = workbook.CreateFont();
+            var defaultFont = workbook.GetFontAt(0);
 
-            font.FontName = DefaultFont;
-            font.FontHeightInPoints = DefaultFontHeight;
+            font.FontName = defaultFont.FontName;
+            font.FontHeightInPoints = defaultFont.FontHeightInPoints;
 
             font.Boldweight = (short)FontBoldWeight.Bold;
 

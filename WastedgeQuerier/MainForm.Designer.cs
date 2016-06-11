@@ -32,46 +32,67 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.mainMenu1 = new System.Windows.Forms.MainMenu(this.components);
             this._fileMenuItem = new System.Windows.Forms.MenuItem();
+            this._fileAddExportMenuItem = new System.Windows.Forms.MenuItem();
+            this._fileAddReportMenuItem = new System.Windows.Forms.MenuItem();
+            this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this._fileAddPluginMenuItem = new System.Windows.Forms.MenuItem();
+            this.menuItem6 = new System.Windows.Forms.MenuItem();
             this._fileExitMenuItem = new System.Windows.Forms.MenuItem();
-            this._pluginsMenuItem = new System.Windows.Forms.MenuItem();
-            this._pluginsPluginManagerSeparatorMenuItem = new System.Windows.Forms.MenuItem();
-            this._pluginsPluginManagerMenuItem = new System.Windows.Forms.MenuItem();
             this._toolsMenuItem = new System.Windows.Forms.MenuItem();
+            this._toolsOpenTableMenuItem = new System.Windows.Forms.MenuItem();
+            this.menuItem5 = new System.Windows.Forms.MenuItem();
             this._toolsJavaScriptConsoleMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this._helpOpenHelpMenuItem = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this._helpAboutMenuItem = new System.Windows.Forms.MenuItem();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.label1 = new System.Windows.Forms.Label();
-            this._tables = new System.Windows.Forms.ComboBox();
-            this._footerPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this._export = new System.Windows.Forms.Button();
-            this._reset = new System.Windows.Forms.Button();
-            this._filters = new System.Windows.Forms.GroupBox();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this._filterContainer = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this._filter = new System.Windows.Forms.ComboBox();
-            this._add = new System.Windows.Forms.Button();
-            this._filterControls = new System.Windows.Forms.Panel();
-            this._container = new System.Windows.Forms.Panel();
-            this._toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this._report = new System.Windows.Forms.Button();
-            this.tableLayoutPanel1.SuspendLayout();
-            this._footerPanel.SuspendLayout();
-            this._filters.SuspendLayout();
-            this.panel3.SuspendLayout();
-            this._filterContainer.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
-            this._container.SuspendLayout();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this._directoryBrowser = new WastedgeQuerier.Support.DirectoryBrowser();
+            this.toolStrip3 = new System.Windows.Forms.ToolStrip();
+            this._addFolder = new System.Windows.Forms.ToolStripButton();
+            this._deleteFolder = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this._renameFolder = new System.Windows.Forms.ToolStripButton();
+            this._fileBrowser = new WastedgeQuerier.Support.FileBrowser();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this._addFile = new System.Windows.Forms.ToolStripDropDownButton();
+            this._addExport = new System.Windows.Forms.ToolStripMenuItem();
+            this._addReport = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
+            this._addPlugin = new System.Windows.Forms.ToolStripMenuItem();
+            this._deleteFile = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this._renameFile = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this._runFile = new System.Windows.Forms.ToolStripButton();
+            this._directoryContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this._addFolderMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this._deleteFolderMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._renameFolderMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._fileContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this._addExportMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._addReportMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
+            this._addPluginMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this._deleteFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._renameFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
+            this.toolStrip3.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
+            this._directoryContextMenu.SuspendLayout();
+            this._fileContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainMenu1
             // 
             this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this._fileMenuItem,
-            this._pluginsMenuItem,
             this._toolsMenuItem,
             this.menuItem1});
             // 
@@ -79,52 +100,79 @@
             // 
             this._fileMenuItem.Index = 0;
             this._fileMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this._fileAddExportMenuItem,
+            this._fileAddReportMenuItem,
+            this.menuItem3,
+            this._fileAddPluginMenuItem,
+            this.menuItem6,
             this._fileExitMenuItem});
             this._fileMenuItem.Text = "&File";
             // 
+            // _fileAddExportMenuItem
+            // 
+            this._fileAddExportMenuItem.Index = 0;
+            this._fileAddExportMenuItem.Text = "New &Export";
+            this._fileAddExportMenuItem.Click += new System.EventHandler(this._fileAddExportMenuItem_Click);
+            // 
+            // _fileAddReportMenuItem
+            // 
+            this._fileAddReportMenuItem.Index = 1;
+            this._fileAddReportMenuItem.Text = "New &Report";
+            this._fileAddReportMenuItem.Click += new System.EventHandler(this._fileAddReportMenuItem_Click);
+            // 
+            // menuItem3
+            // 
+            this.menuItem3.Index = 2;
+            this.menuItem3.Text = "-";
+            // 
+            // _fileAddPluginMenuItem
+            // 
+            this._fileAddPluginMenuItem.Index = 3;
+            this._fileAddPluginMenuItem.Text = "Add &Plugin";
+            this._fileAddPluginMenuItem.Click += new System.EventHandler(this._fileAddPluginMenuItem_Click);
+            // 
+            // menuItem6
+            // 
+            this.menuItem6.Index = 4;
+            this.menuItem6.Text = "-";
+            // 
             // _fileExitMenuItem
             // 
-            this._fileExitMenuItem.Index = 0;
+            this._fileExitMenuItem.Index = 5;
             this._fileExitMenuItem.Shortcut = System.Windows.Forms.Shortcut.AltF4;
             this._fileExitMenuItem.Text = "E&xit";
             this._fileExitMenuItem.Click += new System.EventHandler(this._fileExitMenuItem_Click);
             // 
-            // _pluginsMenuItem
-            // 
-            this._pluginsMenuItem.Index = 1;
-            this._pluginsMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this._pluginsPluginManagerSeparatorMenuItem,
-            this._pluginsPluginManagerMenuItem});
-            this._pluginsMenuItem.Text = "&Plugins";
-            // 
-            // _pluginsPluginManagerSeparatorMenuItem
-            // 
-            this._pluginsPluginManagerSeparatorMenuItem.Index = 0;
-            this._pluginsPluginManagerSeparatorMenuItem.Text = "-";
-            // 
-            // _pluginsPluginManagerMenuItem
-            // 
-            this._pluginsPluginManagerMenuItem.Index = 1;
-            this._pluginsPluginManagerMenuItem.Text = "&Plugin Manager";
-            this._pluginsPluginManagerMenuItem.Click += new System.EventHandler(this._pluginsPluginManagerMenuItem_Click);
-            // 
             // _toolsMenuItem
             // 
-            this._toolsMenuItem.Index = 2;
+            this._toolsMenuItem.Index = 1;
             this._toolsMenuItem.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this._toolsOpenTableMenuItem,
+            this.menuItem5,
             this._toolsJavaScriptConsoleMenuItem});
             this._toolsMenuItem.Text = "&Tools";
             // 
+            // _toolsOpenTableMenuItem
+            // 
+            this._toolsOpenTableMenuItem.Index = 0;
+            this._toolsOpenTableMenuItem.Text = "&Open Table";
+            this._toolsOpenTableMenuItem.Click += new System.EventHandler(this._toolsOpenTableMenuItem_Click);
+            // 
+            // menuItem5
+            // 
+            this.menuItem5.Index = 1;
+            this.menuItem5.Text = "-";
+            // 
             // _toolsJavaScriptConsoleMenuItem
             // 
-            this._toolsJavaScriptConsoleMenuItem.Index = 0;
+            this._toolsJavaScriptConsoleMenuItem.Index = 2;
             this._toolsJavaScriptConsoleMenuItem.Shortcut = System.Windows.Forms.Shortcut.F11;
             this._toolsJavaScriptConsoleMenuItem.Text = "&JavaScript Console";
             this._toolsJavaScriptConsoleMenuItem.Click += new System.EventHandler(this._toolsJavaScriptConsoleMenuItem_Click);
             // 
             // menuItem1
             // 
-            this.menuItem1.Index = 3;
+            this.menuItem1.Index = 2;
             this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this._helpOpenHelpMenuItem,
             this.menuItem2,
@@ -149,208 +197,325 @@
             this._helpAboutMenuItem.Text = "A&bout";
             this._helpAboutMenuItem.Click += new System.EventHandler(this._helpAboutMenuItem_Click);
             // 
-            // tableLayoutPanel1
+            // splitContainer1
             // 
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this._tables, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this._footerPanel, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this._filters, 0, 1);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(9, 9);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(498, 342);
-            this.tableLayoutPanel1.TabIndex = 0;
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
             // 
-            // label1
+            // splitContainer1.Panel1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label1.Location = new System.Drawing.Point(3, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(37, 27);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Table:";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.splitContainer1.Panel1.Controls.Add(this._directoryBrowser);
+            this.splitContainer1.Panel1.Controls.Add(this.toolStrip3);
             // 
-            // _tables
+            // splitContainer1.Panel2
             // 
-            this._tables.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._tables.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this._tables.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this._tables.FormattingEnabled = true;
-            this._tables.Location = new System.Drawing.Point(46, 3);
-            this._tables.Name = "_tables";
-            this._tables.Size = new System.Drawing.Size(449, 21);
-            this._tables.TabIndex = 1;
-            this._tables.SelectedIndexChanged += new System.EventHandler(this._tables_SelectedIndexChanged);
+            this.splitContainer1.Panel2.Controls.Add(this._fileBrowser);
+            this.splitContainer1.Panel2.Controls.Add(this.toolStrip1);
+            this.splitContainer1.Size = new System.Drawing.Size(721, 374);
+            this.splitContainer1.SplitterDistance = 239;
+            this.splitContainer1.TabIndex = 0;
             // 
-            // _footerPanel
+            // _directoryBrowser
             // 
-            this._footerPanel.AutoSize = true;
-            this.tableLayoutPanel1.SetColumnSpan(this._footerPanel, 2);
-            this._footerPanel.Controls.Add(this._export);
-            this._footerPanel.Controls.Add(this._report);
-            this._footerPanel.Controls.Add(this._reset);
-            this._footerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._footerPanel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this._footerPanel.Location = new System.Drawing.Point(3, 310);
-            this._footerPanel.Name = "_footerPanel";
-            this._footerPanel.Size = new System.Drawing.Size(492, 29);
-            this._footerPanel.TabIndex = 3;
+            this._directoryBrowser.AllowDrop = true;
+            this._directoryBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._directoryBrowser.Location = new System.Drawing.Point(0, 25);
+            this._directoryBrowser.Name = "_directoryBrowser";
+            this._directoryBrowser.RootName = "Wastedge";
+            this._directoryBrowser.Size = new System.Drawing.Size(239, 349);
+            this._directoryBrowser.TabIndex = 1;
+            this._directoryBrowser.DirectoryChanged += new System.EventHandler(this._directoryBrowser_DirectoryChanged);
+            this._directoryBrowser.DirectoryClick += new WastedgeQuerier.Support.PathMouseEventHandler(this._directoryBrowser_DirectoryClick);
             // 
-            // _export
+            // toolStrip3
             // 
-            this._export.Location = new System.Drawing.Point(414, 3);
-            this._export.Name = "_export";
-            this._export.Size = new System.Drawing.Size(75, 23);
-            this._export.TabIndex = 2;
-            this._export.Text = "&Export";
-            this._export.UseVisualStyleBackColor = true;
-            this._export.Click += new System.EventHandler(this._export_Click);
+            this.toolStrip3.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._addFolder,
+            this._deleteFolder,
+            this.toolStripSeparator2,
+            this._renameFolder});
+            this.toolStrip3.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip3.Name = "toolStrip3";
+            this.toolStrip3.Size = new System.Drawing.Size(239, 25);
+            this.toolStrip3.TabIndex = 2;
+            this.toolStrip3.Text = "toolStrip3";
             // 
-            // _reset
+            // _addFolder
             // 
-            this._reset.Location = new System.Drawing.Point(252, 3);
-            this._reset.Name = "_reset";
-            this._reset.Size = new System.Drawing.Size(75, 23);
-            this._reset.TabIndex = 0;
-            this._reset.Text = "&Reset";
-            this._reset.UseVisualStyleBackColor = true;
-            this._reset.Click += new System.EventHandler(this._reset_Click);
+            this._addFolder.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this._addFolder.Image = global::WastedgeQuerier.NeutralResources.add;
+            this._addFolder.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._addFolder.Name = "_addFolder";
+            this._addFolder.Size = new System.Drawing.Size(23, 22);
+            this._addFolder.Text = "Add Folder";
+            this._addFolder.Click += new System.EventHandler(this._addFolder_Click);
             // 
-            // _filters
+            // _deleteFolder
             // 
-            this.tableLayoutPanel1.SetColumnSpan(this._filters, 2);
-            this._filters.Controls.Add(this.panel3);
-            this._filters.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._filters.Location = new System.Drawing.Point(3, 30);
-            this._filters.Name = "_filters";
-            this._filters.Padding = new System.Windows.Forms.Padding(8, 4, 8, 8);
-            this._filters.Size = new System.Drawing.Size(492, 274);
-            this._filters.TabIndex = 2;
-            this._filters.TabStop = false;
-            this._filters.Text = "Filters";
+            this._deleteFolder.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this._deleteFolder.Image = global::WastedgeQuerier.NeutralResources.delete;
+            this._deleteFolder.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._deleteFolder.Name = "_deleteFolder";
+            this._deleteFolder.Size = new System.Drawing.Size(23, 22);
+            this._deleteFolder.Text = "Delete Folder";
+            this._deleteFolder.Click += new System.EventHandler(this._deleteFolder_Click);
             // 
-            // panel3
+            // toolStripSeparator2
             // 
-            this.panel3.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.panel3.Controls.Add(this._filterContainer);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(8, 17);
-            this.panel3.Name = "panel3";
-            this.panel3.Padding = new System.Windows.Forms.Padding(1);
-            this.panel3.Size = new System.Drawing.Size(476, 249);
-            this.panel3.TabIndex = 2;
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
             // 
-            // _filterContainer
+            // _renameFolder
             // 
-            this._filterContainer.AutoScroll = true;
-            this._filterContainer.BackColor = System.Drawing.SystemColors.Control;
-            this._filterContainer.Controls.Add(this.tableLayoutPanel2);
-            this._filterContainer.Controls.Add(this._filterControls);
-            this._filterContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._filterContainer.Location = new System.Drawing.Point(1, 1);
-            this._filterContainer.Name = "_filterContainer";
-            this._filterContainer.Size = new System.Drawing.Size(474, 247);
-            this._filterContainer.TabIndex = 0;
+            this._renameFolder.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this._renameFolder.Image = global::WastedgeQuerier.NeutralResources.text_field;
+            this._renameFolder.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._renameFolder.Name = "_renameFolder";
+            this._renameFolder.Size = new System.Drawing.Size(23, 22);
+            this._renameFolder.Text = "Rename";
+            this._renameFolder.Click += new System.EventHandler(this._renameFolder_Click);
             // 
-            // tableLayoutPanel2
+            // _fileBrowser
             // 
-            this.tableLayoutPanel2.AutoSize = true;
-            this.tableLayoutPanel2.ColumnCount = 2;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.Controls.Add(this._filter, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this._add, 1, 0);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 1;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(474, 29);
-            this.tableLayoutPanel2.TabIndex = 1;
+            this._fileBrowser.AllowDrop = true;
+            this._fileBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._fileBrowser.Enabled = false;
+            this._fileBrowser.Location = new System.Drawing.Point(0, 25);
+            this._fileBrowser.Name = "_fileBrowser";
+            this._fileBrowser.Size = new System.Drawing.Size(478, 349);
+            this._fileBrowser.TabIndex = 1;
+            this._fileBrowser.SelectedFilesChanged += new System.EventHandler(this._fileBrowser_SelectedFilesChanged);
+            this._fileBrowser.FileClick += new WastedgeQuerier.Support.PathMouseEventHandler(this._fileBrowser_FileClick);
+            this._fileBrowser.FileActivate += new WastedgeQuerier.Support.PathEventHandler(this._fileBrowser_FileActivate);
             // 
-            // _filter
+            // toolStrip1
             // 
-            this._filter.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this._filter.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this._filter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._filter.FormattingEnabled = true;
-            this._filter.Location = new System.Drawing.Point(3, 3);
-            this._filter.Name = "_filter";
-            this._filter.Size = new System.Drawing.Size(418, 21);
-            this._filter.TabIndex = 0;
-            this._filter.SizeChanged += new System.EventHandler(this._filter_SizeChanged);
-            this._filter.TextChanged += new System.EventHandler(this._filter_TextChanged);
+            this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._addFile,
+            this._deleteFile,
+            this.toolStripSeparator1,
+            this._renameFile,
+            this.toolStripSeparator3,
+            this._runFile});
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(478, 25);
+            this.toolStrip1.TabIndex = 2;
+            this.toolStrip1.Text = "toolStrip1";
             // 
-            // _add
+            // _addFile
             // 
-            this._add.Location = new System.Drawing.Point(427, 3);
-            this._add.Name = "_add";
-            this._add.Size = new System.Drawing.Size(44, 23);
-            this._add.TabIndex = 1;
-            this._add.Text = "Add";
-            this._add.UseVisualStyleBackColor = true;
-            this._add.Click += new System.EventHandler(this._add_Click);
+            this._addFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this._addFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._addExport,
+            this._addReport,
+            this.toolStripMenuItem3,
+            this._addPlugin});
+            this._addFile.Image = global::WastedgeQuerier.NeutralResources.add;
+            this._addFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._addFile.Name = "_addFile";
+            this._addFile.Size = new System.Drawing.Size(29, 22);
+            this._addFile.Text = "Add File";
             // 
-            // _filterControls
+            // _addExport
             // 
-            this._filterControls.AutoSize = true;
-            this._filterControls.Dock = System.Windows.Forms.DockStyle.Top;
-            this._filterControls.Location = new System.Drawing.Point(0, 0);
-            this._filterControls.Name = "_filterControls";
-            this._filterControls.Size = new System.Drawing.Size(474, 0);
-            this._filterControls.TabIndex = 0;
+            this._addExport.Name = "_addExport";
+            this._addExport.Size = new System.Drawing.Size(136, 22);
+            this._addExport.Text = "New &Export";
+            this._addExport.Click += new System.EventHandler(this._addExport_Click);
             // 
-            // _container
+            // _addReport
             // 
-            this._container.Controls.Add(this.tableLayoutPanel1);
-            this._container.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._container.Location = new System.Drawing.Point(0, 0);
-            this._container.Name = "_container";
-            this._container.Padding = new System.Windows.Forms.Padding(9);
-            this._container.Size = new System.Drawing.Size(516, 360);
-            this._container.TabIndex = 0;
+            this._addReport.Name = "_addReport";
+            this._addReport.Size = new System.Drawing.Size(136, 22);
+            this._addReport.Text = "New &Report";
+            this._addReport.Click += new System.EventHandler(this._addReport_Click);
             // 
-            // _report
+            // toolStripMenuItem3
             // 
-            this._report.Location = new System.Drawing.Point(333, 3);
-            this._report.Name = "_report";
-            this._report.Size = new System.Drawing.Size(75, 23);
-            this._report.TabIndex = 1;
-            this._report.Text = "Re&port";
-            this._report.UseVisualStyleBackColor = true;
-            this._report.Click += new System.EventHandler(this._report_Click);
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(133, 6);
+            // 
+            // _addPlugin
+            // 
+            this._addPlugin.Name = "_addPlugin";
+            this._addPlugin.Size = new System.Drawing.Size(136, 22);
+            this._addPlugin.Text = "Add &Plugin";
+            this._addPlugin.Click += new System.EventHandler(this._addPlugin_Click);
+            // 
+            // _deleteFile
+            // 
+            this._deleteFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this._deleteFile.Image = global::WastedgeQuerier.NeutralResources.delete;
+            this._deleteFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._deleteFile.Name = "_deleteFile";
+            this._deleteFile.Size = new System.Drawing.Size(23, 22);
+            this._deleteFile.Text = "Delete File";
+            this._deleteFile.Click += new System.EventHandler(this._deleteFile_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // _renameFile
+            // 
+            this._renameFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this._renameFile.Image = global::WastedgeQuerier.NeutralResources.text_field;
+            this._renameFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._renameFile.Name = "_renameFile";
+            this._renameFile.Size = new System.Drawing.Size(23, 22);
+            this._renameFile.Text = "Rename";
+            this._renameFile.Click += new System.EventHandler(this._renameFile_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
+            // _runFile
+            // 
+            this._runFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this._runFile.Image = global::WastedgeQuerier.NeutralResources._continue;
+            this._runFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._runFile.Name = "_runFile";
+            this._runFile.Size = new System.Drawing.Size(23, 22);
+            this._runFile.Text = "Run File";
+            this._runFile.Click += new System.EventHandler(this._runFile_Click);
+            // 
+            // _directoryContextMenu
+            // 
+            this._directoryContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._addFolderMenuItem,
+            this.toolStripMenuItem1,
+            this._deleteFolderMenuItem,
+            this._renameFolderMenuItem});
+            this._directoryContextMenu.Name = "_directoryContextMenu";
+            this._directoryContextMenu.Size = new System.Drawing.Size(137, 76);
+            // 
+            // _addFolderMenuItem
+            // 
+            this._addFolderMenuItem.Name = "_addFolderMenuItem";
+            this._addFolderMenuItem.Size = new System.Drawing.Size(136, 22);
+            this._addFolderMenuItem.Text = "&New Folder";
+            this._addFolderMenuItem.Click += new System.EventHandler(this._addFolderMenuItem_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(133, 6);
+            // 
+            // _deleteFolderMenuItem
+            // 
+            this._deleteFolderMenuItem.Name = "_deleteFolderMenuItem";
+            this._deleteFolderMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
+            this._deleteFolderMenuItem.Size = new System.Drawing.Size(136, 22);
+            this._deleteFolderMenuItem.Text = "&Delete";
+            this._deleteFolderMenuItem.Click += new System.EventHandler(this._deleteFolderMenuItem_Click);
+            // 
+            // _renameFolderMenuItem
+            // 
+            this._renameFolderMenuItem.Name = "_renameFolderMenuItem";
+            this._renameFolderMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F2;
+            this._renameFolderMenuItem.Size = new System.Drawing.Size(136, 22);
+            this._renameFolderMenuItem.Text = "&Rename";
+            this._renameFolderMenuItem.Click += new System.EventHandler(this._renameFolderMenuItem_Click);
+            // 
+            // _fileContextMenu
+            // 
+            this._fileContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem2,
+            this.toolStripSeparator4,
+            this._deleteFileMenuItem,
+            this._renameFileMenuItem});
+            this._fileContextMenu.Name = "_directoryContextMenu";
+            this._fileContextMenu.Size = new System.Drawing.Size(137, 76);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._addExportMenuItem,
+            this._addReportMenuItem,
+            this.toolStripMenuItem4,
+            this._addPluginMenuItem});
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(136, 22);
+            this.toolStripMenuItem2.Text = "&Add";
+            // 
+            // _addExportMenuItem
+            // 
+            this._addExportMenuItem.Name = "_addExportMenuItem";
+            this._addExportMenuItem.Size = new System.Drawing.Size(136, 22);
+            this._addExportMenuItem.Text = "New &Export";
+            this._addExportMenuItem.Click += new System.EventHandler(this._addExportMenuItem_Click);
+            // 
+            // _addReportMenuItem
+            // 
+            this._addReportMenuItem.Name = "_addReportMenuItem";
+            this._addReportMenuItem.Size = new System.Drawing.Size(136, 22);
+            this._addReportMenuItem.Text = "New &Report";
+            this._addReportMenuItem.Click += new System.EventHandler(this._addReportMenuItem_Click);
+            // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(133, 6);
+            // 
+            // _addPluginMenuItem
+            // 
+            this._addPluginMenuItem.Name = "_addPluginMenuItem";
+            this._addPluginMenuItem.Size = new System.Drawing.Size(136, 22);
+            this._addPluginMenuItem.Text = "Add &Plugin";
+            this._addPluginMenuItem.Click += new System.EventHandler(this._addPluginMenuItem_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(133, 6);
+            // 
+            // _deleteFileMenuItem
+            // 
+            this._deleteFileMenuItem.Name = "_deleteFileMenuItem";
+            this._deleteFileMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
+            this._deleteFileMenuItem.Size = new System.Drawing.Size(136, 22);
+            this._deleteFileMenuItem.Text = "&Delete";
+            this._deleteFileMenuItem.Click += new System.EventHandler(this._deleteFileMenuItem_Click);
+            // 
+            // _renameFileMenuItem
+            // 
+            this._renameFileMenuItem.Name = "_renameFileMenuItem";
+            this._renameFileMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F2;
+            this._renameFileMenuItem.Size = new System.Drawing.Size(136, 22);
+            this._renameFileMenuItem.Text = "&Rename";
+            this._renameFileMenuItem.Click += new System.EventHandler(this._renameFileMenuItem_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(516, 360);
-            this.Controls.Add(this._container);
+            this.ClientSize = new System.Drawing.Size(721, 374);
+            this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Menu = this.mainMenu1;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Wastedge Querier";
             this.Shown += new System.EventHandler(this.MainForm_Shown);
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this._footerPanel.ResumeLayout(false);
-            this._filters.ResumeLayout(false);
-            this.panel3.ResumeLayout(false);
-            this._filterContainer.ResumeLayout(false);
-            this._filterContainer.PerformLayout();
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this._container.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
+            this.toolStrip3.ResumeLayout(false);
+            this.toolStrip3.PerformLayout();
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
+            this._directoryContextMenu.ResumeLayout(false);
+            this._fileContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -362,29 +527,49 @@
         private System.Windows.Forms.MenuItem _fileExitMenuItem;
         private System.Windows.Forms.MenuItem _toolsMenuItem;
         private System.Windows.Forms.MenuItem _toolsJavaScriptConsoleMenuItem;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox _tables;
-        private System.Windows.Forms.Panel _container;
-        private System.Windows.Forms.FlowLayoutPanel _footerPanel;
-        private System.Windows.Forms.Button _export;
-        private System.Windows.Forms.GroupBox _filters;
-        private System.Windows.Forms.Panel _filterContainer;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.ToolTip _toolTip;
-        private System.Windows.Forms.Button _reset;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.ComboBox _filter;
-        private System.Windows.Forms.Button _add;
-        private System.Windows.Forms.Panel _filterControls;
-        private System.Windows.Forms.MenuItem _pluginsMenuItem;
-        private System.Windows.Forms.MenuItem _pluginsPluginManagerSeparatorMenuItem;
-        private System.Windows.Forms.MenuItem _pluginsPluginManagerMenuItem;
         private System.Windows.Forms.MenuItem menuItem1;
         private System.Windows.Forms.MenuItem _helpOpenHelpMenuItem;
         private System.Windows.Forms.MenuItem menuItem2;
         private System.Windows.Forms.MenuItem _helpAboutMenuItem;
-        private System.Windows.Forms.Button _report;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private Support.DirectoryBrowser _directoryBrowser;
+        private Support.FileBrowser _fileBrowser;
+        private System.Windows.Forms.ToolStrip toolStrip3;
+        private System.Windows.Forms.ToolStripButton _addFolder;
+        private System.Windows.Forms.ToolStripButton _deleteFolder;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripButton _renameFolder;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripButton _deleteFile;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripButton _runFile;
+        private System.Windows.Forms.ContextMenuStrip _directoryContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem _addFolderMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem _deleteFolderMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem _renameFolderMenuItem;
+        private System.Windows.Forms.ToolStripButton _renameFile;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ContextMenuStrip _fileContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripMenuItem _deleteFileMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem _renameFileMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem _addPluginMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem _addExportMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem _addReportMenuItem;
+        private System.Windows.Forms.ToolStripDropDownButton _addFile;
+        private System.Windows.Forms.ToolStripMenuItem _addPlugin;
+        private System.Windows.Forms.ToolStripMenuItem _addExport;
+        private System.Windows.Forms.ToolStripMenuItem _addReport;
+        private System.Windows.Forms.MenuItem _fileAddPluginMenuItem;
+        private System.Windows.Forms.MenuItem _fileAddExportMenuItem;
+        private System.Windows.Forms.MenuItem _fileAddReportMenuItem;
+        private System.Windows.Forms.MenuItem menuItem6;
+        private System.Windows.Forms.MenuItem menuItem3;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
+        private System.Windows.Forms.MenuItem _toolsOpenTableMenuItem;
+        private System.Windows.Forms.MenuItem menuItem5;
     }
 }
-

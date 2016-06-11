@@ -7,13 +7,13 @@ using WastedgeApi;
 
 namespace WastedgeQuerier.Report
 {
-    internal class ReportField
+    public class ReportField
     {
-        public IList<EntityMember> Fields { get; }
+        public EntityMemberPath Fields { get; }
         public ReportFieldType Type { get; set; }
         public ReportFieldTransform Transform { get; set; }
 
-        public ReportField(IList<EntityMember> fields)
+        public ReportField(EntityMemberPath fields)
         {
             if (fields == null)
                 throw new ArgumentNullException(nameof(fields));
@@ -23,25 +23,13 @@ namespace WastedgeQuerier.Report
 
         public override string ToString()
         {
-            var tail = Fields[Fields.Count - 1];
+            if (Transform == ReportFieldTransform.None)
+                return Fields.ToString();
 
-            if (Transform != ReportFieldTransform.None)
-            {
-                string prefix = Transform == ReportFieldTransform.CountNumbers ? "Count" : Transform.ToString();
-
-                return prefix + " of " + tail.Name;
-            }
-
-            return tail.Name;
-        }
-
-        public ReportField Clone()
-        {
-            return new ReportField(new List<EntityMember>(Fields))
-            {
-                Type = Type,
-                Transform = Transform
-            };
+            return
+                (Transform == ReportFieldTransform.CountNumbers ? "Count" : Transform.ToString()) +
+                " of " +
+                Fields;
         }
     }
 }

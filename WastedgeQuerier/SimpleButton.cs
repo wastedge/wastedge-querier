@@ -13,6 +13,7 @@ namespace WastedgeQuerier
 
         private State _state;
         private Image _image;
+        private Image _grayImage;
 
         public Image Image
         {
@@ -21,9 +22,13 @@ namespace WastedgeQuerier
             {
                 if (_image != value)
                 {
-                    _image = value;
+                    if (_grayImage != null)
+                        _grayImage.Dispose();
 
-                    Size = Size.Empty;
+                    _image = value;
+                    _grayImage = value == null ? null : ImageUtil.ConvertToGrayscale(value);
+
+                    Size = GetPreferredSize(Size.Empty);
                     Invalidate();
                 }
             }
@@ -40,7 +45,7 @@ namespace WastedgeQuerier
         {
             base.OnTextChanged(e);
 
-            Size = Size.Empty;
+            Size = GetPreferredSize(Size.Empty);
             Invalidate();
         }
 
@@ -48,23 +53,26 @@ namespace WastedgeQuerier
         {
             base.OnFontChanged(e);
 
-            Size = Size.Empty;
+            Size = GetPreferredSize(Size.Empty);
             Invalidate();
         }
 
         protected override void SetBoundsCore(int x, int y, int width, int height, BoundsSpecified specified)
         {
-            Size size;
-
-            if (_image != null)
-                size = _image.Size;
-            else
-                size = TextRenderer.MeasureText(Text.Length > 0 ? Text : "W", Font, new Size(int.MaxValue, int.MaxValue), TextFlags);
+            var size = GetPreferredSize(Size.Empty);
 
             width = size.Width + Padding.Horizontal + 2;
             height = size.Height + Padding.Vertical + 2;
 
             base.SetBoundsCore(x, y, width, height, specified);
+        }
+
+        public override Size GetPreferredSize(Size proposedSize)
+        {
+            if (_image != null)
+                return _image.Size;
+
+            return TextRenderer.MeasureText(Text.Length > 0 ? Text : "W", Font, new Size(int.MaxValue, int.MaxValue), TextFlags);
         }
 
         private void SetState(State state)
@@ -79,6 +87,9 @@ namespace WastedgeQuerier
         {
             base.OnMouseDown(e);
 
+            if (!Enabled)
+                return;
+
             SetState(State.Down);
 
             Capture = true;
@@ -88,6 +99,9 @@ namespace WastedgeQuerier
         {
             base.OnMouseEnter(e);
 
+            if (!Enabled)
+                return;
+
             SetState(State.Over);
         }
 
@@ -95,12 +109,18 @@ namespace WastedgeQuerier
         {
             base.OnMouseLeave(e);
 
+            if (!Enabled)
+                return;
+
             SetState(State.Normal);
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
+
+            if (!Enabled)
+                return;
 
             if (Capture)
                 SetState(ClientRectangle.Contains(e.Location) ? State.Down : State.Normal);
@@ -111,6 +131,9 @@ namespace WastedgeQuerier
         protected override void OnMouseUp(MouseEventArgs e)
         {
             base.OnMouseUp(e);
+
+            if (!Enabled)
+                return;
 
             Capture = false;
 
@@ -153,9 +176,12 @@ namespace WastedgeQuerier
             }
 
             if (_image != null)
-                e.Graphics.DrawImage(_image, Padding.Left + 1, Padding.Top + 1);
+                e.Graphics.DrawImage(Enabled ? _image : _grayImage, Padding.Left + 1, Padding.Top + 1);
             if (Text.Length > 0)
-                TextRenderer.DrawText(e.Graphics, Text, Font, new Point(Padding.Left + 1, Padding.Top + 1), SystemColors.ControlText, TextFlags);
+            {
+                var color = Enabled ? SystemColors.ControlText : SystemColors.GrayText;
+                TextRenderer.DrawText(e.Graphics, Text, Font, new Point(Padding.Left + 1, Padding.Top + 1), color, TextFlags);
+            }
 
             if (Focused)
             {
@@ -165,9 +191,20 @@ namespace WastedgeQuerier
             }
         }
 
+        protected override void OnEnabledChanged(EventArgs e)
+        {
+            base.OnEnabledChanged(e);
+
+            if (!Enabled)
+                SetState(State.Normal);
+        }
+
         protected override void OnKeyDown(KeyEventArgs e)
         {
             base.OnKeyDown(e);
+
+            if (!Enabled)
+                return;
 
             switch (e.KeyCode)
             {

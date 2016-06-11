@@ -74,6 +74,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Messaging" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -98,6 +99,10 @@
   <ItemGroup>
     <Compile Include="CollectionExtensions.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="CopyDataEventHandler.cs" />
+    <Compile Include="CopyDataTarget.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="EditInExcelUploadForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -115,6 +120,42 @@
     </Compile>
     <Compile Include="EditInExcelInstructionsForm.Designer.cs">
       <DependentUpon>EditInExcelInstructionsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EntityFiltersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EntityFiltersForm.Designer.cs">
+      <DependentUpon>EntityFiltersForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EntityMemberPath.cs" />
+    <Compile Include="EntityMemberPathComparer.cs" />
+    <Compile Include="EntityName.cs" />
+    <Compile Include="Export\ApiUtils.cs" />
+    <Compile Include="Export\EntityPathSelectorTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Export\ExportExcelExporter.cs" />
+    <Compile Include="Export\ExportDefinitionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Export\ExportDefinitionForm.Designer.cs">
+      <DependentUpon>ExportDefinitionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Formats\ExportDefinition.cs" />
+    <Compile Include="Formats\FormatUtil.cs" />
+    <Compile Include="Formats\ReportDefinition.cs" />
+    <Compile Include="ImageUtil.cs" />
+    <Compile Include="SaveForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SaveForm.Designer.cs">
+      <DependentUpon>SaveForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SelectEntityForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SelectEntityForm.Designer.cs">
+      <DependentUpon>SelectEntityForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ExcelExporter.cs" />
     <Compile Include="ExcelImporter.cs" />
@@ -223,16 +264,6 @@
       <DependentUpon>NeutralResources.resx</DependentUpon>
     </Compile>
     <Compile Include="Plugins\Plugin.cs" />
-    <Compile Include="Plugins\PluginEventHandler.cs" />
-    <Compile Include="Plugins\PluginFolder.cs" />
-    <Compile Include="Plugins\PluginManager.cs" />
-    <Compile Include="Plugins\PluginManagerForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Plugins\PluginManagerForm.Designer.cs">
-      <DependentUpon>PluginManagerForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Plugins\PluginNode.cs" />
     <Compile Include="Plugins\PluginRunner.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -273,14 +304,52 @@
     <Compile Include="SimpleButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Support\AutoCompleteForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Support\AutoCompleteForm.Designer.cs">
+      <DependentUpon>AutoCompleteForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Support\AutoCompleteFormMode.cs" />
+    <Compile Include="Support\CmdKeyEventHandler.cs" />
+    <Compile Include="Support\DirectoryBrowser.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Support\DirectoryBrowser.Designer.cs">
+      <DependentUpon>DirectoryBrowser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Support\DropMatchKindExtensions.cs" />
+    <Compile Include="Support\FileBrowser.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Support\FileBrowser.Designer.cs">
+      <DependentUpon>FileBrowser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Support\FileBrowserColumn.cs" />
+    <Compile Include="Support\FilesDragEventHandler.cs" />
+    <Compile Include="Support\FileBrowserManager.cs" />
+    <Compile Include="Support\DragDropManager.cs" />
+    <Compile Include="Support\FilesDropData.cs" />
+    <Compile Include="Support\DropMatch.cs" />
+    <Compile Include="Support\DoubleBufferListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Support\OleDropData.cs" />
+    <Compile Include="Support\PathEventHandler.cs" />
+    <Compile Include="Support\PathMouseEventHandler.cs" />
+    <Compile Include="Util\CommandLineUtil.cs" />
+    <Compile Include="Util\FileAttributesExtensions.cs" />
     <Compile Include="Util\FolderBrowser.cs" />
     <Compile Include="Util\FolderBrowser.NativeMethods.cs" />
     <Compile Include="Util\FolderBrowserMode.cs" />
     <Compile Include="Util\NativeMethods.cs" />
+    <Compile Include="Util\PathContains.cs" />
+    <Compile Include="Util\PathUtil.cs" />
     <Compile Include="Util\ShellRegistration.cs" />
     <Compile Include="Util\ShellRegistrationConfiguration.cs" />
     <Compile Include="Util\ShellRegistrationLocation.cs" />
     <Compile Include="Util\ShellUtil.cs" />
+    <Compile Include="Util\HumanText.cs" />
     <Compile Include="Util\VS2012ColorTable.cs" />
     <Compile Include="Util\VS2012ToolStripRenderer.cs" />
     <EmbeddedResource Include="EditInExcelUploadForm.resx">
@@ -291,6 +360,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="EditInExcelInstructionsForm.resx">
       <DependentUpon>EditInExcelInstructionsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EntityFiltersForm.resx">
+      <DependentUpon>EntityFiltersForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Export\ExportDefinitionForm.resx">
+      <DependentUpon>ExportDefinitionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SaveForm.resx">
+      <DependentUpon>SaveForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SelectEntityForm.resx">
+      <DependentUpon>SelectEntityForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FilterControl.resx">
       <DependentUpon>FilterControl.cs</DependentUpon>
@@ -326,20 +407,35 @@
     <EmbeddedResource Include="JavaScript\RenameForm.resx">
       <DependentUpon>RenameForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Plugins\PluginManagerForm.resx">
-      <DependentUpon>PluginManagerForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Report\ReportForm.resx">
       <DependentUpon>ReportForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ResultForm.resx">
       <DependentUpon>ResultForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Support\AutoCompleteForm.resx">
+      <DependentUpon>AutoCompleteForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Support\DirectoryBrowser.resx">
+      <DependentUpon>DirectoryBrowser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Support\FileBrowser.resx">
+      <DependentUpon>FileBrowser.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="WastedgeQuerier.nuspec" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\navigate_right2.png" />
+    <None Include="Resources\navigate_right.png" />
+    <None Include="Resources\navigate_left2.png" />
+    <None Include="Resources\navigate_left.png" />
+    <None Include="Resources\navigate_close.png" />
+    <EmbeddedResource Include="Resources\report.ico" />
+    <None Include="Resources\floppy_disk.png" />
+    <None Include="Resources\nav_refresh.png" />
+    <None Include="Resources\funnel.png" />
     <None Include="Resources\text_field.png" />
     <EmbeddedResource Include="Resources\document.ico" />
     <EmbeddedResource Include="Resources\package.ico" />
@@ -371,6 +467,7 @@
       <Name>Jint</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

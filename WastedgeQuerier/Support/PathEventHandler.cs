@@ -4,22 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WastedgeQuerier.Plugins
+namespace WastedgeQuerier.Support
 {
-    internal abstract class PluginNode
+    public class PathEventArgs : EventArgs
     {
-        public string Name { get; }
         public string Path { get; }
 
-        protected PluginNode(string name, string path)
+        public PathEventArgs(string path)
         {
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
             if (path == null)
                 throw new ArgumentNullException(nameof(path));
 
-            Name = name;
             Path = path;
         }
     }
+
+    public delegate void PathEventHandler(object sender, PathEventArgs e);
 }

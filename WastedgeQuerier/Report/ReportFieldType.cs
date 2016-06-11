@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WastedgeQuerier.Report
 {
-    internal enum ReportFieldType
+    public enum ReportFieldType
     {
         None,
         Column,

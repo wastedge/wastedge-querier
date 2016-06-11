@@ -10,6 +10,7 @@ using SystemEx.Windows.Forms;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using WastedgeApi;
+using WastedgeQuerier.Formats;
 using WastedgeQuerier.JavaScript;
 
 namespace WastedgeQuerier.Report
@@ -21,26 +22,33 @@ namespace WastedgeQuerier.Report
         private const string DateTimeTzFormat = DateTimeFormat + "zzz";
 
         private readonly Api _api;
+        private readonly string _directory;
+        private string _fileName;
         private readonly EntitySchema _entity;
-        private readonly List<Filter> _filters;
+        private List<Filter> _filters;
         private SelectedField _selectedField;
         private readonly ReportGridManager _gridManager;
         private ReportDataSet _dataSet;
 
-        public ReportForm(Api api, EntitySchema entity, List<Filter> filters)
+        public ReportForm(Api api, string directory, string fileName, ReportDefinition report)
         {
             if (api == null)
                 throw new ArgumentNullException(nameof(api));
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
-            if (filters == null)
-                throw new ArgumentNullException(nameof(filters));
+            if (directory == null)
+                throw new ArgumentNullException(nameof(directory));
+            if (report == null)
+                throw new ArgumentNullException(nameof(report));
 
             _api = api;
-            _entity = entity;
-            _filters = filters;
+            _directory = directory;
+            _fileName = fileName;
+            _entity = report.Entity;
+            _filters = report.Filters;
 
             InitializeComponent();
+
+            if (fileName != null)
+                Text += " - " + fileName;
 
             _gridManager = new ReportGridManager(_grid);
 
@@ -51,42 +59,23 @@ namespace WastedgeQuerier.Report
 
             VisualStyleUtil.StyleTreeView(_fields);
 
-            BuildFields(_fields.Nodes, entity);
+            BuildFields(_fields.Nodes, _entity);
 
-#if DEBUG
-            _rows.Items.Add(new ReportField(new List<EntityMember>
+            foreach (var field in report.Fields)
             {
-                _entity.Members["serv_type"]
-            })
-            {
-                Type = ReportFieldType.Row
-            });
-
-            _rows.Items.Add(new ReportField(new List<EntityMember>
-            {
-                _entity.Members["line_no"]
-            })
-            {
-                Type = ReportFieldType.Row
-            });
-
-            _columns.Items.Add(new ReportField(new List<EntityMember>
-            {
-                _entity.Members["bill_cycle"]
-            })
-            {
-                Type = ReportFieldType.Column
-            });
-
-            _values.Items.Add(new ReportField(new List<EntityMember>
-            {
-                _entity.Members["$id"]
-            })
-            {
-                Type = ReportFieldType.Value,
-                Transform = ReportFieldTransform.Count
-            });
-#endif
+                switch (field.Type)
+                {
+                    case ReportFieldType.Column:
+                        _columns.Items.Add(field);
+                        break;
+                    case ReportFieldType.Row:
+                        _rows.Items.Add(field);
+                        break;
+                    case ReportFieldType.Value:
+                        _values.Items.Add(field);
+                        break;
+                }
+            }
         }
 
         private void BuildFields(TreeNodeCollection nodes, EntitySchema entity)
@@ -97,8 +86,7 @@ namespace WastedgeQuerier.Report
             {
                 var node = new TreeNode
                 {
-                    Text = member.Name,
-                    Tag = member
+                    Text = member.Name, Tag = member
                 };
 
                 switch (member.Type)
@@ -164,16 +152,17 @@ namespace WastedgeQuerier.Report
         private void _fields_ItemDrag(object sender, ItemDragEventArgs e)
         {
             var fields = new List<EntityMember>();
+            BuildPath(fields, (TreeNode)e.Item);
+            DoDragDrop(new ReportField(new EntityMemberPath(fields)), DragDropEffects.Copy);
+        }
 
-            var node = (TreeNode)e.Item;
-
-            while (node != null)
+        private void BuildPath(List<EntityMember> fields, TreeNode node)
+        {
+            if (node != null)
             {
-                fields.Insert(0, (EntityMember)node.Tag);
-                node = node.Parent;
+                BuildPath(fields, node.Parent);
+                fields.Add((EntityMember)node.Tag);
             }
-
-            DoDragDrop(new ReportField(fields), DragDropEffects.Copy);
         }
 
         private void _fields_DragOver(object sender, DragEventArgs e)
@@ -190,7 +179,6 @@ namespace WastedgeQuerier.Report
 
         private void _fields_DragDrop(object sender, DragEventArgs e)
         {
-
         }
 
         private void _fieldsList_ItemClick(object sender, ListBoxItemEventArgs e)
@@ -297,12 +285,6 @@ namespace WastedgeQuerier.Report
 
         private async void _update_Click(object sender, EventArgs e)
         {
-            if (_columns.Items.Count == 0 || _rows.Items.Count == 0)
-            {
-                TaskDialogEx.Show(this, "Please select at least one column and row", Text, TaskDialogCommonButtons.OK, TaskDialogIcon.Error);
-                return;
-            }
-
             _gridManager.Reset();
 
             _dataSet = null;
@@ -313,15 +295,11 @@ namespace WastedgeQuerier.Report
 
             try
             {
-                string request = BuildRequest(
-                    _columns.Items.Cast<ReportField>(),
-                    _rows.Items.Cast<ReportField>(),
-                    _values.Items.Cast<ReportField>()
-                );
+                string request = BuildRequest(_columns.Items.Cast<ReportField>(), _rows.Items.Cast<ReportField>(), _values.Items.Cast<ReportField>());
 
                 string[] valueLabels = _values.Items.Cast<ReportField>().Select(p => p.ToString()).ToArray();
 
-                string response = await _api.ExecuteRawAsync(_entity.Name + "/$report", null, "POST", request);
+                string response = await _api.ExecuteRawAsync(_entity.Name + "/$cube", null, "POST", request);
 
                 if (IsDisposed)
                     return;
@@ -401,7 +379,7 @@ namespace WastedgeQuerier.Report
                 {
                     json.WriteStartObject();
                     json.WritePropertyName("name");
-                    json.WriteValue(GetFieldName(field));
+                    json.WriteValue(field.Fields.ToString());
                     json.WritePropertyName("transform");
                     json.WriteValue(GetTransformCode(field.Transform));
                     json.WriteEndObject();
@@ -500,14 +478,48 @@ namespace WastedgeQuerier.Report
             json.WriteStartArray();
             foreach (var field in fields)
             {
-                json.WriteValue(GetFieldName(field));
+                json.WriteValue(field.Fields.ToString());
             }
             json.WriteEndArray();
         }
 
-        private static string GetFieldName(ReportField field)
+        private void _editFilters_Click(object sender, EventArgs e)
         {
-            return String.Join(".", field.Fields.Select(p => p.Name));
+            using (var form = new EntityFiltersForm(_entity, _filters))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                    _filters = form.GetFilters();
+            }
+        }
+
+        private void _save_Click(object sender, EventArgs e)
+        {
+            if (_fileName == null)
+            {
+                using (var form = new SaveForm())
+                {
+                    form.Path = Path.Combine(_directory, "Report.wqreport");
+                    if (form.ShowDialog(this) != DialogResult.OK)
+                        return;
+
+                    _fileName = Path.GetFileName(form.Path);
+
+                    Text += " - " + _fileName;
+                }
+            }
+
+            var report = new ReportDefinition
+            {
+                Entity = _entity
+            };
+
+            report.Filters.AddRange(_filters);
+
+            report.Fields.AddRange(_columns.Items.Cast<ReportField>());
+            report.Fields.AddRange(_rows.Items.Cast<ReportField>());
+            report.Fields.AddRange(_values.Items.Cast<ReportField>());
+
+            report.Save(Path.Combine(_directory, _fileName));
         }
     }
 }

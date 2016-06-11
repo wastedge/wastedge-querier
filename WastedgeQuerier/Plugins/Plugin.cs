@@ -13,9 +13,9 @@ using IOPath = System.IO.Path;
 
 namespace WastedgeQuerier.Plugins
 {
-    internal class Plugin : PluginNode
+    internal class Plugin
     {
-        public static PluginNode Load(string path)
+        public static Plugin Load(string path)
         {
             if (path == null)
                 throw new ArgumentNullException(nameof(path));
@@ -25,11 +25,21 @@ namespace WastedgeQuerier.Plugins
             return new Plugin(project.Title ?? IOPath.GetFileNameWithoutExtension(path), path, project);
         }
 
+        public string Name { get; }
+        public string Path { get; }
         public Project Project { get; }
 
         private Plugin(string name, string path, Project project)
-            : base(name, path)
         {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+            if (path == null)
+                throw new ArgumentNullException(nameof(path));
+            if (project == null)
+                throw new ArgumentNullException(nameof(project));
+
+            Name = name;
+            Path = path;
             Project = project;
         }
 

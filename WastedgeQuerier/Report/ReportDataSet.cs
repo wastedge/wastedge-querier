@@ -26,7 +26,7 @@ namespace WastedgeQuerier.Report
 
             Columns = ParseHeaders((JArray)data["columns"], valueLabels);
             Rows = ParseHeaders((JArray)data["rows"], null);
-            Values = BuildValues((JArray)data["values"]);
+            Values = BuildValues(data["values"] as JArray);
 
             RowLevels = GetLevels(Rows);
             RowCount = Values.GetLength(0);
@@ -43,13 +43,16 @@ namespace WastedgeQuerier.Report
 
         private double[,] BuildValues(JArray values)
         {
+            if (values == null)
+                return new double[Rows.Count, Columns.Count];
+
             int rows = values.Count;
             int columns = values.Count == 0 ? 0 : ((JArray)values[0]).Count;
 
+            var result = new double[rows, columns];
+
             var columnMap = BuildMap(Columns, columns);
             var rowMap = BuildMap(Rows, rows);
-
-            var result = new double[rows, columns];
 
             for (int row = 0; row < rows; row++)
             {
@@ -98,6 +101,9 @@ namespace WastedgeQuerier.Report
                 headers.Add(header);
                 span += header.Span;
             }
+
+            if (headers.Count == 0)
+                return ReportDataHeaderCollection.Empty;
 
             // Don't sort the tail columns.
 
@@ -153,7 +159,10 @@ namespace WastedgeQuerier.Report
             // Don't sort the tail columns.
 
             ReportDataHeaderCollection childHeaders;
-            if (tailLabels != null && children[0].Children.Count == 0)
+
+            if (children.Count == 0)
+                childHeaders = ReportDataHeaderCollection.Empty;
+            else if (tailLabels != null && children[0].Children.Count == 0)
                 childHeaders = ReportDataHeaderCollection.New(children);
             else
                 childHeaders = ReportDataHeaderCollection.NewSorted(children);

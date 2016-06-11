@@ -9,14 +9,19 @@ using WastedgeQuerier.Util;
 
 namespace WastedgeQuerier
 {
-    static class Program
+    internal static class Program
     {
         public static RegistryKey BaseKey => Registry.CurrentUser.CreateSubKey("Software\\Wastedge Querier");
-        public static string DataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        public static readonly string DataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Wastedge Querier");
 
         [STAThread]
-        static void Main(string[] args)
+        static void Main()
         {
+            if (SendData())
+                return;
+
+            Directory.CreateDirectory(DataPath);
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
@@ -36,7 +41,15 @@ namespace WastedgeQuerier
                 credentials = form.Credentials;
             }
 
-            Application.Run(new MainForm(credentials, args));
+            Application.Run(new MainForm(credentials));
+        }
+
+        private static bool SendData()
+        {
+            if ((Control.ModifierKeys & Keys.Shift) != 0)
+                return false;
+
+            return CopyDataTarget.SendData(Environment.CommandLine);
         }
 
         private static void RegisterExtensions()
@@ -70,6 +83,38 @@ namespace WastedgeQuerier
                     OpenCommandArguments = "\"%1\"",
                     ExecutableFileName = typeof(Program).Assembly.Location,
                     DefaultIcon = LoadIcon("package.ico")
+                }
+            );
+
+            ShellRegistration.Register(
+                "WastedgeQuerier.Export",
+                ShellRegistrationLocation.CurrentUser,
+                new ShellRegistrationConfiguration
+                {
+                    ContentType = "application/wqexport",
+                    DefaultIconIndex = 0,
+                    FileExtension = ".wqexport",
+                    FriendlyAppName = "Wastedge Querier",
+                    FriendlyTypeName = "Wastedge Querier Export",
+                    OpenCommandArguments = "\"%1\"",
+                    ExecutableFileName = typeof(Program).Assembly.Location,
+                    DefaultIcon = LoadIcon("report.ico")
+                }
+            );
+
+            ShellRegistration.Register(
+                "WastedgeQuerier.Report",
+                ShellRegistrationLocation.CurrentUser,
+                new ShellRegistrationConfiguration
+                {
+                    ContentType = "application/wqreport",
+                    DefaultIconIndex = 0,
+                    FileExtension = ".wqreport",
+                    FriendlyAppName = "Wastedge Querier",
+                    FriendlyTypeName = "Wastedge Querier Report",
+                    OpenCommandArguments = "\"%1\"",
+                    ExecutableFileName = typeof(Program).Assembly.Location,
+                    DefaultIcon = LoadIcon("report.ico")
                 }
             );
         }

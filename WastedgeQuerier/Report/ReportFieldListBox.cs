@@ -89,7 +89,7 @@ namespace WastedgeQuerier.Report
             }
             else if (field.Transform == ReportFieldTransform.None)
             {
-                var dataType = (field.Fields.Last() as EntityTypedField)?.DataType;
+                var dataType = (field.Fields.Tail as EntityTypedField)?.DataType;
 
                 switch (dataType.GetValueOrDefault(EntityDataType.String))
                 {

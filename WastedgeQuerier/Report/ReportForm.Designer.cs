@@ -34,6 +34,8 @@
             this._grid = new SourceGrid.Grid();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this._exportToExcel = new System.Windows.Forms.ToolStripButton();
+            this._update = new System.Windows.Forms.ToolStripButton();
+            this._editFilters = new System.Windows.Forms.ToolStripButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
@@ -42,10 +44,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this._columns = new WastedgeQuerier.Report.ReportFieldListBox();
-            this._rows = new WastedgeQuerier.Report.ReportFieldListBox();
-            this._values = new WastedgeQuerier.Report.ReportFieldListBox();
-            this._update = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this._fieldContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this._moveUpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -71,6 +69,12 @@
             this._standardDeviationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._sampleVarianceMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._varianceMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._save = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this._columns = new WastedgeQuerier.Report.ReportFieldListBox();
+            this._rows = new WastedgeQuerier.Report.ReportFieldListBox();
+            this._values = new WastedgeQuerier.Report.ReportFieldListBox();
             this.panel2.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -111,6 +115,11 @@
             // 
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._editFilters,
+            this.toolStripSeparator2,
+            this._update,
+            this.toolStripSeparator1,
+            this._save,
             this._exportToExcel});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
@@ -126,6 +135,24 @@
             this._exportToExcel.Size = new System.Drawing.Size(103, 22);
             this._exportToExcel.Text = "Export to Excel";
             this._exportToExcel.Click += new System.EventHandler(this._exportToExcel_Click);
+            // 
+            // _update
+            // 
+            this._update.Image = global::WastedgeQuerier.NeutralResources.nav_refresh;
+            this._update.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._update.Name = "_update";
+            this._update.Size = new System.Drawing.Size(65, 22);
+            this._update.Text = "Update";
+            this._update.Click += new System.EventHandler(this._update_Click);
+            // 
+            // _editFilters
+            // 
+            this._editFilters.Image = global::WastedgeQuerier.NeutralResources.funnel;
+            this._editFilters.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._editFilters.Name = "_editFilters";
+            this._editFilters.Size = new System.Drawing.Size(81, 22);
+            this._editFilters.Text = "Edit Filters";
+            this._editFilters.Click += new System.EventHandler(this._editFilters_Click);
             // 
             // splitContainer1
             // 
@@ -148,30 +175,29 @@
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this._fields, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this._update, 1, 4);
             this.tableLayoutPanel1.Controls.Add(this.label2, 0, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(9, 9);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 5;
+            this.tableLayoutPanel1.RowCount = 4;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 60F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.Size = new System.Drawing.Size(219, 502);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.tableLayoutPanel1.SetColumnSpan(this.label1, 2);
+            this.tableLayoutPanel1.SetColumnSpan(this.label1, 3);
             this.label1.Location = new System.Drawing.Point(3, 3);
             this.label1.Margin = new System.Windows.Forms.Padding(3);
             this.label1.Name = "label1";
@@ -182,13 +208,13 @@
             // _fields
             // 
             this._fields.AllowDrop = true;
-            this.tableLayoutPanel1.SetColumnSpan(this._fields, 2);
+            this.tableLayoutPanel1.SetColumnSpan(this._fields, 3);
             this._fields.Dock = System.Windows.Forms.DockStyle.Fill;
             this._fields.HideSelection = false;
             this._fields.Location = new System.Drawing.Point(3, 22);
             this._fields.Name = "_fields";
             this._fields.ShowLines = false;
-            this._fields.Size = new System.Drawing.Size(213, 253);
+            this._fields.Size = new System.Drawing.Size(213, 270);
             this._fields.TabIndex = 1;
             this._fields.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this._fields_BeforeExpand);
             this._fields.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this._fields_ItemDrag);
@@ -198,7 +224,7 @@
             // tableLayoutPanel2
             // 
             this.tableLayoutPanel2.ColumnCount = 2;
-            this.tableLayoutPanel1.SetColumnSpan(this.tableLayoutPanel2, 2);
+            this.tableLayoutPanel1.SetColumnSpan(this.tableLayoutPanel2, 3);
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.Controls.Add(this.label3, 0, 0);
@@ -208,7 +234,7 @@
             this.tableLayoutPanel2.Controls.Add(this._rows, 1, 1);
             this.tableLayoutPanel2.Controls.Add(this._values, 0, 3);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 300);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 317);
             this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 4;
@@ -216,7 +242,7 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(219, 172);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(219, 185);
             this.tableLayoutPanel2.TabIndex = 2;
             // 
             // label3
@@ -241,64 +267,17 @@
             // 
             this.label5.AutoSize = true;
             this.tableLayoutPanel2.SetColumnSpan(this.label5, 2);
-            this.label5.Location = new System.Drawing.Point(3, 86);
+            this.label5.Location = new System.Drawing.Point(3, 92);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(39, 13);
             this.label5.TabIndex = 2;
             this.label5.Text = "Values";
             // 
-            // _columns
-            // 
-            this._columns.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._columns.FieldType = WastedgeQuerier.Report.ReportFieldType.Column;
-            this._columns.FormattingEnabled = true;
-            this._columns.IntegralHeight = false;
-            this._columns.Location = new System.Drawing.Point(3, 16);
-            this._columns.Name = "_columns";
-            this._columns.Size = new System.Drawing.Size(103, 67);
-            this._columns.TabIndex = 3;
-            this._columns.ItemClick += new WastedgeQuerier.Report.ListBoxItemEventHandler(this._fieldsList_ItemClick);
-            // 
-            // _rows
-            // 
-            this._rows.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._rows.FieldType = WastedgeQuerier.Report.ReportFieldType.Row;
-            this._rows.FormattingEnabled = true;
-            this._rows.IntegralHeight = false;
-            this._rows.Location = new System.Drawing.Point(112, 16);
-            this._rows.Name = "_rows";
-            this._rows.Size = new System.Drawing.Size(104, 67);
-            this._rows.TabIndex = 3;
-            this._rows.ItemClick += new WastedgeQuerier.Report.ListBoxItemEventHandler(this._fieldsList_ItemClick);
-            // 
-            // _values
-            // 
-            this.tableLayoutPanel2.SetColumnSpan(this._values, 2);
-            this._values.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._values.FieldType = WastedgeQuerier.Report.ReportFieldType.Value;
-            this._values.FormattingEnabled = true;
-            this._values.IntegralHeight = false;
-            this._values.Location = new System.Drawing.Point(3, 102);
-            this._values.Name = "_values";
-            this._values.Size = new System.Drawing.Size(213, 67);
-            this._values.TabIndex = 3;
-            this._values.ItemClick += new WastedgeQuerier.Report.ListBoxItemEventHandler(this._fieldsList_ItemClick);
-            // 
-            // _update
-            // 
-            this._update.Location = new System.Drawing.Point(141, 475);
-            this._update.Name = "_update";
-            this._update.Size = new System.Drawing.Size(75, 23);
-            this._update.TabIndex = 3;
-            this._update.Text = "Update";
-            this._update.UseVisualStyleBackColor = true;
-            this._update.Click += new System.EventHandler(this._update_Click);
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.tableLayoutPanel1.SetColumnSpan(this.label2, 2);
-            this.label2.Location = new System.Drawing.Point(3, 281);
+            this.tableLayoutPanel1.SetColumnSpan(this.label2, 3);
+            this.label2.Location = new System.Drawing.Point(3, 298);
             this.label2.Margin = new System.Windows.Forms.Padding(3, 3, 3, 6);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(164, 13);
@@ -500,6 +479,62 @@
             this._varianceMenuItem.Text = "Va&riance";
             this._varianceMenuItem.Click += new System.EventHandler(this._selectAverageMenuItem_Click);
             // 
+            // _save
+            // 
+            this._save.Image = global::WastedgeQuerier.NeutralResources.floppy_disk;
+            this._save.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._save.Name = "_save";
+            this._save.Size = new System.Drawing.Size(51, 22);
+            this._save.Text = "Save";
+            this._save.Click += new System.EventHandler(this._save_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // _columns
+            // 
+            this._columns.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._columns.FieldType = WastedgeQuerier.Report.ReportFieldType.Column;
+            this._columns.FormattingEnabled = true;
+            this._columns.IntegralHeight = false;
+            this._columns.Location = new System.Drawing.Point(3, 16);
+            this._columns.Name = "_columns";
+            this._columns.Size = new System.Drawing.Size(103, 73);
+            this._columns.TabIndex = 3;
+            this._columns.ItemClick += new WastedgeQuerier.Report.ListBoxItemEventHandler(this._fieldsList_ItemClick);
+            // 
+            // _rows
+            // 
+            this._rows.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._rows.FieldType = WastedgeQuerier.Report.ReportFieldType.Row;
+            this._rows.FormattingEnabled = true;
+            this._rows.IntegralHeight = false;
+            this._rows.Location = new System.Drawing.Point(112, 16);
+            this._rows.Name = "_rows";
+            this._rows.Size = new System.Drawing.Size(104, 73);
+            this._rows.TabIndex = 3;
+            this._rows.ItemClick += new WastedgeQuerier.Report.ListBoxItemEventHandler(this._fieldsList_ItemClick);
+            // 
+            // _values
+            // 
+            this.tableLayoutPanel2.SetColumnSpan(this._values, 2);
+            this._values.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._values.FieldType = WastedgeQuerier.Report.ReportFieldType.Value;
+            this._values.FormattingEnabled = true;
+            this._values.IntegralHeight = false;
+            this._values.Location = new System.Drawing.Point(3, 108);
+            this._values.Name = "_values";
+            this._values.Size = new System.Drawing.Size(213, 74);
+            this._values.TabIndex = 3;
+            this._values.ItemClick += new WastedgeQuerier.Report.ListBoxItemEventHandler(this._fieldsList_ItemClick);
+            // 
             // ReportForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -539,7 +574,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TreeView _fields;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.Button _update;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
@@ -571,5 +605,10 @@
         private System.Windows.Forms.ToolStripMenuItem _standardDeviationMenuItem;
         private System.Windows.Forms.ToolStripMenuItem _sampleVarianceMenuItem;
         private System.Windows.Forms.ToolStripMenuItem _varianceMenuItem;
+        private System.Windows.Forms.ToolStripButton _update;
+        private System.Windows.Forms.ToolStripButton _editFilters;
+        private System.Windows.Forms.ToolStripButton _save;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }

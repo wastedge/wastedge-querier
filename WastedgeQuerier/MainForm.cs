@@ -7,53 +7,164 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using SystemEx.Windows.Forms;
 using WastedgeApi;
+using WastedgeQuerier.Export;
+using WastedgeQuerier.Formats;
 using WastedgeQuerier.JavaScript;
 using WastedgeQuerier.Plugins;
 using WastedgeQuerier.Report;
+using WastedgeQuerier.Support;
+using WastedgeQuerier.Util;
 
 namespace WastedgeQuerier
 {
     public partial class MainForm : SystemEx.Windows.Forms.Form
     {
-        private readonly string[] _args;
         private readonly Api _api;
-        private EntitySchema _schema;
-        private readonly Dictionary<string, EntitySchema> _schemas = new Dictionary<string, EntitySchema>();
         private JavaScriptForm _javaScriptForm;
-        private readonly PluginManager _pluginManager;
+        private readonly CopyDataTarget _copyDataTarget = new CopyDataTarget();
 
-        public MainForm(ApiCredentials credentials, string[] args)
+        public MainForm(ApiCredentials credentials)
         {
             if (credentials == null)
                 throw new ArgumentNullException(nameof(credentials));
-            if (args == null)
-                throw new ArgumentNullException(nameof(args));
-
-            _args = args;
-
-            InitializeComponent();
-
-            _pluginManager = new PluginManager(Path.Combine(Program.DataPath, "Plugins"), _pluginsMenuItem, _pluginsPluginManagerSeparatorMenuItem);
-            _pluginManager.Reload();
-            _pluginManager.PluginOpened += _pluginManager_PluginOpened;
-
-            _filters.Visible = false;
 
             _api = new Api(credentials);
 
-            _filter.GotFocus += (s, e) => AcceptButton = _add;
-            _filter.LostFocus += (s, e) => AcceptButton = null;
+            InitializeComponent();
+
+            _directoryBrowser.FileBrowserManager = _fileBrowser.FileBrowserManager = new FileBrowserManager();
+            var filesPath = Path.Combine(Program.DataPath, "Files");
+            Directory.CreateDirectory(filesPath);
+            _directoryBrowser.Root = filesPath;
 
             UpdateEnabled();
 
-            _container.Enabled = false;
+            Enabled = false;
+
+            Text = $"{Text} - {credentials.Company}\\{credentials.UserName} - {credentials.Url}";
+
+            var handle = _copyDataTarget.Handle; // Force creation of the handle.
+            _copyDataTarget.DataCopied += _copyDataTarget_DataCopied;
         }
 
-        private void _pluginManager_PluginOpened(object sender, PluginEventArgs e)
+        private void _copyDataTarget_DataCopied(object sender, CopyDataEventArgs e)
         {
-            e.Plugin.Run(_api.Credentials, this);
+            NativeMethods.SetForegroundWindow(Handle);
+
+            ParseArguments(e.Data);
+        }
+
+        private void UpdateEnabled()
+        {
+            _addFolder.Enabled = _directoryBrowser.CanAdd;
+            _deleteFolder.Enabled = _directoryBrowser.CanDelete;
+            _renameFolder.Enabled = _directoryBrowser.CanRename;
+
+            bool haveSingleSelection = _fileBrowser.SelectedFiles.Length == 1;
+
+            _addFile.Enabled = _fileBrowser.Directory != null;
+            _deleteFile.Enabled = _fileBrowser.CanDelete;
+            _renameFile.Enabled = _fileBrowser.CanRename;
+            _runFile.Enabled = haveSingleSelection;
+
+            _addFile.Enabled = _fileBrowser.Directory != null;
+            _fileAddPluginMenuItem.Enabled = _fileBrowser.Directory != null;
+            _fileAddExportMenuItem.Enabled = _fileBrowser.Directory != null;
+            _fileAddReportMenuItem.Enabled = _fileBrowser.Directory != null;
+        }
+
+        private void _directoryBrowser_DirectoryChanged(object sender, EventArgs e)
+        {
+            _fileBrowser.Directory = _directoryBrowser.Directory;
+
+            UpdateEnabled();
+        }
+
+        private void _addFolder_Click(object sender, EventArgs e)
+        {
+            _directoryBrowser.DoAdd();
+        }
+
+        private void _deleteFolder_Click(object sender, EventArgs e)
+        {
+            _directoryBrowser.DoDelete();
+        }
+
+        private void _renameFolder_Click(object sender, EventArgs e)
+        {
+            _directoryBrowser.DoRename();
+        }
+
+        private void _directoryBrowser_DirectoryClick(object sender, PathMouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            _addFolderMenuItem.Enabled = _directoryBrowser.CanAdd;
+            _deleteFolderMenuItem.Enabled = _directoryBrowser.CanDelete;
+            _renameFolderMenuItem.Enabled = _directoryBrowser.CanRename;
+
+            _directoryContextMenu.Show(_directoryBrowser, e.Location);
+        }
+
+        private void _addFolderMenuItem_Click(object sender, EventArgs e)
+        {
+            _directoryBrowser.DoAdd();
+        }
+
+        private void _deleteFolderMenuItem_Click(object sender, EventArgs e)
+        {
+            _directoryBrowser.DoDelete();
+        }
+
+        private void _renameFolderMenuItem_Click(object sender, EventArgs e)
+        {
+            _directoryBrowser.DoRename();
+        }
+
+        private void _fileBrowser_SelectedFilesChanged(object sender, EventArgs e)
+        {
+            UpdateEnabled();
+        }
+
+        private void _deleteFile_Click(object sender, EventArgs e)
+        {
+            DoDeleteFile();
+        }
+
+        private void DoDeleteFile()
+        {
+            _fileBrowser.DoDelete();
+        }
+
+        private void _renameFile_Click(object sender, EventArgs e)
+        {
+            _fileBrowser.DoRename();
+        }
+
+        private void _fileBrowser_FileClick(object sender, PathMouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            _deleteFileMenuItem.Enabled = _fileBrowser.CanDelete;
+            _renameFileMenuItem.Enabled = _fileBrowser.CanRename;
+
+            _fileContextMenu.Show(_fileBrowser, e.Location);
+        }
+
+        private void _deleteFileMenuItem_Click(object sender, EventArgs e)
+        {
+            _fileBrowser.DoDelete();
+        }
+
+        private void _renameFileMenuItem_Click(object sender, EventArgs e)
+        {
+            _fileBrowser.DoRename();
         }
 
         private void _fileExitMenuItem_Click(object sender, EventArgs e)
@@ -61,148 +172,9 @@ namespace WastedgeQuerier
             Close();
         }
 
-        private async void MainForm_Shown(object sender, EventArgs e)
-        {
-            await _api.CacheFullEntitySchemaAsync();
-
-            _tables.BeginUpdate();
-            _tables.Items.Clear();
-            _tables.Items.Add("");
-            _tables.Items.AddRange(_api.GetSchema().Entities.OrderBy(p => p).Cast<object>().ToArray());
-            _tables.EndUpdate();
-
-            _container.Enabled = true;
-
-            ProcessArguments();
-
-#if DEBUG
-            _tables.SelectedItem = "customer/service";
-#endif
-        }
-
-        private void ProcessArguments()
-        {
-            foreach (string arg in _args)
-            {
-                if (File.Exists(arg) && Path.HasExtension(arg))
-                {
-                    switch (Path.GetExtension(arg).ToLowerInvariant())
-                    {
-                        case ".js":
-                            EnsureJavaScriptForm();
-                            _javaScriptForm.OpenEditor(arg);
-                            break;
-
-                        case ".weproj":
-                            EnsureJavaScriptForm();
-                            _javaScriptForm.OpenProject(arg);
-                            break;
-
-                        case ".wqpkg":
-                            using (var form = new PluginManagerForm(_api.Credentials))
-                            {
-                                form.LoadPackage(arg);
-                                form.ShowDialog(this);
-                                _pluginManager.Reload();
-                            }
-                            return;
-                    }
-                }
-            }
-        }
-
-        private async void _tables_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            _filterControls.Controls.Clear();
-
-            if (_tables.SelectedIndex == 0)
-            {
-                _footerPanel.Visible = false;
-                _filters.Visible = false;
-                return;
-            }
-
-            if (!_schemas.TryGetValue(_tables.Text, out _schema))
-            {
-                _container.Enabled = false;
-
-                _schema = await _api.GetEntitySchemaAsync(_tables.Text);
-                _schemas.Add(_tables.Text, _schema);
-
-                _container.Enabled = true;
-            }
-
-            _filter.BeginUpdate();
-            _filter.Items.Clear();
-            _filter.Items.AddRange(_schema.Members.OfType<EntityPhysicalField>().Select(p => p.Name).Cast<object>().ToArray());
-            _filter.EndUpdate();
-
-            _footerPanel.Visible = true;
-            _filters.Visible = true;
-
-#if DEBUG
-            _report.PerformClick();
-#endif
-        }
-
-        private void _filter_SizeChanged(object sender, EventArgs e)
-        {
-            _add.Height = _filter.Height;
-        }
-
-        private void _add_Click(object sender, EventArgs e)
-        {
-            if (!_schema.Members.Contains(_filter.Text))
-            {
-                MessageBox.Show(this, "Unknown field", Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            AddFilter((EntityPhysicalField)_schema.Members[_filter.Text]);
-            _filter.Text = null;
-        }
-
-        private void AddFilter(EntityPhysicalField member)
-        {
-            var filterControl = new FilterControl(member)
-            {
-                Dock = DockStyle.Top
-            };
-
-            _filterControls.Controls.Add(filterControl);
-
-            filterControl.BringToFront();
-
-            filterControl.SelectNextControl(filterControl, true, true, true, false);
-        }
-
-        private void _reset_Click(object sender, EventArgs e)
-        {
-            _filterControls.Controls.Clear();
-        }
-
-        private void _filter_TextChanged(object sender, EventArgs e)
-        {
-            UpdateEnabled();
-        }
-
-        private void UpdateEnabled()
-        {
-            _add.Enabled = _filter.Text.Length > 0;
-        }
-
-        private void _export_Click(object sender, EventArgs e)
-        {
-            var filters = _filterControls.Controls.OfType<FilterControl>().Select(p => p.GetFilter()).ToList();
-
-            using (var form = new ResultForm(_api, _schema, filters))
-            {
-                form.ShowDialog(this);
-            }
-        }
-
         private void _toolsJavaScriptConsoleMenuItem_Click(object sender, EventArgs e)
         {
+
             EnsureJavaScriptForm();
         }
 
@@ -218,16 +190,6 @@ namespace WastedgeQuerier
             _javaScriptForm.Disposed += (s, ea) => _javaScriptForm = null;
 
             _javaScriptForm.Show();
-        }
-
-        private void _pluginsPluginManagerMenuItem_Click(object sender, EventArgs e)
-        {
-            using (var form = new PluginManagerForm(_api.Credentials))
-            {
-                form.ShowDialog(this);
-
-                _pluginManager.Reload();
-            }
         }
 
         private void _helpOpenHelpMenuItem_Click(object sender, EventArgs e)
@@ -254,13 +216,321 @@ namespace WastedgeQuerier
             }
         }
 
-        private void _report_Click(object sender, EventArgs e)
+        private void _fileBrowser_FileActivate(object sender, PathEventArgs e)
         {
-            var filters = _filterControls.Controls.OfType<FilterControl>().Select(p => p.GetFilter()).ToList();
+            DoOpenFile(e.Path);
+        }
 
-            using (var form = new ReportForm(_api, _schema, filters))
+        private void _runFile_Click(object sender, EventArgs e)
+        {
+            var selectedFiles = _fileBrowser.SelectedFiles;
+            if (selectedFiles.Length != 1)
+                return;
+
+            DoOpenFile(selectedFiles[0]);
+        }
+
+        private void DoOpenFile(string path)
+        {
+            switch (Path.GetExtension(path).ToLower())
+            {
+                case ".wqpkg":
+                    DoRunPlugin(path);
+                    break;
+
+                case ".wqexport":
+                    DoRunExport(path);
+                    break;
+
+                case ".wqreport":
+                    DoRunReport(path);
+                    break;
+            }
+        }
+
+        private void DoRunPlugin(string path)
+        {
+            var plugin = Plugin.Load(path);
+
+            plugin.Run(_api.Credentials, this);
+        }
+
+        private void DoRunExport(string path)
+        {
+            ExportDefinition export;
+
+            try
+            {
+                export = ExportDefinition.Load(_api, path);
+            }
+            catch
+            {
+                TaskDialogEx.Show(this, "Unable to load report", Text, TaskDialogCommonButtons.OK, TaskDialogIcon.Error);
+                return;
+            }
+
+            using (var form = new ExportDefinitionForm(_api, Path.GetDirectoryName(path), Path.GetFileName(path), export))
             {
                 form.ShowDialog(this);
+            }
+        }
+
+        private void DoRunReport(string path)
+        {
+            ReportDefinition report;
+
+            try
+            {
+                report = ReportDefinition.Load(_api, path);
+            }
+            catch
+            {
+                TaskDialogEx.Show(this, "Unable to load report", Text, TaskDialogCommonButtons.OK, TaskDialogIcon.Error);
+                return;
+            }
+
+            using (var form = new ReportForm(_api, Path.GetDirectoryName(path), Path.GetFileName(path), report))
+            {
+                form.ShowDialog(this);
+            }
+        }
+
+        private async void MainForm_Shown(object sender, EventArgs e)
+        {
+            await _api.CacheFullEntitySchemaAsync();
+
+            Enabled = true;
+
+            ParseArguments(Environment.CommandLine);
+
+#if DEBUG
+            //using (var form = new ExportDefinitionForm(_api, Path.GetDirectoryName(path), Path.GetFileName(path), _api.GetEntitySchema("customer/service")))
+            //{
+            //    form.ShowDialog(this);
+            //}
+#endif
+        }
+
+        private void ParseArguments(string commandLine)
+        {
+            var args = CommandLineUtil.Parse(commandLine);
+
+            foreach (string arg in args.Skip(1))
+            {
+                if (File.Exists(arg) && Path.HasExtension(arg))
+                {
+                    switch (Path.GetExtension(arg).ToLowerInvariant())
+                    {
+                        case ".js":
+                            EnsureJavaScriptForm();
+                            _javaScriptForm.OpenEditor(arg);
+                            break;
+
+                        case ".weproj":
+                            EnsureJavaScriptForm();
+                            _javaScriptForm.OpenProject(arg);
+                            break;
+
+                        case ".wqpkg":
+                            AddPlugin(arg);
+                            return;
+                    }
+                }
+            }
+        }
+
+        private void _addPlugin_Click(object sender, EventArgs e)
+        {
+            DoAddPlugin();
+        }
+
+        private void _addPluginMenuItem_Click(object sender, EventArgs e)
+        {
+            DoAddPlugin();
+        }
+
+        private void _fileAddPluginMenuItem_Click(object sender, EventArgs e)
+        {
+            DoAddPlugin();
+        }
+
+        private void DoAddPlugin()
+        {
+            using (var form = new OpenFileDialog())
+            {
+                form.Title = "Open Plugin";
+                form.Filter = "Wastedge Querier Plugin (*.wqpkg)|*.wqpkg|All Files (*.*)|*.*";
+
+                if (form.ShowDialog(this) == DialogResult.OK)
+                    AddPlugin(form.FileName);
+            }
+        }
+
+        private void AddPlugin(string fileName)
+        {
+            string target = Path.Combine(_fileBrowser.Directory, Path.GetFileName(fileName));
+
+            if (File.Exists(target))
+            {
+                var result = TaskDialogEx.Show(this, "A plugin with the same name already exists. Do you want to overwrite the existing plugin?", Text, TaskDialogCommonButtons.Yes | TaskDialogCommonButtons.No, TaskDialogIcon.Warning);
+                if (result == DialogResult.No)
+                    return;
+
+                File.Delete(target);
+            }
+
+            File.Copy(fileName, target);
+        }
+
+        private void _fileAddReportMenuItem_Click(object sender, EventArgs e)
+        {
+            DoAddReport();
+        }
+
+        private void _addReport_Click(object sender, EventArgs e)
+        {
+            DoAddReport();
+        }
+
+        private void _addReportMenuItem_Click(object sender, EventArgs e)
+        {
+            DoAddReport();
+        }
+
+        private void DoAddReport()
+        {
+            EntitySchema entity;
+
+            using (var form = new SelectEntityForm(_api))
+            {
+                if (form.ShowDialog(this) != DialogResult.OK)
+                    return;
+
+                entity = form.SelectedEntity;
+            }
+
+            var report = new ReportDefinition
+            {
+                Entity = entity
+            };
+
+            using (var form = new ReportForm(_api, _fileBrowser.Directory, null, report))
+            {
+                form.ShowDialog(this);
+            }
+        }
+
+        private void DoAddExport()
+        {
+            EntitySchema entity;
+
+            using (var form = new SelectEntityForm(_api))
+            {
+                if (form.ShowDialog(this) != DialogResult.OK)
+                    return;
+
+                entity = form.SelectedEntity;
+            }
+
+            var export = new ExportDefinition
+            {
+                Entity = entity
+            };
+
+            using (var form = new ExportDefinitionForm(_api, _fileBrowser.Directory, null, export))
+            {
+                form.ShowDialog(this);
+            }
+        }
+
+        private void _toolsOpenTableMenuItem_Click(object sender, EventArgs e)
+        {
+            EntitySchema entity;
+
+            using (var form = new SelectEntityForm(_api))
+            {
+                if (form.ShowDialog(this) != DialogResult.OK)
+                    return;
+
+                entity = form.SelectedEntity;
+            }
+
+            List<Filter> filters;
+
+            using (var form = new EntityFiltersForm(entity, new Filter[0]))
+            {
+                if (form.ShowDialog(this) != DialogResult.OK)
+                    return;
+
+                filters = form.GetFilters();
+            }
+
+            using (var form = new ResultForm(_api, entity, filters))
+            {
+                form.ShowDialog(this);
+            }
+        }
+
+        private void _fileAddExportMenuItem_Click(object sender, EventArgs e)
+        {
+            DoAddExport();
+        }
+
+        private void _addExport_Click(object sender, EventArgs e)
+        {
+            DoAddExport();
+        }
+
+        private void _addExportMenuItem_Click(object sender, EventArgs e)
+        {
+            DoAddExport();
+        }
+
+        private class FileBrowserManager : Support.FileBrowserManager
+        {
+            public FileBrowserManager()
+            {
+                Filters.Add(".wqpkg");
+                Filters.Add(".wqexport");
+                Filters.Add(".wqreport");
+
+                Columns.Add(new FileBrowserColumn("Type", 120, HorizontalAlignment.Left));
+                Columns.Add(new FileBrowserColumn("Description", 200, HorizontalAlignment.Left));
+            }
+
+            public override string[] GetValues(string path)
+            {
+                string type;
+                string description = null;
+
+                switch (Path.GetExtension(path).ToLowerInvariant())
+                {
+                    case ".wqpkg":
+                        type = "Plugin";
+                        try
+                        {
+                            description = Plugin.Load(path).Project.Description;
+                        }
+                        catch
+                        {
+                            // Ignore.
+                        }
+                        break;
+
+                    case ".wqexport":
+                        type = "Export";
+                        break;
+
+                    case ".wqreport":
+                        type = "Report";
+                        break;
+
+                    default:
+                        type = "";
+                        break;
+                }
+
+                return new[] { type, description };
             }
         }
     }

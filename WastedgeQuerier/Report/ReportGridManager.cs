@@ -179,7 +179,7 @@ namespace WastedgeQuerier.Report
             _grid.Redim(
                 _grid.FixedRows + rows,
                 _grid.FixedColumns + columns
-                );
+            );
 
             for (int row = 0; row < _grid.FixedRows; row++)
             {

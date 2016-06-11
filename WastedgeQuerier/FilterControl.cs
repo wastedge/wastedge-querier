@@ -20,7 +20,7 @@ namespace WastedgeQuerier
         private static readonly FilterType[] OtherFilterTypes = { FilterType.Equal, FilterType.NotEqual, FilterType.GreaterThan, FilterType.GreaterEqual, FilterType.LessThan, FilterType.LessEqual, FilterType.IsNull, FilterType.NotIsNull };
 
         private FilterType _filterType;
-        private Control _control;
+        private readonly Control _control;
         private int _filterWidth;
 
         public EntityPhysicalField Field { get; }
@@ -289,6 +289,23 @@ namespace WastedgeQuerier
                 throw new InvalidOperationException();
 
             return new Filter(Field, FilterType, value);
+        }
+
+        public void SetValue(object value)
+        {
+            if (_control == null)
+                return;
+
+            if (_control is SimpleNumericTextBox)
+                ((SimpleNumericTextBox)_control).Value = value as decimal?;
+            else if (_control is TextBox)
+                ((TextBox)_control).Text = value as string;
+            else if (_control is SystemEx.Windows.Forms.DateTimePicker)
+                ((SystemEx.Windows.Forms.DateTimePicker)_control).Value = value as DateTime?;
+            else if (_control is DateTimePickerEx)
+                ((DateTimePickerEx)_control).SelectedDateTime = value as DateTime?;
+            else
+                throw new InvalidOperationException();
         }
     }
 }
