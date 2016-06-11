@@ -19,6 +19,8 @@ namespace WastedgeQuerier
         private static readonly FilterType[] BoolFilterTypes = { FilterType.IsTrue, FilterType.NotIsTrue, FilterType.IsFalse, FilterType.NotIsFalse, FilterType.IsNull, FilterType.NotIsNull };
         private static readonly FilterType[] TextFilterTypes = { FilterType.Equal, FilterType.NotEqual, FilterType.GreaterThan, FilterType.GreaterEqual, FilterType.LessThan, FilterType.LessEqual, FilterType.Like, FilterType.NotLike, FilterType.IsNull, FilterType.NotIsNull };
         private static readonly FilterType[] OtherFilterTypes = { FilterType.Equal, FilterType.NotEqual, FilterType.GreaterThan, FilterType.GreaterEqual, FilterType.LessThan, FilterType.LessEqual, FilterType.IsNull, FilterType.NotIsNull };
+        private static readonly FilterType[] ForeignFilterTypes = { FilterType.Equal, FilterType.NotEqual, FilterType.IsNull, FilterType.NotIsNull };
+        private static readonly FilterType[] IdFilterTypes = { FilterType.Equal };
 
         private FilterType _filterType;
         private readonly Control _control;
@@ -59,44 +61,74 @@ namespace WastedgeQuerier
                 control.Visible = false;
             }
 
-            FilterType[] filterTypes;
-
             switch (field.DataType)
             {
                 case EntityDataType.String:
                     _control = _textBox;
-                    filterTypes = TextFilterTypes;
                     break;
 
                 case EntityDataType.Date:
-                    _control = _date;
-                    filterTypes = OtherFilterTypes;
+                    _control =_date;
                     break;
 
                 case EntityDataType.DateTime:
                 case EntityDataType.DateTimeTz:
                     _control = _dateTime;
-                    filterTypes = OtherFilterTypes;
                     break;
 
                 case EntityDataType.Decimal:
                     _control = _numericTextBox;
-                    filterTypes = OtherFilterTypes;
                     break;
 
                 case EntityDataType.Long:
                 case EntityDataType.Int:
-                    _control = _numericTextBox;
                     _numericTextBox.NumberScale = 0;
-                    filterTypes = OtherFilterTypes;
+                    _control = _numericTextBox;
                     break;
 
                 case EntityDataType.Bool:
-                    filterTypes = BoolFilterTypes;
                     break;
 
                 default:
                     throw new ArgumentOutOfRangeException();
+            }
+
+            FilterType[] filterTypes;
+
+            switch (field.Type)
+            {
+                case EntityMemberType.Foreign:
+                    filterTypes = ForeignFilterTypes;
+                    break;
+
+                case EntityMemberType.Id:
+                    filterTypes = IdFilterTypes;
+                    break;
+
+                default:
+                    switch (field.DataType)
+                    {
+                        case EntityDataType.String:
+                            filterTypes = TextFilterTypes;
+                            break;
+
+                        case EntityDataType.Date:
+                        case EntityDataType.DateTime:
+                        case EntityDataType.DateTimeTz:
+                        case EntityDataType.Decimal:
+                        case EntityDataType.Long:
+                        case EntityDataType.Int:
+                            filterTypes = OtherFilterTypes;
+                            break;
+
+                        case EntityDataType.Bool:
+                            filterTypes = BoolFilterTypes;
+                            break;
+
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                    break;
             }
 
             foreach (var filterType in filterTypes)
