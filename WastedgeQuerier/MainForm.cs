@@ -302,13 +302,6 @@ namespace WastedgeQuerier
             Enabled = true;
 
             ParseArguments(Environment.CommandLine);
-
-#if DEBUG
-            //using (var form = new ExportDefinitionForm(_api, Path.GetDirectoryName(path), Path.GetFileName(path), _api.GetEntitySchema("customer/service")))
-            //{
-            //    form.ShowDialog(this);
-            //}
-#endif
         }
 
         private void ParseArguments(string commandLine)
@@ -332,7 +325,9 @@ namespace WastedgeQuerier
                             break;
 
                         case ".wqpkg":
-                            AddPlugin(arg);
+                        case ".wqreport":
+                        case ".wqexport":
+                            AddFile(arg);
                             return;
                     }
                 }
@@ -362,17 +357,17 @@ namespace WastedgeQuerier
                 form.Filter = "Wastedge Querier Plugin (*.wqpkg)|*.wqpkg|All Files (*.*)|*.*";
 
                 if (form.ShowDialog(this) == DialogResult.OK)
-                    AddPlugin(form.FileName);
+                    AddFile(form.FileName);
             }
         }
 
-        private void AddPlugin(string fileName)
+        private void AddFile(string fileName)
         {
             string target = Path.Combine(_fileBrowser.Directory, Path.GetFileName(fileName));
 
             if (File.Exists(target))
             {
-                var result = TaskDialogEx.Show(this, "A plugin with the same name already exists. Do you want to overwrite the existing plugin?", Text, TaskDialogCommonButtons.Yes | TaskDialogCommonButtons.No, TaskDialogIcon.Warning);
+                var result = TaskDialogEx.Show(this, "A file with the same name already exists. Do you want to overwrite the existing file?", Text, TaskDialogCommonButtons.Yes | TaskDialogCommonButtons.No, TaskDialogIcon.Warning);
                 if (result == DialogResult.No)
                     return;
 
