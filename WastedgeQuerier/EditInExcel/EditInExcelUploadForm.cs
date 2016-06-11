@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WastedgeApi;
 
-namespace WastedgeQuerier
+namespace WastedgeQuerier.EditInExcel
 {
     public partial class EditInExcelUploadForm : SystemEx.Windows.Forms.Form
     {
@@ -33,8 +33,11 @@ namespace WastedgeQuerier
             InitializeComponent();
 
             _newCheckBox.Text = String.Format(_newCheckBox.Text, _changes.New.Count);
+            _newCheckBox.Enabled = entity.CanCreate;
             _modifiedCheckBox.Text = String.Format(_modifiedCheckBox.Text, _changes.Modified.Count);
+            _modifiedCheckBox.Enabled = entity.CanUpdate;
             _deletedCheckBox.Text = String.Format(_deletedCheckBox.Text, _changes.Deleted.Count);
+            _deletedCheckBox.Enabled = entity.CanDelete;
 
             UpdateEnabled();
         }
@@ -105,11 +108,11 @@ namespace WastedgeQuerier
 
         private async Task UploadChanges(LoadingForm form)
         {
-            if (_changes.New.Count > 0)
+            if (_changes.New.Count > 0 && _entity.CanCreate && _newCheckBox.Checked)
                 await UploadNew(form, _changes.New);
-            if (_changes.Modified.Count > 0)
+            if (_changes.Modified.Count > 0 && _entity.CanUpdate && _modifiedCheckBox.Checked)
                 await UploadModified(form, _changes.Modified);
-            if (_changes.Deleted.Count > 0)
+            if (_changes.Deleted.Count > 0 && _entity.CanDelete && _deletedCheckBox.Checked)
                 await UploadDeleted(form, _changes.Deleted);
         }
 

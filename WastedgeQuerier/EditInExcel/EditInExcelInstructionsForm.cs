@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WastedgeQuerier
+namespace WastedgeQuerier.EditInExcel
 {
     public partial class EditInExcelInstructionsForm : SystemEx.Windows.Forms.Form
     {

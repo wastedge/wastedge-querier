@@ -1,6 +1,6 @@
-﻿namespace WastedgeQuerier
+﻿namespace WastedgeQuerier.EditInExcel
 {
-    partial class EditInExcelUploadForm
+    partial class EditInExcelWaitForm
     {
         /// <summary>
         /// Required designer variable.
@@ -34,10 +34,7 @@
             this.formHeader1 = new SystemEx.Windows.Forms.FormHeader();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this._newCheckBox = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
-            this._modifiedCheckBox = new System.Windows.Forms.CheckBox();
-            this._deletedCheckBox = new System.Windows.Forms.CheckBox();
             this.formFlowFooter1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -47,7 +44,7 @@
             // 
             this.formFlowFooter1.Controls.Add(this._cancelButton);
             this.formFlowFooter1.Controls.Add(this._acceptButton);
-            this.formFlowFooter1.Location = new System.Drawing.Point(0, 168);
+            this.formFlowFooter1.Location = new System.Drawing.Point(0, 85);
             this.formFlowFooter1.Name = "formFlowFooter1";
             this.formFlowFooter1.Size = new System.Drawing.Size(462, 45);
             this.formFlowFooter1.TabIndex = 0;
@@ -77,9 +74,9 @@
             this.formHeader1.Location = new System.Drawing.Point(0, 0);
             this.formHeader1.Name = "formHeader1";
             this.formHeader1.Size = new System.Drawing.Size(462, 47);
-            this.formHeader1.SubText = "Upload changes made in Excel back to Wastedge.";
+            this.formHeader1.SubText = "Use Excel to modify the result set.";
             this.formHeader1.TabIndex = 1;
-            this.formHeader1.Text = "Upload Changes";
+            this.formHeader1.Text = "Edit in Excel";
             // 
             // panel1
             // 
@@ -89,7 +86,7 @@
             this.panel1.Location = new System.Drawing.Point(0, 47);
             this.panel1.Name = "panel1";
             this.panel1.Padding = new System.Windows.Forms.Padding(9);
-            this.panel1.Size = new System.Drawing.Size(462, 121);
+            this.panel1.Size = new System.Drawing.Size(462, 38);
             this.panel1.TabIndex = 2;
             // 
             // tableLayoutPanel1
@@ -97,34 +94,15 @@
             this.tableLayoutPanel1.AutoSize = true;
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this._newCheckBox, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this._modifiedCheckBox, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this._deletedCheckBox, 0, 3);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(9, 9);
             this.tableLayoutPanel1.MaximumSize = new System.Drawing.Size(444, 9999);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 4;
+            this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(444, 103);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(444, 20);
             this.tableLayoutPanel1.TabIndex = 0;
-            // 
-            // _newCheckBox
-            // 
-            this._newCheckBox.AutoSize = true;
-            this._newCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this._newCheckBox.Location = new System.Drawing.Point(20, 35);
-            this._newCheckBox.Margin = new System.Windows.Forms.Padding(20, 3, 3, 3);
-            this._newCheckBox.Name = "_newCheckBox";
-            this._newCheckBox.Size = new System.Drawing.Size(133, 18);
-            this._newCheckBox.TabIndex = 3;
-            this._newCheckBox.Text = "{0} records were new";
-            this._newCheckBox.UseVisualStyleBackColor = true;
-            this._newCheckBox.CheckedChanged += new System.EventHandler(this._newCheckBox_CheckedChanged);
             // 
             // label1
             // 
@@ -132,55 +110,28 @@
             this.label1.Location = new System.Drawing.Point(3, 3);
             this.label1.Margin = new System.Windows.Forms.Padding(3);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(424, 26);
+            this.label1.Size = new System.Drawing.Size(292, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "The following changes were detected. Please confirm the changes by ticking the ch" +
-    "eck boxes and click Upload Changes to upload the changes back to Wastedge.";
+            this.label1.Text = "Click Upload Changes once you\'ve made your modifications.";
             // 
-            // _modifiedCheckBox
-            // 
-            this._modifiedCheckBox.AutoSize = true;
-            this._modifiedCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this._modifiedCheckBox.Location = new System.Drawing.Point(20, 59);
-            this._modifiedCheckBox.Margin = new System.Windows.Forms.Padding(20, 3, 3, 3);
-            this._modifiedCheckBox.Name = "_modifiedCheckBox";
-            this._modifiedCheckBox.Size = new System.Drawing.Size(152, 18);
-            this._modifiedCheckBox.TabIndex = 1;
-            this._modifiedCheckBox.Text = "{0} records were modified";
-            this._modifiedCheckBox.UseVisualStyleBackColor = true;
-            this._modifiedCheckBox.CheckedChanged += new System.EventHandler(this._modifiedCheckBox_CheckedChanged);
-            // 
-            // _deletedCheckBox
-            // 
-            this._deletedCheckBox.AutoSize = true;
-            this._deletedCheckBox.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this._deletedCheckBox.Location = new System.Drawing.Point(20, 83);
-            this._deletedCheckBox.Margin = new System.Windows.Forms.Padding(20, 3, 3, 3);
-            this._deletedCheckBox.Name = "_deletedCheckBox";
-            this._deletedCheckBox.Size = new System.Drawing.Size(148, 18);
-            this._deletedCheckBox.TabIndex = 2;
-            this._deletedCheckBox.Text = "{0} records were deleted";
-            this._deletedCheckBox.UseVisualStyleBackColor = true;
-            this._deletedCheckBox.CheckedChanged += new System.EventHandler(this._deletedCheckBox_CheckedChanged);
-            // 
-            // EditInExcelUploadForm
+            // EditInExcelWaitForm
             // 
             this.AcceptButton = this._acceptButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.CancelButton = this._cancelButton;
-            this.ClientSize = new System.Drawing.Size(462, 213);
+            this.ClientSize = new System.Drawing.Size(462, 130);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.formHeader1);
             this.Controls.Add(this.formFlowFooter1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "EditInExcelUploadForm";
+            this.Name = "EditInExcelWaitForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Upload Changes";
+            this.Text = "Edit in Excel";
             this.formFlowFooter1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
@@ -200,8 +151,5 @@
         private System.Windows.Forms.Button _cancelButton;
         private System.Windows.Forms.Button _acceptButton;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.CheckBox _modifiedCheckBox;
-        private System.Windows.Forms.CheckBox _deletedCheckBox;
-        private System.Windows.Forms.CheckBox _newCheckBox;
     }
 }

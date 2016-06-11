@@ -103,22 +103,22 @@
     <Compile Include="CopyDataTarget.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EditInExcelUploadForm.cs">
+    <Compile Include="EditInExcel\EditInExcelUploadForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EditInExcelUploadForm.Designer.cs">
+    <Compile Include="EditInExcel\EditInExcelUploadForm.Designer.cs">
       <DependentUpon>EditInExcelUploadForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="EditInExcelWaitForm.cs">
+    <Compile Include="EditInExcel\EditInExcelWaitForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EditInExcelWaitForm.Designer.cs">
+    <Compile Include="EditInExcel\EditInExcelWaitForm.Designer.cs">
       <DependentUpon>EditInExcelWaitForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="EditInExcelInstructionsForm.cs">
+    <Compile Include="EditInExcel\EditInExcelInstructionsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EditInExcelInstructionsForm.Designer.cs">
+    <Compile Include="EditInExcel\EditInExcelInstructionsForm.Designer.cs">
       <DependentUpon>EditInExcelInstructionsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="EntityFiltersForm.cs">
@@ -296,10 +296,10 @@
     </Compile>
     <Compile Include="Report\ReportGridManager.cs" />
     <Compile Include="Report\ReportLoader.cs" />
-    <Compile Include="ResultForm.cs">
+    <Compile Include="EditInExcel\ResultForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ResultForm.Designer.cs">
+    <Compile Include="EditInExcel\ResultForm.Designer.cs">
       <DependentUpon>ResultForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SimpleButton.cs">
@@ -353,13 +353,13 @@
     <Compile Include="Util\HumanText.cs" />
     <Compile Include="Util\VS2012ColorTable.cs" />
     <Compile Include="Util\VS2012ToolStripRenderer.cs" />
-    <EmbeddedResource Include="EditInExcelUploadForm.resx">
+    <EmbeddedResource Include="EditInExcel\EditInExcelUploadForm.resx">
       <DependentUpon>EditInExcelUploadForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EditInExcelWaitForm.resx">
+    <EmbeddedResource Include="EditInExcel\EditInExcelWaitForm.resx">
       <DependentUpon>EditInExcelWaitForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EditInExcelInstructionsForm.resx">
+    <EmbeddedResource Include="EditInExcel\EditInExcelInstructionsForm.resx">
       <DependentUpon>EditInExcelInstructionsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EntityFiltersForm.resx">
@@ -411,7 +411,7 @@
     <EmbeddedResource Include="Report\ReportForm.resx">
       <DependentUpon>ReportForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ResultForm.resx">
+    <EmbeddedResource Include="EditInExcel\ResultForm.resx">
       <DependentUpon>ResultForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Support\AutoCompleteForm.resx">

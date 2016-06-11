@@ -1,4 +1,4 @@
-﻿namespace WastedgeQuerier
+﻿namespace WastedgeQuerier.EditInExcel
 {
     partial class EditInExcelInstructionsForm
     {

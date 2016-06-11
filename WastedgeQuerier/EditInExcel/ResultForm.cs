@@ -19,7 +19,7 @@ using WastedgeQuerier.JavaScript;
 using WastedgeQuerier.Util;
 using Cell = SourceGrid.Cells.Cell;
 
-namespace WastedgeQuerier
+namespace WastedgeQuerier.EditInExcel
 {
     public partial class ResultForm : SystemEx.Windows.Forms.Form
     {
@@ -47,6 +47,8 @@ namespace WastedgeQuerier
             _filters = filters;
 
             InitializeComponent();
+
+            _editInExcel.Enabled = entity.CanCreate || entity.CanUpdate || entity.CanDelete;
 
             var headerView = new SourceGrid.Cells.Views.ColumnHeader
             {

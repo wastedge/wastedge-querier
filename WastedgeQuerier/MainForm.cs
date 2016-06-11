@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using SystemEx.Windows.Forms;
 using WastedgeApi;
+using WastedgeQuerier.EditInExcel;
 using WastedgeQuerier.Export;
 using WastedgeQuerier.Formats;
 using WastedgeQuerier.JavaScript;
