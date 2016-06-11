@@ -38,7 +38,8 @@ namespace WastedgeQuerier
 
             for (int i = 0; i < firstResultSet.FieldCount; i++)
             {
-                AddHeader(row, i, HumanText.ToHuman(firstResultSet.GetFieldName(i)), headerStyle);
+                var member = firstResultSet.Entity.Members[firstResultSet.GetFieldName(i)];
+                AddHeader(row, i, HumanText.GetMemberName(member), member.Comments, headerStyle);
             }
 
             int rowOffset = 0;
@@ -112,9 +113,16 @@ namespace WastedgeQuerier
                 cell.CellStyle = style;
         }
 
-        private void AddHeader(IRow row, int column, object value, ICellStyle headerStyle)
+        private void AddHeader(IRow row, int column, object value, string comment, ICellStyle headerStyle)
         {
             var cell = row.CreateCell(column);
+            if (!String.IsNullOrEmpty(comment))
+            {
+                var cellComment = ((XSSFSheet)row.Sheet).CreateComment();
+                cellComment.String = new XSSFRichTextString(comment);
+                cell.CellComment = cellComment;
+            }
+
             SetValue(cell, value);
             cell.CellStyle = headerStyle;
         }
