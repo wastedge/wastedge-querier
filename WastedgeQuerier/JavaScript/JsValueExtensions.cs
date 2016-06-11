@@ -80,6 +80,7 @@ namespace WastedgeQuerier.JavaScript
             {
                 case Types.Null:
                 case Types.Undefined:
+                case Types.None:
                     return true;
 
                 default:

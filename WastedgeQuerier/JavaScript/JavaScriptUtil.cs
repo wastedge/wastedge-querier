@@ -58,29 +58,29 @@ namespace WastedgeQuerier.JavaScript
 
             return new
             {
-                query = new Func<string, string, JsValue, JsValue, string, JsValue, JsValue>((entity, weql, offset, count, order, compact) =>
+                query = new Func<JsValue, JsValue, JsValue, JsValue, JsValue, JsValue, JsValue>((entity, weql, offset, count, order, compact) =>
                 {
                     var parameters = new ParameterBuilder()
-                        .Add("$query", weql)
+                        .Add("$query", weql.ConvertToString())
                         .Add("$offset", offset.ConvertToInt32())
                         .Add("$count", count.ConvertToInt32())
-                        .Add("$order", order)
+                        .Add("$order", order.ConvertToString())
                         .Add("$output", compact.ConvertToBoolean().GetValueOrDefault() ? "compact" : "normal")
                         .ToString();
 
-                    return Execute(engine, () => api.ExecuteRaw(entity, parameters, "GET", null));
+                    return Execute(engine, () => api.ExecuteRaw(entity.ConvertToString(), parameters, "GET", null));
                 }),
-                create = new Func<string, JsValue, JsValue>((path, request) =>
-                    Execute(engine, () => api.ExecuteRaw(path, null, "PUT", SerializeRequest(engine, request)))
+                create = new Func<JsValue, JsValue, JsValue>((path, request) =>
+                    Execute(engine, () => api.ExecuteRaw(path.ConvertToString(), null, "PUT", SerializeRequest(engine, request)))
                 ),
-                update = new Func<string, JsValue, JsValue>((path, request) =>
-                    Execute(engine, () => api.ExecuteRaw(path, null, "POST", SerializeRequest(engine, request)))
+                update = new Func<JsValue, JsValue, JsValue>((path, request) =>
+                    Execute(engine, () => api.ExecuteRaw(path.ConvertToString(), null, "POST", SerializeRequest(engine, request)))
                 ),
-                delete = new Func<string, JsValue, JsValue>((path, request) =>
-                    Execute(engine, () => api.ExecuteRaw(path, null, "DELETE", SerializeRequest(engine, request)))
+                delete = new Func<JsValue, JsValue, JsValue>((path, request) =>
+                    Execute(engine, () => api.ExecuteRaw(path.ConvertToString(), null, "DELETE", SerializeRequest(engine, request)))
                 ),
-                schema = new Func<string, JsValue>(path =>
-                    Execute(engine, () => api.ExecuteRaw(path, "$meta=true", "GET", null))
+                schema = new Func<JsValue, JsValue>(path =>
+                    Execute(engine, () => api.ExecuteRaw(path.ConvertToString(), "$meta=true", "GET", null))
                 )
             };
         }
