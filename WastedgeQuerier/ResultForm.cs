@@ -10,10 +10,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SystemEx.Windows.Forms;
 using SourceGrid.Cells;
 using SourceGrid.Cells.Controllers;
 using SourceGrid.Cells.Views;
 using WastedgeApi;
+using WastedgeQuerier.JavaScript;
+using WastedgeQuerier.Util;
 using Cell = SourceGrid.Cells.Cell;
 
 namespace WastedgeQuerier
@@ -77,10 +80,10 @@ namespace WastedgeQuerier
 
             for (int i = 0; i < _entity.Members.Count; i++)
             {
-                _grid[0, i] = new SourceGrid.Cells.ColumnHeader(_entity.Members[i].Name)
+                _grid[0, i] = new SourceGrid.Cells.ColumnHeader(HumanText.GetMemberName(_entity.Members[i]))
                 {
                     View = headerView,
-                    ToolTipText = _entity.Members[i].Name,
+                    ToolTipText = HumanText.GetMemberName(_entity.Members[i]),
                     AutomaticSortEnabled = false
                 };
 
@@ -329,7 +332,30 @@ namespace WastedgeQuerier
                         return;
                 }
 
-                using (var form = new EditInExcelUploadForm(_api, _entity, BuildChanges(_resultSets, fileName)))
+                RecordSetChanges changes;
+
+                while (true)
+                {
+                    try
+                    {
+                        changes = BuildChanges(_resultSets, fileName);
+                        break;
+                    }
+                    catch (IOException)
+                    {
+                        var result = TaskDialogEx.Show(
+                            this,
+                            "The Excel file cannot be opened. Please close the Excel file before uploading your changes",
+                            Text,
+                            TaskDialogCommonButtons.OK | TaskDialogCommonButtons.Cancel,
+                            TaskDialogIcon.Error
+                        );
+                        if (result == DialogResult.Cancel)
+                            return;
+                    }
+                }
+
+                using (var form = new EditInExcelUploadForm(_api, _entity, changes))
                 {
                     form.ShowDialog(this);
                 }

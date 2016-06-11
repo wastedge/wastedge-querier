@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WastedgeApi;
+using WastedgeQuerier.Util;
 
 namespace WastedgeQuerier.Report
 {
@@ -24,12 +25,12 @@ namespace WastedgeQuerier.Report
         public override string ToString()
         {
             if (Transform == ReportFieldTransform.None)
-                return Fields.ToString();
+                return HumanText.GetEntityMemberPath(Fields);
 
             return
                 (Transform == ReportFieldTransform.CountNumbers ? "Count" : Transform.ToString()) +
                 " of " +
-                Fields;
+                HumanText.GetEntityMemberPath(Fields);
         }
     }
 }

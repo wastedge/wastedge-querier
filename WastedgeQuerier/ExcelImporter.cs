@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using NPOI.XSSF.UserModel;
 using NPOI.SS.UserModel;
 using WastedgeApi;
+using WastedgeQuerier.Util;
 
 namespace WastedgeQuerier
 {
@@ -19,12 +20,12 @@ namespace WastedgeQuerier
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            var calculatedFields = new HashSet<string>(entity.Members.OfType<EntityCalculatedField>().Select(p => p.Name));
+            var calculatedFields = new HashSet<EntityMember>(entity.Members.OfType<EntityCalculatedField>());
 
             var workbook = new XSSFWorkbook(stream);
             var sheet = workbook.GetSheetAt(0);
 
-            var headers = GetHeaders(sheet);
+            var headers = GetHeaders(sheet, entity);
 
             var recordSet = new RecordSet();
 
@@ -38,7 +39,7 @@ namespace WastedgeQuerier
             return recordSet;
         }
 
-        private Record GetRecord(IRow row, List<string> headers, HashSet<string> calculatedFields)
+        private Record GetRecord(IRow row, List<EntityMember> headers, HashSet<EntityMember> calculatedFields)
         {
             var record = new Record();
 
@@ -81,7 +82,7 @@ namespace WastedgeQuerier
                     }
                 }
 
-                record[headers[i]] = value;
+                record[headers[i].Name] = value;
             }
 
             if (record.Count == 0)
@@ -90,14 +91,17 @@ namespace WastedgeQuerier
             return record;
         }
 
-        private List<string> GetHeaders(ISheet sheet)
+        private List<EntityMember> GetHeaders(ISheet sheet, EntitySchema entity)
         {
-            var headers = new List<string>();
+            var headers = new List<EntityMember>();
             var row = sheet.GetRow(0);
+            var members = entity.Members.ToDictionary(HumanText.GetMemberName, StringComparer.OrdinalIgnoreCase);
 
             for (int i = row.FirstCellNum; i < row.LastCellNum; i++)
             {
-                headers.Add(row.GetCell(i).StringCellValue);
+                EntityMember member;
+                if (members.TryGetValue(row.GetCell(i).StringCellValue, out member))
+                    headers.Add(member);
             }
 
             return headers;

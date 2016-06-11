@@ -18,6 +18,7 @@ using WastedgeQuerier.Formats;
 using WastedgeQuerier.JavaScript;
 using WastedgeQuerier.Report;
 using WastedgeQuerier.Support;
+using WastedgeQuerier.Util;
 using ListView = System.Windows.Forms.ListView;
 
 namespace WastedgeQuerier.Export
@@ -56,7 +57,7 @@ namespace WastedgeQuerier.Export
             VisualStyleUtil.StyleListView(_availableFields);
             VisualStyleUtil.StyleListView(_reportFields);
 
-            _entityGroup = new ListViewGroup(new EntityName(_entity.Name).Name);
+            _entityGroup = new ListViewGroup(HumanText.GetEntityName(_entity));
             _reportFields.Groups.Add(_entityGroup);
 
             var selectPath = new Button
@@ -80,7 +81,7 @@ namespace WastedgeQuerier.Export
 
         private void AddReportField(EntityMemberPath path)
         {
-            var item = new ListViewItem(path.Tail.Name)
+            var item = new ListViewItem(HumanText.GetMemberName(path.Tail))
             {
                 Tag = path
             };
@@ -158,12 +159,12 @@ namespace WastedgeQuerier.Export
             if (path.Count == 0)
             {
                 _selectedEntity = _entity;
-                _path.Text = new EntityName(_selectedEntity.Name).Name;
+                _path.Text = HumanText.GetEntityName(_selectedEntity);
             }
             else
             {
                 _selectedEntity = _api.GetEntitySchema(((EntityForeign)path.Tail).LinkTable);
-                _path.Text = String.Join(".", path.Select(p => p.Name));
+                _path.Text = HumanText.GetEntityMemberPath(path);
             }
 
             _availableFields.BeginUpdate();
@@ -178,7 +179,7 @@ namespace WastedgeQuerier.Export
                     _reportFields.Items.Cast<ListViewItem>().All(p => !p.Tag.Equals(memberPath))
                 )
                 {
-                    _availableFields.Items.Add(new ListViewItem(member.Name)
+                    _availableFields.Items.Add(new ListViewItem(HumanText.GetMemberName(member))
                     {
                         Tag = memberPath
                     });
@@ -320,7 +321,7 @@ namespace WastedgeQuerier.Export
             if (path.Count == 1)
                 return _entityGroup;
 
-            string groupName = new EntityMemberPath(path.Take(path.Count - 1)).ToString();
+            string groupName = HumanText.GetEntityMemberPath(new EntityMemberPath(path.Take(path.Count - 1)));
 
             var group = listView.Groups.Cast<ListViewGroup>().FirstOrDefault(p => p.Header == groupName);
             if (group != null)

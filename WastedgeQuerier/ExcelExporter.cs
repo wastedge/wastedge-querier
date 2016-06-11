@@ -6,6 +6,7 @@ using System.Text;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using WastedgeApi;
+using WastedgeQuerier.Util;
 
 namespace WastedgeQuerier
 {
@@ -37,7 +38,7 @@ namespace WastedgeQuerier
 
             for (int i = 0; i < firstResultSet.FieldCount; i++)
             {
-                AddHeader(row, i, firstResultSet.GetFieldName(i), headerStyle);
+                AddHeader(row, i, HumanText.ToHuman(firstResultSet.GetFieldName(i)), headerStyle);
             }
 
             int rowOffset = 0;

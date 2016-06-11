@@ -8,6 +8,7 @@ using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using WastedgeApi;
 using WastedgeQuerier.Formats;
+using WastedgeQuerier.Util;
 
 namespace WastedgeQuerier.Export
 {
@@ -39,7 +40,7 @@ namespace WastedgeQuerier.Export
 
             for (int i = 0; i < export.Fields.Count; i++)
             {
-                AddHeader(row, i, export.Fields[i].ToString(), headerStyle);
+                AddHeader(row, i, HumanText.GetEntityMemberPath(export.Fields[i]), headerStyle);
             }
 
             int rowOffset = 0;

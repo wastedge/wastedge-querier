@@ -130,6 +130,7 @@
     <Compile Include="EntityMemberPath.cs" />
     <Compile Include="EntityMemberPathComparer.cs" />
     <Compile Include="EntityName.cs" />
+    <Compile Include="EntitySchemaComparer.cs" />
     <Compile Include="Export\ApiUtils.cs" />
     <Compile Include="Export\EntityPathSelectorTreeView.cs">
       <SubType>Component</SubType>

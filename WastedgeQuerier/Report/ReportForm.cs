@@ -12,6 +12,7 @@ using Newtonsoft.Json.Linq;
 using WastedgeApi;
 using WastedgeQuerier.Formats;
 using WastedgeQuerier.JavaScript;
+using WastedgeQuerier.Util;
 
 namespace WastedgeQuerier.Report
 {
@@ -86,7 +87,8 @@ namespace WastedgeQuerier.Report
             {
                 var node = new TreeNode
                 {
-                    Text = member.Name, Tag = member
+                    Text = HumanText.GetMemberName(member),
+                    Tag = member
                 };
 
                 switch (member.Type)

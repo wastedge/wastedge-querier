@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WastedgeApi;
+using WastedgeQuerier.Util;
 
 namespace WastedgeQuerier.Export
 {
     internal class EntityPathSelectorTreeView : TreeView
     {
         private readonly Api _api;
-        private readonly EntitySchema _entity;
 
         public EntityPathSelectorTreeView(Api api, EntitySchema entity)
         {
@@ -21,9 +21,8 @@ namespace WastedgeQuerier.Export
                 throw new ArgumentNullException(nameof(entity));
 
             _api = api;
-            _entity = entity;
 
-            var node = new TreeNode(new EntityName(entity.Name).Name);
+            var node = new TreeNode(HumanText.GetEntityName(entity));
             node.Tag = entity;
             node.Nodes.Add(new TreeNode());
             Nodes.Add(node);
@@ -45,7 +44,7 @@ namespace WastedgeQuerier.Export
 
             foreach (var foreign in entity.Members.OfType<EntityForeign>())
             {
-                var node = new TreeNode(foreign.Name);
+                var node = new TreeNode(HumanText.GetMemberName(foreign));
                 var linkTable = _api.GetEntitySchema(foreign.LinkTable);
                 node.Tag = foreign;
                 if (linkTable.Members.Any(p => p is EntityForeign))

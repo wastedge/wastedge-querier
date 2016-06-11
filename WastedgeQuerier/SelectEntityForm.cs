@@ -124,26 +124,7 @@ namespace WastedgeQuerier
                     entities.Add(entity);
             }
 
-            entities.Sort((a, b) =>
-            {
-                var aName = new EntityName(a.Name);
-                var bName = new EntityName(b.Name);
-
-                int result;
-                if (aName.Header == null && bName.Header == null)
-                    result = 0;
-                else if (aName.Header == null)
-                    result = -1;
-                else if (bName.Header == null)
-                    result = 1;
-                else
-                    result = String.Compare(aName.Header, bName.Header, StringComparison.CurrentCultureIgnoreCase);
-
-                if (result != 0)
-                    return result;
-
-                return String.Compare(aName.Name, bName.Name, StringComparison.CurrentCultureIgnoreCase);
-            });
+            entities.Sort(EntitySchemaComparer.Instance);
 
             _entities.BeginUpdate();
 
@@ -224,7 +205,7 @@ namespace WastedgeQuerier
             public EntityDrawer(EntitySchema entity)
             {
                 Entity = entity;
-                _name = HumanText.ToHuman(new EntityName(Entity.Name).Name);
+                _name = HumanText.GetEntityName(Entity);
             }
 
             public int MeasureItem(int width)

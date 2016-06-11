@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using SystemEx.Windows.Forms;
 using WastedgeApi;
 using WastedgeQuerier.JavaScript;
+using WastedgeQuerier.Util;
 
 namespace WastedgeQuerier
 {
@@ -34,7 +35,7 @@ namespace WastedgeQuerier
             _filter.BeginUpdate();
 
             _filter.Items.Clear();
-            _filter.Items.AddRange(_entity.Members.OfType<EntityPhysicalField>().Select(p => p.Name).Cast<object>().ToArray());
+            _filter.Items.AddRange(_entity.Members.OfType<EntityPhysicalField>().Select(p => new FilterField(p)).ToArray());
 
             _filter.EndUpdate();
 
@@ -55,13 +56,14 @@ namespace WastedgeQuerier
 
         private void _add_Click(object sender, EventArgs e)
         {
-            if (!_entity.Members.Contains(_filter.Text))
+            var member = _filter.SelectedItem as FilterField;
+            if (member == null)
             {
                 TaskDialogEx.Show(this, "Unknown field", Text, TaskDialogCommonButtons.OK, TaskDialogIcon.Error);
                 return;
             }
 
-            AddFilter((EntityPhysicalField)_entity.Members[_filter.Text]);
+            AddFilter(member.Field);
             _filter.Text = null;
         }
 
@@ -99,6 +101,21 @@ namespace WastedgeQuerier
         private void _acceptButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
+        }
+
+        private class FilterField
+        {
+            public EntityPhysicalField Field { get; }
+
+            public FilterField(EntityPhysicalField field)
+            {
+                Field = field;
+            }
+
+            public override string ToString()
+            {
+                return HumanText.GetMemberName(Field);
+            }
         }
     }
 }

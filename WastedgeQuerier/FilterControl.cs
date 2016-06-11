@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using SystemEx;
 using SystemEx.Windows.Forms;
 using WastedgeApi;
+using WastedgeQuerier.Util;
 using TextBox = System.Windows.Forms.TextBox;
 
 namespace WastedgeQuerier
@@ -51,7 +52,7 @@ namespace WastedgeQuerier
 
             InitializeComponent();
 
-            _name.Text = Field.Name;
+            _name.Text = HumanText.GetMemberName(Field);
 
             foreach (var control in new Control[] { _textBox, _date, _dateTime, _numericTextBox })
             {
