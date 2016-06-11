@@ -85,6 +85,25 @@ namespace WastedgeQuerier.EditInExcel
             }
         }
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (_grid.ContainsFocus && _grid.RowsCount > _grid.FixedRows)
+            {
+                switch (keyData)
+                {
+                    case Keys.Home:
+                        _grid.Selection.FocusRow(1);
+                        return true;
+
+                    case Keys.End:
+                        _grid.Selection.FocusRow(_grid.RowsCount - 1);
+                        return true;
+                }
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
         private void LoadResultSet(ResultSet resultSet)
         {
             _resultSet = resultSet;
