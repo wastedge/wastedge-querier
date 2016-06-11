@@ -47,13 +47,11 @@
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this._helpAboutMenuItem = new System.Windows.Forms.MenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this._directoryBrowser = new WastedgeQuerier.Support.DirectoryBrowser();
             this.toolStrip3 = new System.Windows.Forms.ToolStrip();
             this._addFolder = new System.Windows.Forms.ToolStripButton();
             this._deleteFolder = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this._renameFolder = new System.Windows.Forms.ToolStripButton();
-            this._fileBrowser = new WastedgeQuerier.Support.FileBrowser();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this._addFile = new System.Windows.Forms.ToolStripDropDownButton();
             this._addExport = new System.Windows.Forms.ToolStripMenuItem();
@@ -79,6 +77,8 @@
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this._deleteFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._renameFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._directoryBrowser = new WastedgeQuerier.Support.DirectoryBrowser();
+            this._fileBrowser = new WastedgeQuerier.Support.FileBrowser();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -212,21 +212,9 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this._fileBrowser);
             this.splitContainer1.Panel2.Controls.Add(this.toolStrip1);
-            this.splitContainer1.Size = new System.Drawing.Size(721, 374);
+            this.splitContainer1.Size = new System.Drawing.Size(721, 164);
             this.splitContainer1.SplitterDistance = 239;
             this.splitContainer1.TabIndex = 0;
-            // 
-            // _directoryBrowser
-            // 
-            this._directoryBrowser.AllowDrop = true;
-            this._directoryBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._directoryBrowser.Location = new System.Drawing.Point(0, 25);
-            this._directoryBrowser.Name = "_directoryBrowser";
-            this._directoryBrowser.RootName = "Wastedge";
-            this._directoryBrowser.Size = new System.Drawing.Size(239, 349);
-            this._directoryBrowser.TabIndex = 1;
-            this._directoryBrowser.DirectoryChanged += new System.EventHandler(this._directoryBrowser_DirectoryChanged);
-            this._directoryBrowser.DirectoryClick += new WastedgeQuerier.Support.PathMouseEventHandler(this._directoryBrowser_DirectoryClick);
             // 
             // toolStrip3
             // 
@@ -276,19 +264,6 @@
             this._renameFolder.Size = new System.Drawing.Size(23, 22);
             this._renameFolder.Text = "Rename";
             this._renameFolder.Click += new System.EventHandler(this._renameFolder_Click);
-            // 
-            // _fileBrowser
-            // 
-            this._fileBrowser.AllowDrop = true;
-            this._fileBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._fileBrowser.Enabled = false;
-            this._fileBrowser.Location = new System.Drawing.Point(0, 25);
-            this._fileBrowser.Name = "_fileBrowser";
-            this._fileBrowser.Size = new System.Drawing.Size(478, 349);
-            this._fileBrowser.TabIndex = 1;
-            this._fileBrowser.SelectedFilesChanged += new System.EventHandler(this._fileBrowser_SelectedFilesChanged);
-            this._fileBrowser.FileClick += new WastedgeQuerier.Support.PathMouseEventHandler(this._fileBrowser_FileClick);
-            this._fileBrowser.FileActivate += new WastedgeQuerier.Support.PathEventHandler(this._fileBrowser_FileActivate);
             // 
             // toolStrip1
             // 
@@ -492,11 +467,36 @@
             this._renameFileMenuItem.Text = "&Rename";
             this._renameFileMenuItem.Click += new System.EventHandler(this._renameFileMenuItem_Click);
             // 
+            // _directoryBrowser
+            // 
+            this._directoryBrowser.AllowDrop = true;
+            this._directoryBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._directoryBrowser.Location = new System.Drawing.Point(0, 25);
+            this._directoryBrowser.Name = "_directoryBrowser";
+            this._directoryBrowser.RootName = "Wastedge";
+            this._directoryBrowser.Size = new System.Drawing.Size(239, 139);
+            this._directoryBrowser.TabIndex = 1;
+            this._directoryBrowser.DirectoryChanged += new System.EventHandler(this._directoryBrowser_DirectoryChanged);
+            this._directoryBrowser.DirectoryClick += new WastedgeQuerier.Support.PathMouseEventHandler(this._directoryBrowser_DirectoryClick);
+            // 
+            // _fileBrowser
+            // 
+            this._fileBrowser.AllowDrop = true;
+            this._fileBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._fileBrowser.Enabled = false;
+            this._fileBrowser.Location = new System.Drawing.Point(0, 25);
+            this._fileBrowser.Name = "_fileBrowser";
+            this._fileBrowser.Size = new System.Drawing.Size(478, 139);
+            this._fileBrowser.TabIndex = 1;
+            this._fileBrowser.SelectedFilesChanged += new System.EventHandler(this._fileBrowser_SelectedFilesChanged);
+            this._fileBrowser.FileClick += new WastedgeQuerier.Support.PathMouseEventHandler(this._fileBrowser_FileClick);
+            this._fileBrowser.FileActivate += new WastedgeQuerier.Support.PathEventHandler(this._fileBrowser_FileActivate);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(721, 374);
+            this.ClientSize = new System.Drawing.Size(721, 164);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Menu = this.mainMenu1;

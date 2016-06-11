@@ -29,7 +29,6 @@ namespace WastedgeQuerier.EditInExcel
         private ResultSet _resultSet;
         private readonly IView _defaultView;
         private readonly IView _numberView;
-        private readonly IView _nullView;
         private readonly List<ResultSet> _resultSets = new List<ResultSet>();
         private ApiQuery _query;
 
@@ -64,13 +63,6 @@ namespace WastedgeQuerier.EditInExcel
             {
                 ElementText = new DevAge.Drawing.VisualElements.TextRenderer(),
                 TextAlignment = DevAge.Drawing.ContentAlignment.MiddleRight
-            };
-
-            _nullView = new SourceGrid.Cells.Views.Cell
-            {
-                ElementText = new DevAge.Drawing.VisualElements.TextRenderer(),
-                ForeColor = SystemColors.GrayText,
-                Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic)
             };
 
             var toolTipController = new ToolTipText();
@@ -114,8 +106,14 @@ namespace WastedgeQuerier.EditInExcel
             {
                 _grid.AutoSizeCells(new SourceGrid.Range(
                     new SourceGrid.Position(_grid.FixedRows, 0),
-                    new SourceGrid.Position(Math.Min(20, _grid.Rows.Count - _grid.FixedRows), _grid.ColumnsCount - _grid.FixedRows)
+                    new SourceGrid.Position(Math.Min(20, _grid.Rows.Count - _grid.FixedRows), _grid.ColumnsCount - 1)
                 ));
+
+                for (int i = 0; i < _grid.ColumnsCount; i++)
+                {
+                    if (_grid.Columns[i].Width < 60)
+                        _grid.Columns[i].Width = 60;
+                }
             }
 
             UpdateEnabled();
@@ -147,9 +145,9 @@ namespace WastedgeQuerier.EditInExcel
             }
             if (value == null)
             {
-                return new Cell("null")
+                return new Cell
                 {
-                    View = _nullView
+                    View = _defaultView
                 };
             }
 
