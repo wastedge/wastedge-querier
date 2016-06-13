@@ -42,7 +42,7 @@ namespace WastedgeQuerier.Export
             if (entity == null)
                 entity = _api.GetEntitySchema(((EntityForeign)e.Node.Tag).LinkTable);
 
-            foreach (var foreign in entity.Members.OfType<EntityForeign>())
+            foreach (var foreign in entity.Members.OfType<EntityForeign>().OrderBy(HumanText.GetMemberName))
             {
                 var node = new TreeNode(HumanText.GetMemberName(foreign));
                 var linkTable = _api.GetEntitySchema(foreign.LinkTable);

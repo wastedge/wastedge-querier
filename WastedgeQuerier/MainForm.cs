@@ -37,6 +37,8 @@ namespace WastedgeQuerier
 
             InitializeComponent();
 
+            Size = new Size(800, 500);
+
             _directoryBrowser.FileBrowserManager = _fileBrowser.FileBrowserManager = new FileBrowserManager();
             var filesPath = Path.Combine(Program.DataPath, "Files");
             Directory.CreateDirectory(filesPath);

@@ -6,6 +6,7 @@ using System.Text;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using WastedgeApi;
+using WastedgeQuerier.Export;
 using WastedgeQuerier.Util;
 
 namespace WastedgeQuerier
@@ -36,10 +37,12 @@ namespace WastedgeQuerier
 
             var row = sheet.CreateRow(0);
 
+            var columnMap = ApiUtils.BuildColumnMap(firstResultSet);
+
             for (int i = 0; i < firstResultSet.FieldCount; i++)
             {
                 var member = firstResultSet.Entity.Members[firstResultSet.GetFieldName(i)];
-                AddHeader(row, i, HumanText.GetMemberName(member), member.Comments, headerStyle);
+                AddHeader(row, columnMap[i], HumanText.GetMemberName(member), member.Comments, headerStyle);
             }
 
             int rowOffset = 0;
@@ -69,7 +72,7 @@ namespace WastedgeQuerier
                                 break;
                         }
 
-                        AddCell(row, i, resultSet[i], cellStyle);
+                        AddCell(row, columnMap[i], resultSet[i], cellStyle);
                     }
 
                     // We only auto size the top 20 rows for performance reasons.

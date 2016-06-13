@@ -212,8 +212,8 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this._fileBrowser);
             this.splitContainer1.Panel2.Controls.Add(this.toolStrip1);
-            this.splitContainer1.Size = new System.Drawing.Size(721, 164);
-            this.splitContainer1.SplitterDistance = 239;
+            this.splitContainer1.Size = new System.Drawing.Size(784, 440);
+            this.splitContainer1.SplitterDistance = 259;
             this.splitContainer1.TabIndex = 0;
             // 
             // toolStrip3
@@ -226,7 +226,7 @@
             this._renameFolder});
             this.toolStrip3.Location = new System.Drawing.Point(0, 0);
             this.toolStrip3.Name = "toolStrip3";
-            this.toolStrip3.Size = new System.Drawing.Size(239, 25);
+            this.toolStrip3.Size = new System.Drawing.Size(259, 25);
             this.toolStrip3.TabIndex = 2;
             this.toolStrip3.Text = "toolStrip3";
             // 
@@ -277,7 +277,7 @@
             this._runFile});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(478, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(521, 25);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -474,7 +474,7 @@
             this._directoryBrowser.Location = new System.Drawing.Point(0, 25);
             this._directoryBrowser.Name = "_directoryBrowser";
             this._directoryBrowser.RootName = "Wastedge";
-            this._directoryBrowser.Size = new System.Drawing.Size(239, 139);
+            this._directoryBrowser.Size = new System.Drawing.Size(259, 415);
             this._directoryBrowser.TabIndex = 1;
             this._directoryBrowser.DirectoryChanged += new System.EventHandler(this._directoryBrowser_DirectoryChanged);
             this._directoryBrowser.DirectoryClick += new WastedgeQuerier.Support.PathMouseEventHandler(this._directoryBrowser_DirectoryClick);
@@ -486,7 +486,7 @@
             this._fileBrowser.Enabled = false;
             this._fileBrowser.Location = new System.Drawing.Point(0, 25);
             this._fileBrowser.Name = "_fileBrowser";
-            this._fileBrowser.Size = new System.Drawing.Size(478, 139);
+            this._fileBrowser.Size = new System.Drawing.Size(521, 415);
             this._fileBrowser.TabIndex = 1;
             this._fileBrowser.SelectedFilesChanged += new System.EventHandler(this._fileBrowser_SelectedFilesChanged);
             this._fileBrowser.FileClick += new WastedgeQuerier.Support.PathMouseEventHandler(this._fileBrowser_FileClick);
@@ -496,7 +496,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(721, 164);
+            this.ClientSize = new System.Drawing.Size(784, 440);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Menu = this.mainMenu1;

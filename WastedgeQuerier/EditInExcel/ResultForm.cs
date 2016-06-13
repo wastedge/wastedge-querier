@@ -15,6 +15,7 @@ using SourceGrid.Cells;
 using SourceGrid.Cells.Controllers;
 using SourceGrid.Cells.Views;
 using WastedgeApi;
+using WastedgeQuerier.Export;
 using WastedgeQuerier.JavaScript;
 using WastedgeQuerier.Util;
 using Cell = SourceGrid.Cells.Cell;
@@ -31,6 +32,7 @@ namespace WastedgeQuerier.EditInExcel
         private readonly IView _numberView;
         private readonly List<ResultSet> _resultSets = new List<ResultSet>();
         private ApiQuery _query;
+        private int[] _columnMap;
 
         public ResultForm(Api api, EntitySchema entity, List<Filter> filters)
         {
@@ -49,11 +51,6 @@ namespace WastedgeQuerier.EditInExcel
 
             _editInExcel.Enabled = entity.CanCreate || entity.CanUpdate || entity.CanDelete;
 
-            var headerView = new SourceGrid.Cells.Views.ColumnHeader
-            {
-                ElementText = new DevAge.Drawing.VisualElements.TextRenderer()
-            };
-
             _defaultView = new SourceGrid.Cells.Views.Cell
             {
                 ElementText = new DevAge.Drawing.VisualElements.TextRenderer()
@@ -64,25 +61,6 @@ namespace WastedgeQuerier.EditInExcel
                 ElementText = new DevAge.Drawing.VisualElements.TextRenderer(),
                 TextAlignment = DevAge.Drawing.ContentAlignment.MiddleRight
             };
-
-            var toolTipController = new ToolTipText();
-
-            _grid.ColumnsCount = _entity.Members.Count;
-            _grid.FixedRows = 1;
-
-            _grid.Rows.Insert(0);
-
-            for (int i = 0; i < _entity.Members.Count; i++)
-            {
-                _grid[0, i] = new SourceGrid.Cells.ColumnHeader(HumanText.GetMemberName(_entity.Members[i]))
-                {
-                    View = headerView,
-                    ToolTipText = HumanText.GetMemberName(_entity.Members[i]),
-                    AutomaticSortEnabled = false
-                };
-
-                _grid[0, i].AddController(toolTipController);
-            }
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -106,6 +84,9 @@ namespace WastedgeQuerier.EditInExcel
 
         private void LoadResultSet(ResultSet resultSet)
         {
+            if (_grid.RowsCount == 0)
+                CreateHeaders(resultSet);
+
             _resultSet = resultSet;
             _resultSets.Add(resultSet);
 
@@ -117,7 +98,7 @@ namespace WastedgeQuerier.EditInExcel
 
                 for (int i = 0; i < resultSet.FieldCount; i++)
                 {
-                    _grid[row, i] = BuildCell(resultSet[i], resultSet.GetField(i).DataType);
+                    _grid[row, _columnMap[i]] = BuildCell(resultSet[i], resultSet.GetField(i).DataType);
                 }
             }
 
@@ -136,6 +117,37 @@ namespace WastedgeQuerier.EditInExcel
             }
 
             UpdateEnabled();
+        }
+
+        private void CreateHeaders(ResultSet resultSet)
+        {
+            var headerView = new SourceGrid.Cells.Views.ColumnHeader
+            {
+                ElementText = new DevAge.Drawing.VisualElements.TextRenderer()
+            };
+
+            var toolTipController = new ToolTipText();
+
+            _grid.ColumnsCount = _entity.Members.Count;
+            _grid.FixedRows = 1;
+
+            _grid.Rows.Insert(0);
+
+            _columnMap = ApiUtils.BuildColumnMap(resultSet);
+
+            for (int i = 0; i < resultSet.FieldCount; i++)
+            {
+                var member = _entity.Members[resultSet.GetFieldName(i)];
+
+                _grid[0, _columnMap[i]] = new SourceGrid.Cells.ColumnHeader(HumanText.GetMemberName(member))
+                {
+                    View = headerView,
+                    ToolTipText = HumanText.GetMemberName(member),
+                    AutomaticSortEnabled = false
+                };
+
+                _grid[0, _columnMap[i]].AddController(toolTipController);
+            }
         }
 
         private void UpdateEnabled()

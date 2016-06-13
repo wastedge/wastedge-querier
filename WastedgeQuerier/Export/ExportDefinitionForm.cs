@@ -170,7 +170,7 @@ namespace WastedgeQuerier.Export
             _availableFields.BeginUpdate();
             _availableFields.Items.Clear();
 
-            foreach (var member in _selectedEntity.Members)
+            foreach (var member in _selectedEntity.Members.OrderBy(HumanText.GetMemberName))
             {
                 var memberPath = new EntityMemberPath(path, member);
 

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WastedgeApi;
+using WastedgeQuerier.Util;
 
 namespace WastedgeQuerier.Export
 {
@@ -237,6 +238,30 @@ namespace WastedgeQuerier.Export
         private static void Append(StringBuilder sb, object value, EntityDataType dataType)
         {
             sb.Append(Uri.EscapeDataString(Serialize(value, dataType)));
+        }
+
+        public static int[] BuildColumnMap(ResultSet resultSet)
+        {
+            if (resultSet == null)
+                throw new ArgumentNullException(nameof(resultSet));
+
+            var columns = new List<Tuple<string, int>>();
+
+            for (int i = 0; i < resultSet.FieldCount; i++)
+            {
+                columns.Add(Tuple.Create(resultSet.GetFieldName(i), i));
+            }
+
+            columns.Sort((a, b) => String.Compare(HumanText.ToHuman(a.Item1), HumanText.ToHuman(b.Item1), StringComparison.CurrentCultureIgnoreCase));
+
+            var columnMap = new int[columns.Count];
+
+            for (int i = 0; i < columns.Count; i++)
+            {
+                columnMap[columns[i].Item2] = i;
+            }
+
+            return columnMap;
         }
     }
 }

@@ -35,7 +35,7 @@ namespace WastedgeQuerier
             _filter.BeginUpdate();
 
             _filter.Items.Clear();
-            _filter.Items.AddRange(_entity.Members.OfType<EntityPhysicalField>().Select(p => new FilterField(p)).ToArray());
+            _filter.Items.AddRange(_entity.Members.OfType<EntityPhysicalField>().Select(p => new FilterField(p)).OrderBy(p => p.ToString()).ToArray());
 
             _filter.EndUpdate();
 

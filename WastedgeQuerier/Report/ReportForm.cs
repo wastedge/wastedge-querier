@@ -83,7 +83,7 @@ namespace WastedgeQuerier.Report
         {
             nodes.Clear();
 
-            foreach (var member in entity.Members)
+            foreach (var member in entity.Members.OrderBy(HumanText.GetMemberName))
             {
                 var node = new TreeNode
                 {
