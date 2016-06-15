@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using NBug.Core.Submission.Web;
 using WastedgeApi;
 using WastedgeQuerier.Util;
 
@@ -17,6 +18,16 @@ namespace WastedgeQuerier
         [STAThread]
         static void Main()
         {
+#if !DEBUG
+            NBug.Settings.ReleaseMode = true;
+            NBug.Settings.StoragePath = NBug.Enums.StoragePath.IsolatedStorage;
+            NBug.Settings.UIMode = NBug.Enums.UIMode.Full;
+            NBug.Settings.Destinations.Add(new Http { Url = "https://bugreport.gmt.nl/api" });
+
+            AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
+            Application.ThreadException += NBug.Handler.ThreadException;
+#endif
+
             if (SendData())
                 return;
 
