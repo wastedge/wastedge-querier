@@ -517,11 +517,20 @@ namespace WastedgeQuerier.Report
 
             report.Filters.AddRange(_filters);
 
-            report.Fields.AddRange(_columns.Items.Cast<ReportField>());
-            report.Fields.AddRange(_rows.Items.Cast<ReportField>());
-            report.Fields.AddRange(_values.Items.Cast<ReportField>());
+            report.Fields.AddRange(UpdateFieldType(_columns.Items.Cast<ReportField>(), ReportFieldType.Column));
+            report.Fields.AddRange(UpdateFieldType(_rows.Items.Cast<ReportField>(), ReportFieldType.Row));
+            report.Fields.AddRange(UpdateFieldType(_values.Items.Cast<ReportField>(), ReportFieldType.Value));
 
             report.Save(Path.Combine(_directory, _fileName));
+        }
+
+        IEnumerable<ReportField> UpdateFieldType(IEnumerable<ReportField> items, ReportFieldType type)
+        {
+            foreach (var item in items)
+            {
+                item.Type = type;
+            }
+            return items;
         }
     }
 }
