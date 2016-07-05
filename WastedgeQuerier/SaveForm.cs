@@ -37,12 +37,7 @@ namespace WastedgeQuerier
             if (_nameTextBox.Text.Length == 0)
                 TaskDialogEx.Show(this, "Please enter a name", Text, TaskDialogCommonButtons.OK, TaskDialogIcon.Error);
             else if (File.Exists(Path))
-            {
-                if (TaskDialogEx.Show(this, "File name already exists, would you like to overwrite it?", Text, TaskDialogCommonButtons.Yes | TaskDialogCommonButtons.No, TaskDialogIcon.Warning) == DialogResult.Yes)
-                {
-                    DialogResult = DialogResult.OK;
-                }
-            }
+                TaskDialogEx.Show(this, "File name already exists", Text, TaskDialogCommonButtons.OK, TaskDialogIcon.Error);
             else if (Directory.Exists(Path))
                 TaskDialogEx.Show(this, "Directory already exists", Text, TaskDialogCommonButtons.OK, TaskDialogIcon.Error);
             else
