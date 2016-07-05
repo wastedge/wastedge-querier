@@ -14,15 +14,13 @@ namespace WastedgeQuerier
     public partial class SaveForm : SystemEx.Windows.Forms.Form
     {
         private string _path;
-        private string _extension;
 
         public string Path
         {
-            get { return IOPath.Combine(_path, _nameTextBox.Text + _extension); }
+            get { return IOPath.Combine(_path, _nameTextBox.Text); }
             set
             {
-                _nameTextBox.Text = IOPath.GetFileNameWithoutExtension(value);
-                _extension = IOPath.GetExtension(value);
+                _nameTextBox.Text = IOPath.GetFileName(value);
                 _path = IOPath.GetDirectoryName(value);
             }
         }
