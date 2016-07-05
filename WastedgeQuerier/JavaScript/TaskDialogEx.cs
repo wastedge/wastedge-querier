@@ -27,6 +27,11 @@ namespace WastedgeQuerier.JavaScript
 
         public static DialogResult Show(IWin32Window owner, string message, string title, TaskDialogCommonButtons buttons, TaskDialogIcon icon)
         {
+            return Show(owner, message, title, buttons, icon, 0);
+        }            
+
+        public static DialogResult Show(IWin32Window owner, string message, string title, TaskDialogCommonButtons buttons, TaskDialogIcon icon, int defaultButtonIndex)
+        {
             var taskDialog = new TaskDialog
             {
                 AllowDialogCancellation = true,
@@ -34,7 +39,8 @@ namespace WastedgeQuerier.JavaScript
                 MainInstruction = message,
                 MainIcon = icon,
                 WindowTitle = title,
-                PositionRelativeToWindow = true
+                PositionRelativeToWindow = true,
+                DefaultButton = defaultButtonIndex,
             };
 
             return (DialogResult)taskDialog.Show(owner);
