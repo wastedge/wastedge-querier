@@ -125,7 +125,7 @@ namespace WastedgeQuerier.Support
             if (Directory == null)
                 return;
 
-            var matches = BuildMatches(e.DropData);
+            var matches = BuildMatches(e);
             if (matches == null)
                 return;
 
@@ -138,9 +138,7 @@ namespace WastedgeQuerier.Support
                 if (match.Kind.IsDirectory())
                     effect = DragDropEffects.None;
                 else if (match.Kind.IsMove())
-                    effect = (e.KeyState & 8) != 0 ? DragDropEffects.Copy : DragDropEffects.Move;
-                else if (match.Kind.IsCopy())
-                    effect = (e.KeyState & 4) != 0 ? DragDropEffects.Move : DragDropEffects.Copy;
+                    effect = DragDropEffects.Move;
                 else
                     effect = DragDropEffects.Copy;
 
@@ -156,14 +154,14 @@ namespace WastedgeQuerier.Support
             e.Effect = effectiveEffect & e.AllowedEffect;
         }
 
-        private List<DropMatch> BuildMatches(FilesDropData dropData)
+        private List<DropMatch> BuildMatches(FilesDragEventArgs e)
         {
-            return DropMatch.FromDropData(Directory, Directory, FileBrowserManager, dropData);
+            return DropMatch.FromDropData(Directory, Directory, FileBrowserManager, e);
         }
 
         private void _dragDropManager_DragDrop(object sender, FilesDragEventArgs e)
         {
-            var matches = BuildMatches(e.DropData);
+            var matches = BuildMatches(e);
             if (matches == null)
                 return;
 

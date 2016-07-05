@@ -11,12 +11,16 @@ namespace WastedgeQuerier.Support
 {
     internal class DropMatch
     {
-        public static List<DropMatch> FromDropData(string rootPath, string targetPath, FileBrowserManager fileBrowserManager, FilesDropData dropData)
+        public static List<DropMatch> FromDropData(string rootPath, string targetPath, FileBrowserManager fileBrowserManager, FilesDragEventArgs e)
         {
             if (rootPath == null)
                 throw new ArgumentNullException(nameof(rootPath));
             if (targetPath == null)
                 throw new ArgumentNullException(nameof(targetPath));
+            if (e == null)
+                throw new ArgumentNullException(nameof(e));
+
+            FilesDropData dropData = e.DropData;
             if (dropData == null)
                 throw new ArgumentNullException(nameof(dropData));
 
@@ -42,6 +46,8 @@ namespace WastedgeQuerier.Support
                     continue;
 
                 bool contained = PathUtil.ContainsPath(rootPath, fileInfo.FullName) != PathContains.Not;
+                bool ctrlKeyPressed = (e.KeyState & 8) != 0;
+                bool shiftKeyPressed = (e.KeyState & 4) != 0;
 
                 if (PathUtil.ContainsPath(targetPath, fileInfo.DirectoryName) == PathContains.Equals)
                     continue;
@@ -53,11 +59,21 @@ namespace WastedgeQuerier.Support
                     if (PathUtil.ContainsPath(fileInfo.FullName, targetPath) != PathContains.Not)
                         continue;
 
-                    matches.Add(new DropMatch(fileInfo.FullName, i, contained ? DropMatchKind.DirectoryMove : DropMatchKind.DirectoryCopy));
+                    var kind = contained ? DropMatchKind.DirectoryMove : DropMatchKind.DirectoryCopy;
+                    if (ctrlKeyPressed && kind == DropMatchKind.DirectoryMove)
+                        kind = DropMatchKind.DirectoryCopy;
+                    else if (shiftKeyPressed && kind == DropMatchKind.DirectoryCopy)
+                        kind = DropMatchKind.DirectoryMove;
+                    matches.Add(new DropMatch(fileInfo.FullName, i, kind));
                 }
                 else if (fileBrowserManager != null && fileBrowserManager.Matches(fileInfo.FullName))
                 {
-                    matches.Add(new DropMatch(fileInfo.FullName, i, contained ? DropMatchKind.FileMove : DropMatchKind.FileCopy));
+                    var kind = contained ? DropMatchKind.FileMove : DropMatchKind.FileCopy;
+                    if (ctrlKeyPressed && kind == DropMatchKind.FileMove)
+                        kind = DropMatchKind.FileCopy;
+                    else if (shiftKeyPressed && kind == DropMatchKind.FileCopy)
+                        kind = DropMatchKind.FileMove;
+                    matches.Add(new DropMatch(fileInfo.FullName, i, kind));
                 }
             }
 
