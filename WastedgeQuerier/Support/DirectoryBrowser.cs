@@ -219,7 +219,7 @@ namespace WastedgeQuerier.Support
             if (node == null)
                 return;
 
-            var matches = BuildMatches((string)node.Tag, e.DropData);
+            var matches = BuildMatches((string)node.Tag, e);
             if (matches == null)
                 return;
 
@@ -230,9 +230,7 @@ namespace WastedgeQuerier.Support
                 DragDropEffects effect;
 
                 if (match.Kind.IsMove())
-                    effect = (e.KeyState & 8) != 0 ? DragDropEffects.Copy : DragDropEffects.Move;
-                else if (match.Kind.IsCopy())
-                    effect = (e.KeyState & 4) != 0 ? DragDropEffects.Move : DragDropEffects.Copy;
+                    effect = DragDropEffects.Move;
                 else
                     effect = DragDropEffects.Copy;
 
@@ -248,9 +246,9 @@ namespace WastedgeQuerier.Support
             e.Effect = effectiveEffect & e.AllowedEffect;
         }
 
-        private List<DropMatch> BuildMatches(string targetPath, FilesDropData dropData)
+        private List<DropMatch> BuildMatches(string targetPath, FilesDragEventArgs e)
         {
-            return DropMatch.FromDropData(Root, targetPath, FileBrowserManager, dropData);
+            return DropMatch.FromDropData(Root, targetPath, FileBrowserManager, e);
         }
 
         private void _dragDropManager_DragDrop(object sender, FilesDragEventArgs e)
@@ -263,7 +261,7 @@ namespace WastedgeQuerier.Support
 
             string targetPath = (string)node.Tag;
 
-            var matches = BuildMatches(targetPath, e.DropData);
+            var matches = BuildMatches(targetPath, e);
             if (matches == null)
                 return;
 
