@@ -25,6 +25,11 @@ namespace WastedgeQuerier.Report
             AllowDrop = true;
         }
 
+        public List<ReportField> GetFields()
+        {
+            return Items.Cast<ReportField>().Select(p => new ReportField(p.Fields) { Type = FieldType, Transform = p.Transform }).ToList();
+        }
+
         protected override void OnItemDrag(ListBoxItemEventArgs e)
         {
             var field = (ReportField)Items[e.Index];
