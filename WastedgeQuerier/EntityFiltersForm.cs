@@ -95,7 +95,7 @@ namespace WastedgeQuerier
 
         public List<Filter> GetFilters()
         {
-            return _filterControls.Controls.Cast<FilterControl>().Select(p => p.GetFilter()).ToList();
+            return _filterControls.Controls.Cast<FilterControl>().Select(p => p.GetFilter()).Reverse<Filter>().ToList();
         }
 
         private void _acceptButton_Click(object sender, EventArgs e)

@@ -38,6 +38,8 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this._getMoreResults = new System.Windows.Forms.ToolStripButton();
             this._getAllResults = new System.Windows.Forms.ToolStripButton();
+            this._editFilters = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -82,6 +84,8 @@
             // 
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this._editFilters,
+            this.toolStripSeparator2,
             this._exportToExcel,
             this._editInExcel,
             this.toolStripSeparator1,
@@ -134,6 +138,20 @@
             this._getAllResults.Text = "Get All Results";
             this._getAllResults.Click += new System.EventHandler(this._getAllResults_Click);
             // 
+            // _editFilters
+            // 
+            this._editFilters.Image = global::WastedgeQuerier.NeutralResources.funnel;
+            this._editFilters.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._editFilters.Name = "_editFilters";
+            this._editFilters.Size = new System.Drawing.Size(81, 22);
+            this._editFilters.Text = "Edit Filters";
+            this._editFilters.Click += _editFilters_Click;
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
             // ResultForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -166,5 +184,7 @@
         private System.Windows.Forms.ToolStripButton _getMoreResults;
         private System.Windows.Forms.ToolStripButton _getAllResults;
         private System.Windows.Forms.ToolStripButton _editInExcel;
+        private System.Windows.Forms.ToolStripButton _editFilters;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     }
 }
