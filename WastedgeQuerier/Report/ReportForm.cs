@@ -517,9 +517,9 @@ namespace WastedgeQuerier.Report
 
             report.Filters.AddRange(_filters);
 
-            report.Fields.AddRange(_columns.Items.Cast<ReportField>());
-            report.Fields.AddRange(_rows.Items.Cast<ReportField>());
-            report.Fields.AddRange(_values.Items.Cast<ReportField>());
+            report.Fields.AddRange(_columns.GetFields());
+            report.Fields.AddRange(_rows.GetFields());
+            report.Fields.AddRange(_values.GetFields());
 
             report.Save(Path.Combine(_directory, _fileName));
         }
