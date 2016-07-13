@@ -144,7 +144,7 @@ namespace WastedgeQuerier.Report
         {
             var style = (XSSFCellStyle)_workbook.CreateCellStyle();
 
-            style.FillForegroundXSSFColor = new XSSFColor(new byte[] { 192, 192, 192 });
+            style.FillForegroundXSSFColor = ExcelExporter.DefaultFillColor;
             style.FillPattern = FillPattern.SolidForeground;
             style.Alignment = HorizontalAlignment.Center;
             style.VerticalAlignment = VerticalAlignment.Top;

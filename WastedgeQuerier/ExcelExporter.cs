@@ -160,11 +160,13 @@ namespace WastedgeQuerier
             return dateStyle;
         }
 
+        public readonly static XSSFColor DefaultFillColor = new XSSFColor(new byte[] { 219, 229, 241 });
+
         private static ICellStyle CreateHeaderStyle(XSSFWorkbook workbook)
         {
             var style = (XSSFCellStyle)workbook.CreateCellStyle();
 
-            style.FillForegroundXSSFColor = new XSSFColor(new byte[] { 192, 192, 192 });
+            style.FillForegroundXSSFColor = ExcelExporter.DefaultFillColor;
             style.FillPattern = FillPattern.SolidForeground;
             style.Alignment = NPOI.SS.UserModel.HorizontalAlignment.Center;
 
