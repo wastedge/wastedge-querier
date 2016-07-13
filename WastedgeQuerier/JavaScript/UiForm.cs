@@ -117,15 +117,37 @@ namespace WastedgeQuerier.JavaScript
 
                 form._acceptButton.Click += (s, e) =>
                 {
-                    if (validate.IsObject())
+                    try
                     {
-                        var values = BuildValues(ui.Engine, controls);
-                        var result = validate.Invoke(values);
-                        if (!result.ConvertToBoolean().GetValueOrDefault())
-                            return;
+                        if (validate.IsObject())
+                        {
+                            var values = BuildValues(ui.Engine, controls);
+                            var result = validate.Invoke(values);
+                            if (!result.ConvertToBoolean().GetValueOrDefault())
+                                return;
+                        }
+                        form.DialogResult = DialogResult.OK;
                     }
-
-                    form.DialogResult = DialogResult.OK;
+                    catch (JavaScriptException exception)
+                    {
+                        JintDebugger.ExceptionForm.Show(form, exception);
+                    }
+                    catch (Exception exception)
+                    {
+                        MessageBox.Show(
+                            form,
+                            new StringBuilder()
+                                .AppendLine("An exception occurred while executing the script:")
+                                .AppendLine()
+                                .Append(exception.Message).Append(" (").Append(exception.GetType().FullName).AppendLine(")")
+                                .AppendLine()
+                                .AppendLine(exception.StackTrace)
+                                .ToString(),
+                            "Error",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error
+                        );
+                    }
                 };
 
                 var owner = ui.Owner;
