@@ -458,52 +458,45 @@ namespace WastedgeQuerier.Export
 
             string parameters = sb.ToString();
 
-            using (var form = new LoadingForm())
+            LoadingForm.Show(this, async p =>
             {
-                form.LoadingText = "Loading results...";
+                p.LoadingText = "Loading results...";
 
-                form.Shown += async (s, ea) =>
+                int count = 0;
+                string nextResult = null;
+
+                while (true)
                 {
-                    int count = 0;
-                    string nextResult = null;
-
-                    while (true)
+                    string thisParameters = parameters;
+                    if (nextResult != null)
                     {
-                        string thisParameters = parameters;
-                        if (nextResult != null)
-                        {
-                            if (thisParameters.Length > 0)
-                                thisParameters += "&";
-                            thisParameters += "$start=" + Uri.EscapeDataString(nextResult);
-                        }
-
-                        var response = await _api.ExecuteRawAsync(_entity.Name, thisParameters, "GET", null);
-
-                        if (form.IsDisposed)
-                            return;
-
-                        var resultSet = JObject.Parse(response);
-
-                        var rows = (JArray)resultSet["result"];
-                        nextResult = (string)resultSet["next_result"];
-
-                        count += rows.Count;
-
-                        form.LoadingText = $"Loading {count} results...";
-
-                        result.AddRange(rows.Cast<JObject>());
-
-                        if (nextResult == null)
-                            break;
+                        if (thisParameters.Length > 0)
+                            thisParameters += "&";
+                        thisParameters += "$start=" + Uri.EscapeDataString(nextResult);
                     }
 
-                    success = true;
+                    var response = await _api.ExecuteRawAsync(_entity.Name, thisParameters, "GET", null);
 
-                    form.Dispose();
-                };
+                    if (p.IsDisposed)
+                        return;
 
-                form.ShowDialog(this);
-            }
+                    var resultSet = JObject.Parse(response);
+
+                    var rows = (JArray)resultSet["result"];
+                    nextResult = (string)resultSet["next_result"];
+
+                    count += rows.Count;
+
+                    p.LoadingText = $"Loading {count} results...";
+
+                    result.AddRange(rows.Cast<JObject>());
+
+                    if (nextResult == null)
+                        break;
+                }
+
+                success = true;
+            });
 
             if (!success)
                 return null;

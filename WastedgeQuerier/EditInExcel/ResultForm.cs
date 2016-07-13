@@ -226,21 +226,14 @@ namespace WastedgeQuerier.EditInExcel
 
         private void _getMoreResults_Click(object sender, EventArgs e)
         {
-            using (var form = new LoadingForm())
+            LoadingForm.Show(this, async p =>
             {
-                form.LoadingText = $"Loading {Constants.LimitPageSize} results...";
+                p.LoadingText = $"Loading {Constants.LimitPageSize} results...";
 
-                form.Shown += async (s, ea) =>
-                {
-                    _query.Start = _resultSet.NextResult;
+                _query.Start = _resultSet.NextResult;
 
-                    LoadResultSet(await _query.ExecuteReaderAsync());
-
-                    form.Dispose();
-                };
-
-                form.ShowDialog(this);
-            }
+                LoadResultSet(await _query.ExecuteReaderAsync());
+            });
         }
 
         private void _getAllResults_Click(object sender, EventArgs e)
@@ -253,49 +246,42 @@ namespace WastedgeQuerier.EditInExcel
             if (!_resultSet.HasMore)
                 return;
 
-            using (var form = new LoadingForm())
+            LoadingForm.Show(this, async p =>
             {
-                form.LoadingText = "Loading results...";
+                p.LoadingText = "Loading results...";
 
-                form.Shown += async (s, ea) =>
+                int count = 0;
+                var resultSets = new List<ResultSet>();
+                string nextResult = _resultSet.NextResult;
+
+                _query.Count = null;
+
+                while (true)
                 {
-                    int count = 0;
-                    var resultSets = new List<ResultSet>();
-                    string nextResult = _resultSet.NextResult;
+                    _query.Start = nextResult;
 
-                    _query.Count = null;
+                    if (p.IsDisposed)
+                        return;
 
-                    while (true)
-                    {
-                        _query.Start = nextResult;
+                    var resultSet = await _query.ExecuteReaderAsync();
 
-                        if (form.IsDisposed)
-                            return;
+                    count += resultSet.RowCount;
 
-                        var resultSet = await _query.ExecuteReaderAsync();
+                    p.LoadingText = $"Loading {count} results...";
 
-                        count += resultSet.RowCount;
+                    resultSets.Add(resultSet);
 
-                        form.LoadingText = $"Loading {count} results...";
+                    if (!resultSet.HasMore)
+                        break;
 
-                        resultSets.Add(resultSet);
+                    nextResult = resultSet.NextResult;
+                }
 
-                        if (!resultSet.HasMore)
-                            break;
-
-                        nextResult = resultSet.NextResult;
-                    }
-
-                    foreach (var resultSet in resultSets)
-                    {
-                        LoadResultSet(resultSet);
-                    }
-
-                    form.Dispose();
-                };
-
-                form.ShowDialog(this);
-            }
+                foreach (var resultSet in resultSets)
+                {
+                    LoadResultSet(resultSet);
+                }
+            });
         }
 
         private void _exportToExcel_Click(object sender, EventArgs e)
@@ -452,23 +438,16 @@ namespace WastedgeQuerier.EditInExcel
 
             _resultSets.Clear();
 
-            using (var form = new LoadingForm())
+            LoadingForm.Show(this, async p =>
             {
-                form.LoadingText = $"Loading {Constants.PageSize} results...";
+                p.LoadingText = $"Loading {Constants.PageSize} results...";
 
-                form.Shown += async (s, ea) =>
-                {
-                    _query = _api.CreateQuery(_entity);
-                    _query.Filters.AddRange(_filters);
-                    _query.Count = Constants.PageSize;
+                _query = _api.CreateQuery(_entity);
+                _query.Filters.AddRange(_filters);
+                _query.Count = Constants.PageSize;
 
-                    LoadResultSet(await _query.ExecuteReaderAsync());
-
-                    form.Dispose();
-                };
-
-                form.ShowDialog(this);
-            }
+                LoadResultSet(await _query.ExecuteReaderAsync());
+            });
         }
     }
 }

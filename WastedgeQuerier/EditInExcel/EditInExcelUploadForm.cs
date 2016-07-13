@@ -71,34 +71,20 @@ namespace WastedgeQuerier.EditInExcel
 
         private void UploadChanges()
         {
-            Exception exception = null;
-
-            using (var form = new LoadingForm())
+            try
             {
-                form.LoadingText = "Uploading changes...";
-
-                form.Shown += async (s, ea) =>
+                LoadingForm.Show(this, async p =>
                 {
-                    try
-                    {
-                        await UploadChanges(form);
-                    }
-                    catch (Exception ex)
-                    {
-                        exception = ex;
-                    }
+                    p.LoadingText = "Uploading changes...";
 
-                    form.Dispose();
-                };
-
-                form.ShowDialog(this);
+                    await UploadChanges(p);
+                });
             }
-
-            if (exception != null)
+            catch (Exception ex)
             {
                 MessageBox.Show(
                     this,
-                    "One or more requests failed" + Environment.NewLine + Environment.NewLine + exception.Message,
+                    "One or more requests failed" + Environment.NewLine + Environment.NewLine + ex.Message,
                     Text,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error
