@@ -84,6 +84,9 @@ namespace WastedgeQuerier.EditInExcel
 
         private void LoadResultSet(ResultSet resultSet)
         {
+            if (IsDisposed)
+                return;
+
             if (_grid.RowsCount == 0)
                 CreateHeaders(resultSet);
 
