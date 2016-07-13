@@ -26,7 +26,7 @@ namespace WastedgeQuerier.EditInExcel
     {
         private readonly Api _api;
         private readonly EntitySchema _entity;
-        private readonly List<Filter> _filters;
+        private List<Filter> _filters;
         private ResultSet _resultSet;
         private readonly IView _defaultView;
         private readonly IView _numberView;
@@ -210,6 +210,18 @@ namespace WastedgeQuerier.EditInExcel
                 return new SourceGrid.Cells.CheckBox(null, (bool)value);
 
             throw new InvalidOperationException();
+        }
+
+        private void _editFilters_Click(object sender, EventArgs e)
+        {
+            using (var form = new EntityFiltersForm(_entity, _filters))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    _filters = form.GetFilters();
+                    ReloadResults();
+                }
+            }
         }
 
         private void _getMoreResults_Click(object sender, EventArgs e)
