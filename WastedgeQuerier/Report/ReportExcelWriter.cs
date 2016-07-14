@@ -16,7 +16,9 @@ namespace WastedgeQuerier.Report
         private readonly string _sheetName;
         private XSSFWorkbook _workbook;
         private ISheet _sheet;
-        private ICellStyle _headerStyle;
+        private ICellStyle _columnHeaderStyle;
+        private ICellStyle _rowHeaderStyle;
+        private ICellStyle _defaultCellStyle;
         private ICellStyle _dateStyle;
         private ICellStyle _dateTimeStyle;
         private int _headerRows;
@@ -38,9 +40,12 @@ namespace WastedgeQuerier.Report
             _workbook = new XSSFWorkbook();
             _sheet = _workbook.CreateSheet(_sheetName);
 
-            _headerStyle = CreateHeaderStyle();
-            _dateStyle = CreateDateStyle(false);
-            _dateTimeStyle = CreateDateStyle(true);
+            _columnHeaderStyle = ExcelExporter.CreateColumnHeaderStyle(_workbook);
+            _rowHeaderStyle = ExcelExporter.CreateRowHeaderStyle(_workbook);
+            _defaultCellStyle = ExcelExporter.CreateDefaultCellStyle(_workbook);
+
+            _dateStyle = ExcelExporter.CreateDateStyle(_workbook, false);
+            _dateTimeStyle = ExcelExporter.CreateDateStyle(_workbook, true);
 
             base.Load(data);
 
@@ -77,6 +82,7 @@ namespace WastedgeQuerier.Report
         protected override void SetCell(int row, int column, object value)
         {
             var cell = GetCell(_headerRows + row, _headerColumns + column);
+            cell.CellStyle = _defaultCellStyle;
 
             if (value == null || value is string)
             {
@@ -114,7 +120,7 @@ namespace WastedgeQuerier.Report
         {
             var cell = GetCell(row, column);
 
-            cell.CellStyle = _headerStyle;
+            cell.CellStyle = (row < _headerRows) ? _columnHeaderStyle : _rowHeaderStyle;
             cell.SetCellValue(data ?? "(blank)");
 
             if (rowSpan > 1 || columnSpan > 1)
@@ -126,36 +132,6 @@ namespace WastedgeQuerier.Report
                     column + columnSpan - 1
                 ));
             }
-        }
-
-        private ICellStyle CreateDateStyle(bool withTime)
-        {
-            var dateStyle = _workbook.CreateCellStyle();
-            var dataFormat = _workbook.CreateDataFormat();
-
-            string format = withTime ? ExcelUtil.GetDateTimeFormat() : ExcelUtil.GetDateFormat();
-
-            dateStyle.DataFormat = dataFormat.GetFormat(format);
-
-            return dateStyle;
-        }
-
-        private ICellStyle CreateHeaderStyle()
-        {
-            var style = (XSSFCellStyle)_workbook.CreateCellStyle();
-
-            style.FillForegroundXSSFColor = ExcelExporter.DefaultFillColor;
-            style.FillPattern = FillPattern.SolidForeground;
-            style.Alignment = HorizontalAlignment.Center;
-            style.VerticalAlignment = VerticalAlignment.Top;
-
-            var font = _workbook.CreateFont();
-
-            font.Boldweight = (short)FontBoldWeight.Bold;
-
-            style.SetFont(font);
-
-            return style;
         }
     }
 }

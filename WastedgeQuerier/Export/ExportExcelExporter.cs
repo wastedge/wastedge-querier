@@ -28,9 +28,9 @@ namespace WastedgeQuerier.Export
             var sheet = workbook.CreateSheet(PrettifyName(export.Entity.Name));
             sheet.DefaultRowHeightInPoints = 15;
 
-            var headerStyle = CreateHeaderStyle(workbook);
-            var dateStyle = CreateDateStyle(workbook, false);
-            var dateTimeStyle = CreateDateStyle(workbook, true);
+            var headerStyle = ExcelExporter.CreateColumnHeaderStyle(workbook);
+            var dateStyle = ExcelExporter.CreateDateStyle(workbook, false);
+            var dateTimeStyle = ExcelExporter.CreateDateStyle(workbook, true);
             var wrapStyle = workbook.CreateCellStyle();
             wrapStyle.WrapText = true;
 
@@ -156,39 +156,6 @@ namespace WastedgeQuerier.Export
                 cell.SetCellValue(((DateTimeOffset)value).LocalDateTime);
             else
                 throw new ArgumentException("Invalid type");
-        }
-
-        private static ICellStyle CreateDateStyle(XSSFWorkbook workbook, bool withTime)
-        {
-            var dateStyle = workbook.CreateCellStyle();
-            var dataFormat = workbook.CreateDataFormat();
-
-            string format = withTime ? ExcelUtil.GetDateTimeFormat() : ExcelUtil.GetDateFormat();
-
-            dateStyle.DataFormat = dataFormat.GetFormat(format);
-
-            return dateStyle;
-        }
-
-        private static ICellStyle CreateHeaderStyle(XSSFWorkbook workbook)
-        {
-            var style = (XSSFCellStyle)workbook.CreateCellStyle();
-
-            style.FillForegroundXSSFColor = ExcelExporter.DefaultFillColor;
-            style.FillPattern = FillPattern.SolidForeground;
-            style.Alignment = HorizontalAlignment.Center;
-
-            var font = workbook.CreateFont();
-            var defaultFont = workbook.GetFontAt(0);
-
-            font.FontName = defaultFont.FontName;
-            font.FontHeightInPoints = defaultFont.FontHeightInPoints;
-
-            font.Boldweight = (short)FontBoldWeight.Bold;
-
-            style.SetFont(font);
-
-            return style;
         }
     }
 }
