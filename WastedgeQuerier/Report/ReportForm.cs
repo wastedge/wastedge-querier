@@ -77,6 +77,8 @@ namespace WastedgeQuerier.Report
                         break;
                 }
             }
+
+            UpdateEnabled();
         }
 
         private void BuildFields(TreeNodeCollection nodes, EntitySchema entity)
@@ -118,7 +120,9 @@ namespace WastedgeQuerier.Report
             {
                 form.Filter = "Excel (*.xlsx)|*.xlsx|All Files (*.*)|*.*";
                 form.RestoreDirectory = true;
-                form.FileName = "Wastedge Report.xlsx";
+
+                string filename = Path.GetFileNameWithoutExtension(_fileName);
+                form.FileName = !string.IsNullOrEmpty(filename) ? filename : "Wastedge Report.xlsx";
 
                 if (form.ShowDialog(this) != DialogResult.OK)
                     return;

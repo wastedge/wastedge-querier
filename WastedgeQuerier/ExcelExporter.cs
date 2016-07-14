@@ -27,7 +27,7 @@ namespace WastedgeQuerier
             var sheet = workbook.CreateSheet(PrettifyName(firstResultSet.Entity.Name));
             sheet.DefaultRowHeightInPoints = 15;
 
-            var headerStyle = CreateHeaderStyle(workbook);
+            var headerStyle = CreateColumnHeaderStyle(workbook);
             var dateStyle = CreateDateStyle(workbook, false);
             var dateTimeStyle = CreateDateStyle(workbook, true);
             var wrapStyle = workbook.CreateCellStyle();
@@ -148,8 +148,11 @@ namespace WastedgeQuerier
                 throw new ArgumentException("Invalid type");
         }
 
-        private static ICellStyle CreateDateStyle(XSSFWorkbook workbook, bool withTime)
+        public static ICellStyle CreateDateStyle(XSSFWorkbook workbook, bool withTime)
         {
+            if (workbook == null)
+                throw new ArgumentNullException(nameof(workbook));
+
             var dateStyle = workbook.CreateCellStyle();
             var dataFormat = workbook.CreateDataFormat();
 
@@ -160,24 +163,64 @@ namespace WastedgeQuerier
             return dateStyle;
         }
 
-        private static ICellStyle CreateHeaderStyle(XSSFWorkbook workbook)
+        public readonly static XSSFColor DefaultColumnHeaderFillColor = new XSSFColor(new byte[] { 219, 229, 241 });
+        public readonly static XSSFColor DefaultCellFillColor = new XSSFColor(new byte[] { 255, 255, 255 });
+        public readonly static XSSFColor DefaultCellBorderColor = new XSSFColor(new byte[] { 181, 202, 227 });
+        
+        public static ICellStyle CreateColumnHeaderStyle(XSSFWorkbook workbook)
         {
+            if (workbook == null)
+                throw new ArgumentNullException(nameof(workbook));
+
             var style = (XSSFCellStyle)workbook.CreateCellStyle();
 
-            style.FillForegroundXSSFColor = new XSSFColor(new byte[] { 192, 192, 192 });
+            style.FillForegroundXSSFColor = ExcelExporter.DefaultColumnHeaderFillColor;
             style.FillPattern = FillPattern.SolidForeground;
-            style.Alignment = NPOI.SS.UserModel.HorizontalAlignment.Center;
+            style.Alignment = HorizontalAlignment.Center;
+            style.VerticalAlignment = VerticalAlignment.Top;
 
             var font = workbook.CreateFont();
-            var defaultFont = workbook.GetFontAt(0);
-
-            font.FontName = defaultFont.FontName;
-            font.FontHeightInPoints = defaultFont.FontHeightInPoints;
 
             font.Boldweight = (short)FontBoldWeight.Bold;
 
             style.SetFont(font);
 
+            return style;
+        }
+
+        public static ICellStyle CreateRowHeaderStyle(XSSFWorkbook workbook)
+        {
+            if (workbook == null)
+                throw new ArgumentNullException(nameof(workbook));
+
+            var style = (XSSFCellStyle)workbook.CreateCellStyle();
+
+            style.FillForegroundXSSFColor = ExcelExporter.DefaultCellFillColor;
+            style.FillPattern = FillPattern.SolidForeground;
+            style.Alignment = HorizontalAlignment.Left;
+            style.VerticalAlignment = VerticalAlignment.Top;
+            style.BorderBottom = BorderStyle.Thin;
+
+            var font = workbook.CreateFont();
+
+            font.Boldweight = (short)FontBoldWeight.Bold;
+
+            style.SetFont(font);
+
+            return style;
+        }
+
+        public static ICellStyle CreateDefaultCellStyle(XSSFWorkbook workbook)
+        {
+            if (workbook == null)
+                throw new ArgumentNullException(nameof(workbook));
+
+            var style = (XSSFCellStyle)workbook.CreateCellStyle();
+
+            style.FillForegroundXSSFColor = ExcelExporter.DefaultCellFillColor;
+            style.FillPattern = FillPattern.SolidForeground;
+            style.BorderBottom = BorderStyle.Thin;
+            style.SetBorderColor(NPOI.XSSF.UserModel.Extensions.BorderSide.BOTTOM, ExcelExporter.DefaultCellBorderColor);
             return style;
         }
     }
