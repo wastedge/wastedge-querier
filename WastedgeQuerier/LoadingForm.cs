@@ -12,7 +12,9 @@ namespace WastedgeQuerier
 {
     public partial class LoadingForm : SystemEx.Windows.Forms.Form
     {
-        public static void Show(IWin32Window owner, Func<LoadingForm, Task> callback)
+        private bool _cancelled;
+
+        public static bool Show(IWin32Window owner, Func<LoadingForm, Task> callback)
         {
             if (owner == null)
                 throw new ArgumentNullException(nameof(owner));
@@ -20,6 +22,7 @@ namespace WastedgeQuerier
                 throw new ArgumentNullException(nameof(callback));
 
             Exception exception = null;
+            bool cancelled;
 
             using (var form = new LoadingForm())
             {
@@ -40,10 +43,13 @@ namespace WastedgeQuerier
                 };
 
                 form.ShowDialog(owner);
+                cancelled = form._cancelled;
             }
 
             if (exception != null)
                 throw exception;
+
+            return !cancelled;
         }
 
         public event EventHandler CancelClicked;
@@ -70,6 +76,8 @@ namespace WastedgeQuerier
 
         private void _cancelButton_Click(object sender, EventArgs e)
         {
+            _cancelled = true;
+
             OnCancelClicked(EventArgs.Empty);
         }
     }

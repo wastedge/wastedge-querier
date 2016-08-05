@@ -46,8 +46,6 @@ namespace WastedgeQuerier
 
             UpdateEnabled();
 
-            Enabled = false;
-
             Text = $"{Text} - {credentials.Company}\\{credentials.UserName} - {credentials.Url}";
 
             var handle = _copyDataTarget.Handle; // Force creation of the handle.
@@ -298,13 +296,19 @@ namespace WastedgeQuerier
             }
         }
 
-        private async void MainForm_Shown(object sender, EventArgs e)
+        private void MainForm_Shown(object sender, EventArgs e)
         {
-            await _api.CacheFullEntitySchemaAsync();
+            bool success = LoadingForm.Show(this, async p =>
+            {
+                p.LoadingText = "Loading schema...";
 
-            Enabled = true;
+                await _api.CacheFullEntitySchemaAsync();
 
-            ParseArguments(Environment.CommandLine);
+                ParseArguments(Environment.CommandLine);
+            });
+
+            if (!success)
+                Dispose();
         }
 
         private void ParseArguments(string commandLine)

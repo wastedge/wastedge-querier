@@ -30,6 +30,7 @@ namespace WastedgeQuerier.Report
         private SelectedField _selectedField;
         private readonly ReportGridManager _gridManager;
         private ReportDataSet _dataSet;
+        private int _cookie;
 
         public ReportForm(Api api, string directory, string fileName, ReportDefinition report)
         {
@@ -287,42 +288,39 @@ namespace WastedgeQuerier.Report
             _selectedField.ListBox.Items.Remove(_selectedField.Field);
         }
 
-        private async void _update_Click(object sender, EventArgs e)
+        private void _update_Click(object sender, EventArgs e)
         {
-            _gridManager.Reset();
-
-            _dataSet = null;
-
-            _update.Enabled = false;
-
-            UpdateEnabled();
-
-            string request = BuildRequest(_columns.Items.Cast<ReportField>(), _rows.Items.Cast<ReportField>(), _values.Items.Cast<ReportField>());
-
-            string[] valueLabels = _values.Items.Cast<ReportField>().Select(p => p.ToString()).ToArray();
-
-            string response = await _api.ExecuteRawAsync(_entity.Name + "/$cube", null, "POST", request);
-
-            if (IsDisposed)
-                return;
-
-            JObject result;
-
-            using (var reader = new StringReader(response))
-            using (var json = new JsonTextReader(reader))
+            LoadingForm.Show(this, async p =>
             {
-                json.DateParseHandling = DateParseHandling.None;
+                _gridManager.Reset();
 
-                result = (JObject)JToken.ReadFrom(json);
-            }
+                _dataSet = null;
 
-            _dataSet = new ReportDataSet(result, valueLabels);
+                string request = BuildRequest(_columns.Items.Cast<ReportField>(), _rows.Items.Cast<ReportField>(), _values.Items.Cast<ReportField>());
 
-            _gridManager.Load(_dataSet);
+                string[] valueLabels = _values.Items.Cast<ReportField>().Select(p1 => p1.ToString()).ToArray();
 
-            _update.Enabled = true;
+                int cookie = ++_cookie;
 
-            UpdateEnabled();
+                string response = await _api.ExecuteRawAsync(_entity.Name + "/$cube", null, "POST", request);
+
+                if (IsDisposed || cookie != _cookie)
+                    return;
+
+                JObject result;
+
+                using (var reader = new StringReader(response))
+                using (var json = new JsonTextReader(reader))
+                {
+                    json.DateParseHandling = DateParseHandling.None;
+
+                    result = (JObject)JToken.ReadFrom(json);
+                }
+
+                _dataSet = new ReportDataSet(result, valueLabels);
+
+                _gridManager.Load(_dataSet);
+            });
         }
 
         private void UpdateEnabled()
