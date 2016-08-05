@@ -107,11 +107,18 @@ namespace WastedgeQuerier
 
         private void CheckForUpdates()
         {
-            bool updateAvailable = NuGetUpdate.Update.IsUpdateAvailable(PackageCode);
-            if (!updateAvailable)
-                return;
+            try
+            {
+                bool updateAvailable = NuGetUpdate.Update.IsUpdateAvailable(PackageCode);
+                if (!updateAvailable)
+                    return;
 
-            BeginInvoke(new Action(InstallUpdate));
+                BeginInvoke(new Action(InstallUpdate));
+            }
+            catch
+            {
+                // Ignore exceptions.
+            }
         }
 
         private void InstallUpdate()
