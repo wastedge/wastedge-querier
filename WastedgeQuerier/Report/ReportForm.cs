@@ -297,41 +297,32 @@ namespace WastedgeQuerier.Report
 
             UpdateEnabled();
 
-            try
+            string request = BuildRequest(_columns.Items.Cast<ReportField>(), _rows.Items.Cast<ReportField>(), _values.Items.Cast<ReportField>());
+
+            string[] valueLabels = _values.Items.Cast<ReportField>().Select(p => p.ToString()).ToArray();
+
+            string response = await _api.ExecuteRawAsync(_entity.Name + "/$cube", null, "POST", request);
+
+            if (IsDisposed)
+                return;
+
+            JObject result;
+
+            using (var reader = new StringReader(response))
+            using (var json = new JsonTextReader(reader))
             {
-                string request = BuildRequest(_columns.Items.Cast<ReportField>(), _rows.Items.Cast<ReportField>(), _values.Items.Cast<ReportField>());
+                json.DateParseHandling = DateParseHandling.None;
 
-                string[] valueLabels = _values.Items.Cast<ReportField>().Select(p => p.ToString()).ToArray();
-
-                string response = await _api.ExecuteRawAsync(_entity.Name + "/$cube", null, "POST", request);
-
-                if (IsDisposed)
-                    return;
-
-                JObject result;
-
-                using (var reader = new StringReader(response))
-                using (var json = new JsonTextReader(reader))
-                {
-                    json.DateParseHandling = DateParseHandling.None;
-
-                    result = (JObject)JToken.ReadFrom(json);
-                }
-
-                _dataSet = new ReportDataSet(result, valueLabels);
-
-                _gridManager.Load(_dataSet);
+                result = (JObject)JToken.ReadFrom(json);
             }
-            catch (Exception ex)
-            {
-                TaskDialogEx.Show(this, "An unexpected error occured" + Environment.NewLine + Environment.NewLine + ex.Message, Text, TaskDialogCommonButtons.OK, TaskDialogIcon.Error);
-            }
-            finally
-            {
-                _update.Enabled = true;
 
-                UpdateEnabled();
-            }
+            _dataSet = new ReportDataSet(result, valueLabels);
+
+            _gridManager.Load(_dataSet);
+
+            _update.Enabled = true;
+
+            UpdateEnabled();
         }
 
         private void UpdateEnabled()
