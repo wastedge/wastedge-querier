@@ -25,40 +25,63 @@ namespace WastedgeQuerier.Report
                 throw new ArgumentNullException(nameof(valueLabels));
 
             Columns = ParseHeaders((JArray)data["columns"], valueLabels);
-            Rows = ParseHeaders((JArray)data["rows"], null);
-            Values = BuildValues(data["values"] as JArray);
-
-            RowLevels = GetLevels(Rows);
-            RowCount = Values.GetLength(0);
             ColumnLevels = GetLevels(Columns);
-            ColumnCount = Values.GetLength(1);
+            ColumnCount = GetCount(Columns);
+
+            Rows = ParseHeaders((JArray)data["rows"], null);
+            RowLevels = GetLevels(Rows);
+            RowCount = GetCount(Rows);
+
+            Values = BuildValues(data["values"] as JArray);
         }
 
-        private int GetLevels(ReportDataHeaderCollection columns)
+        private int GetCount(ReportDataHeaderCollection headers)
         {
-            if (columns.Count == 0)
+            int result = 0;
+
+            foreach (var header in headers)
+            {
+                if (header.Children.Count == 0)
+                    result++;
+                else
+                    result += GetCount(header.Children);
+            }
+
+            return result;
+        }
+
+        private int GetLevels(ReportDataHeaderCollection headers)
+        {
+            if (headers.Count == 0)
                 return 0;
-            return GetLevels(columns[0].Children) + 1;
+            return GetLevels(headers[0].Children) + 1;
         }
 
         private double[,] BuildValues(JArray values)
         {
-            if (values == null)
-                return new double[Rows.Count, Columns.Count];
+            var result = new double[RowCount, ColumnCount];
 
-            int rows = values.Count;
-            int columns = values.Count == 0 ? 0 : ((JArray)values[0]).Count;
+            if (values == null || values.Count == 0 || ((JArray)values[0]).Count == 0)
+            {
+                for (int row = 0; row < RowCount; row++)
+                {
+                    for (int column = 0; column < ColumnCount; column++)
+                    {
+                        result[row, column] = double.NaN;
+                    }
+                }
 
-            var result = new double[rows, columns];
+                return result;
+            }
 
-            var columnMap = BuildMap(Columns, columns);
-            var rowMap = BuildMap(Rows, rows);
+            var columnMap = BuildMap(Columns, ColumnCount);
+            var rowMap = BuildMap(Rows, RowCount);
 
-            for (int row = 0; row < rows; row++)
+            for (int row = 0; row < RowCount; row++)
             {
                 var valuesRow = (JArray)values[row];
 
-                for (int column = 0; column < columns; column++)
+                for (int column = 0; column < ColumnCount; column++)
                 {
                     var value = valuesRow[column];
                     double cellValue = value.Type == JTokenType.Null ? double.NaN : (double)value;

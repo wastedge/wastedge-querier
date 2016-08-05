@@ -32,9 +32,9 @@ namespace WastedgeQuerier.Report
 
             var values = data.Values;
 
-            for (int row = 0; row < values.GetLength(0); row++)
+            for (int row = 0; row < data.RowCount; row++)
             {
-                for (int column = 0; column < values.GetLength(1); column++)
+                for (int column = 0; column < data.ColumnCount; column++)
                 {
                     var value = values[row, column];
                     if (!double.IsNaN(value))
