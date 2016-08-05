@@ -61,6 +61,8 @@ namespace WastedgeQuerier.EditInExcel
                 ElementText = new DevAge.Drawing.VisualElements.TextRenderer(),
                 TextAlignment = DevAge.Drawing.ContentAlignment.MiddleRight
             };
+
+            UpdateEnabled();
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -155,7 +157,7 @@ namespace WastedgeQuerier.EditInExcel
 
         private void UpdateEnabled()
         {
-            _getMoreResults.Enabled = _getAllResults.Enabled = _resultSet.HasMore;
+            _getMoreResults.Enabled = _getAllResults.Enabled = _resultSet == null || _resultSet.HasMore;
         }
 
         private ICell BuildCell(object value, EntityDataType dataType)
@@ -230,7 +232,7 @@ namespace WastedgeQuerier.EditInExcel
             {
                 p.LoadingText = $"Loading {Constants.LimitPageSize} results...";
 
-                _query.Start = _resultSet.NextResult;
+                _query.Start = _resultSet?.NextResult;
 
                 LoadResultSet(await _query.ExecuteReaderAsync());
             });
@@ -243,7 +245,7 @@ namespace WastedgeQuerier.EditInExcel
 
         private void GetAllResults()
         {
-            if (!_resultSet.HasMore)
+            if (_resultSet != null && !_resultSet.HasMore)
                 return;
 
             LoadingForm.Show(this, async p =>
@@ -252,7 +254,7 @@ namespace WastedgeQuerier.EditInExcel
 
                 int count = 0;
                 var resultSets = new List<ResultSet>();
-                string nextResult = _resultSet.NextResult;
+                string nextResult = _resultSet?.NextResult;
 
                 _query.Count = null;
 

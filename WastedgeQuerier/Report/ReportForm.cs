@@ -77,6 +77,8 @@ namespace WastedgeQuerier.Report
                         break;
                 }
             }
+
+            UpdateEnabled();
         }
 
         private void BuildFields(TreeNodeCollection nodes, EntitySchema entity)
