@@ -21,8 +21,6 @@
 
   <Install>
 
-    <Page.Install.DestinationFolder />
-
     <Page.Install.StartMenu CreateOnDesktopVisible="true" IsLast="true" />
 
     <Page.Install.Progress>
