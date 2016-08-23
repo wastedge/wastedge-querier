@@ -60,10 +60,23 @@ namespace WastedgeQuerier
                     switch (cellType)
                     {
                         case CellType.Numeric:
-                            if (DateUtil.IsCellDateFormatted(cell))
-                                value = DateTime.FromOADate(cell.NumericCellValue);
-                            else
-                                value = cell.NumericCellValue;
+                            switch ((headers[i] as EntityTypedField).DataType)
+                            {
+                                case EntityDataType.Date:
+                                case EntityDataType.DateTime:
+                                case EntityDataType.DateTimeTz:
+                                    value = DateTime.FromOADate(cell.NumericCellValue);
+                                    break;
+
+                                case EntityDataType.Int:
+                                case EntityDataType.Long:
+                                    value = (long)cell.NumericCellValue;
+                                    break;
+
+                                default:
+                                    value = (decimal)cell.NumericCellValue;
+                                    break;
+                            }
                             break;
                         case CellType.String:
                             value = cell.StringCellValue.Length == 0 ? null : cell.StringCellValue;

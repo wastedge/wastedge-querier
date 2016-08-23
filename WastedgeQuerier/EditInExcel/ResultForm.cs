@@ -306,7 +306,7 @@ namespace WastedgeQuerier.EditInExcel
 
             using (var stream = File.Create(fileName))
             {
-                new ExcelExporter().Export(stream, _resultSets);
+                new ExcelExporter().Export(stream, _resultSets, null);
             }
 
             try
@@ -329,103 +329,120 @@ namespace WastedgeQuerier.EditInExcel
                     return;
             }
 
-            string fileName;
+            ApiRowErrorsCollection errors = null;
 
-            for (int i = 0;; i++)
-            {
-                fileName = "Wastedge Export";
-                if (i > 0)
-                    fileName += $" ({i})";
-                fileName += ".xlsx";
-
-                fileName = Path.Combine(Path.GetTempPath(), fileName);
-
-                if (!File.Exists(fileName))
-                    break;
-            }
-
-            try
-            {
-                using (var stream = File.Create(fileName))
-                {
-                    new ExcelExporter().Export(stream, _resultSets);
-                }
-
-                try
-                {
-                    Process.Start(fileName);
-                }
-                catch
-                {
-                    // Ignore exceptions.
-                }
-
-                using (var form = new EditInExcelWaitForm())
-                {
-                    if (form.ShowDialog(this) != DialogResult.OK)
-                        return;
-                }
-
-                RecordSetChanges changes;
-
-                while (true)
-                {
-                    try
-                    {
-                        changes = BuildChanges(_resultSets, fileName);
-                        break;
-                    }
-                    catch (IOException)
-                    {
-                        var result = TaskDialogEx.Show(
-                            this,
-                            "The Excel file cannot be opened. Please close the Excel file before uploading your changes",
-                            Text,
-                            TaskDialogCommonButtons.OK | TaskDialogCommonButtons.Cancel,
-                            TaskDialogIcon.Error
-                        );
-                        if (result == DialogResult.Cancel)
-                            return;
-                    }
-                }
-
-                using (var form = new EditInExcelUploadForm(_api, _entity, changes))
-                {
-                    form.ShowDialog(this);
-                }
-
-                ReloadResults();
-            }
-            finally
-            {
-                try
-                {
-                    File.Delete(fileName);
-                }
-                catch
-                {
-                    // Ignore.
-                }
-            }
-        }
-
-        private RecordSetChanges BuildChanges(List<ResultSet> resultSets, string fileName)
-        {
             var original = new RecordSet();
+            var editing = original;
 
-            foreach (var resultSet in resultSets)
+            foreach (var resultSet in _resultSets)
             {
                 original.AddResultSet(resultSet);
             }
 
-            RecordSet modified;
-
-            using (var stream = File.OpenRead(fileName))
+            while (true)
             {
-                modified = new ExcelImporter().Import(stream, _entity);
-            }
+                string fileName;
 
-            return RecordSetChanges.Create(original, modified);
+                for (int i = 0; ; i++)
+                {
+                    fileName = "Wastedge Export";
+                    if (i > 0)
+                        fileName += $" ({i})";
+                    fileName += ".xlsx";
+
+                    fileName = Path.Combine(Path.GetTempPath(), fileName);
+
+                    if (!File.Exists(fileName))
+                        break;
+                }
+
+                try
+                {
+                    using (var stream = File.Create(fileName))
+                    {
+                        new ExcelExporter().Export(stream, _entity, editing, errors);
+                    }
+
+                    try
+                    {
+                        Process.Start(fileName);
+                    }
+                    catch
+                    {
+                        // Ignore exceptions.
+                    }
+
+                    using (var form = new EditInExcelWaitForm())
+                    {
+                        if (form.ShowDialog(this) != DialogResult.OK)
+                            return;
+                    }
+
+                    RecordSetChanges changes;
+                    RecordSet modified;
+
+                    while (true)
+                    {
+                        try
+                        {
+                            using (var stream = File.OpenRead(fileName))
+                            {
+                                modified = new ExcelImporter().Import(stream, _entity);
+                            }
+
+                            changes = RecordSetChanges.Create(original, modified);
+                            break;
+                        }
+                        catch (IOException)
+                        {
+                            var result = TaskDialogEx.Show(
+                                this,
+                                "The Excel file cannot be opened. Please close the Excel file before uploading your changes",
+                                Text,
+                                TaskDialogCommonButtons.OK | TaskDialogCommonButtons.Cancel,
+                                TaskDialogIcon.Error
+                            );
+                            if (result == DialogResult.Cancel)
+                                return;
+                        }
+                    }
+
+                    using (var form = new EditInExcelUploadForm(_api, _entity, changes))
+                    {
+                        form.ShowDialog(this);
+
+                        errors = form.Errors;
+                    }
+
+                    if (errors != null)
+                    {
+                        using (var form = new ValidationErrorsForm(errors))
+                        {
+                            if (form.ShowDialog(this) != DialogResult.OK)
+                                return;
+
+                            editing = modified;
+                        }
+                    }
+                    else
+                    {
+                        ReloadResults();
+
+                        return;
+                    }
+                }
+                finally
+                {
+                    try
+                    {
+                        File.Delete(fileName);
+                    }
+                    catch
+                    {
+                        // Ignore.
+                    }
+                }
+            }
         }
 
         private void ResultForm_Shown(object sender, EventArgs e)

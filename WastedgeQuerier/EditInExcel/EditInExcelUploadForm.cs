@@ -17,6 +17,8 @@ namespace WastedgeQuerier.EditInExcel
         private readonly EntitySchema _entity;
         private readonly RecordSetChanges _changes;
 
+        public ApiRowErrorsCollection Errors { get; private set; }
+
         public EditInExcelUploadForm(Api api, EntitySchema entity, RecordSetChanges changes)
         {
             if (api == null)
@@ -82,13 +84,21 @@ namespace WastedgeQuerier.EditInExcel
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
-                    this,
-                    "One or more requests failed" + Environment.NewLine + Environment.NewLine + ex.Message,
-                    Text,
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );
+                var apiException = ex as ApiException;
+                if (apiException?.Errors != null && apiException.Errors.Count > 0)
+                {
+                    Errors = apiException.Errors;
+                }
+                else
+                {
+                    MessageBox.Show(
+                        this,
+                        "One or more requests failed" + Environment.NewLine + Environment.NewLine + ex.Message,
+                        Text,
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+                }
             }
         }
 

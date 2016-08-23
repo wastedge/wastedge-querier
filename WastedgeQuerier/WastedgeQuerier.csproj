@@ -125,6 +125,12 @@
     <Compile Include="EditInExcel\EditInExcelInstructionsForm.Designer.cs">
       <DependentUpon>EditInExcelInstructionsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="EditInExcel\ValidationErrorsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditInExcel\ValidationErrorsForm.Designer.cs">
+      <DependentUpon>ValidationErrorsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="EntityFiltersForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -365,6 +371,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="EditInExcel\EditInExcelInstructionsForm.resx">
       <DependentUpon>EditInExcelInstructionsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditInExcel\ValidationErrorsForm.resx">
+      <DependentUpon>ValidationErrorsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EntityFiltersForm.resx">
       <DependentUpon>EntityFiltersForm.cs</DependentUpon>
