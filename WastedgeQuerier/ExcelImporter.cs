@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -60,7 +61,7 @@ namespace WastedgeQuerier
                     switch (cellType)
                     {
                         case CellType.Numeric:
-                            switch ((headers[i] as EntityTypedField).DataType)
+                            switch (((EntityTypedField)headers[i]).DataType)
                             {
                                 case EntityDataType.Date:
                                 case EntityDataType.DateTime:
@@ -95,13 +96,54 @@ namespace WastedgeQuerier
                     }
                 }
 
-                record[headers[i].Name] = value;
+                record[headers[i].Name] = CoerceType(value, ((EntityTypedField)headers[i]).DataType);
             }
 
             if (record.Count == 0)
                 return null;
 
             return record;
+        }
+
+        private object CoerceType(object value, EntityDataType type)
+        {
+            if (value == null)
+                return null;
+
+            switch (type)
+            {
+                case EntityDataType.String:
+                    if (value is long)
+                        value = ((long)value).ToString(CultureInfo.InvariantCulture);
+                    else if (value is decimal)
+                        value = ((decimal)value).ToString(CultureInfo.InvariantCulture);
+                    break;
+                case EntityDataType.Long:
+                case EntityDataType.Int:
+                    if (value is string)
+                        value = long.Parse((string)value);
+                    break;
+                case EntityDataType.Bool:
+                    if (value is string)
+                    {
+                        switch (((string)value).ToLower())
+                        {
+                            case "true":
+                            case "1":
+                            case "yes":
+                                value = true;
+                                break;
+                            case "false":
+                            case "0":
+                            case "no":
+                                value = false;
+                                break;
+                        }
+                    }
+                    break;
+            }
+
+            return value;
         }
 
         private List<EntityMember> GetHeaders(ISheet sheet, EntitySchema entity)
