@@ -99,7 +99,8 @@ namespace WastedgeQuerier
 
                     string fieldError = GetFieldError(rowErrors, field);
 
-                    AddCell(row, j, record[field], cellStyle, fieldError);
+                    object value = record.ContainsField(field) ? record[field] : null;
+                    AddCell(row, j, value, cellStyle, fieldError);
                 }
 
                 // We only auto size the top 20 rows for performance reasons.
