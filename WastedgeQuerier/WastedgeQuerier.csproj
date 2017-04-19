@@ -87,8 +87,8 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="SystemEx, Version=16.3.26.6, Culture=neutral, PublicKeyToken=b07f240bd4274843, processorArchitecture=MSIL">
-      <HintPath>..\packages\SystemEx.16.3.26.6\lib\net20\SystemEx.dll</HintPath>
+    <Reference Include="SystemEx, Version=14.5.31.5, Culture=neutral, PublicKeyToken=b07f240bd4274843, processorArchitecture=MSIL">
+      <HintPath>..\packages\SystemEx.14.5.31.5\lib\net20\SystemEx.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="WastedgeApi, Version=1.3.7.0, Culture=neutral, processorArchitecture=MSIL">
@@ -437,7 +437,9 @@
       <DependentUpon>FileBrowser.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="WastedgeQuerier.nuspec" />
   </ItemGroup>
   <ItemGroup>
